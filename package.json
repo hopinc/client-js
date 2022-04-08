@@ -3,6 +3,10 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"packageManager": "yarn@3.2.0",
+	"scripts": {
+		"build": "yarn preconstruct build",
+		"dev": "yarn preconstruct dev"
+	},
 	"workspaces": [
 		"packages/*",
 		"apps/*"
