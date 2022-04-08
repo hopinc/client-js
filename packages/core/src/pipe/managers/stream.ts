@@ -20,13 +20,15 @@ export interface HopStreamOptions
  * HopStream manages an instance of a stream to an HTMLVideoElement.
  */
 export class HopStream {
-	// TODO: `async` so we can do any resolutions that need to be done here (e.g. finding a node to connect to, etc)
 	public static async from(
 		token: string,
 		nodes: NodeConfig,
 		options: HopStreamOptions,
 	) {
-		return new HopStream(token, nodes, {
+		// TODO: Resolve our track to stream from
+		const track = new MediaStreamTrack();
+
+		return new HopStream(token, track, nodes, {
 			volume: 1.0,
 			muted: false,
 			...options,
@@ -45,9 +47,15 @@ export class HopStream {
 	 */
 	private constructor(
 		token: string,
+		track: MediaStreamTrack,
 		nodes: NodeConfig,
 		options: Required<HopStreamOptions>,
 	) {
+		const stream = new MediaStream();
+		nodes.stream.srcObject = stream;
+
+		stream.addTrack(track);
+
 		this.token = token;
 		this.nodes = nodes;
 		this.transport = transports[options.transport].mount(nodes.stream);
