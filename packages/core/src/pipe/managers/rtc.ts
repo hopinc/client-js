@@ -1,8 +1,7 @@
 import * as mediasoup from 'mediasoup-client';
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class,@typescript-eslint/naming-convention
 export class RTCManager {
-	private device: mediasoup.Device;
+	private readonly device: mediasoup.Device;
 	private recvTransport: mediasoup.types.Transport | null;
 
 	constructor() {
@@ -13,13 +12,16 @@ export class RTCManager {
 	async createRecvTransport(data: mediasoup.types.TransportOptions) {
 		this.recvTransport = this.device.createRecvTransport(data);
 
-		this.recvTransport.on('connect', ({dtlsParameters}, callback, _err) => {
+		this.recvTransport.on('connect', (opts, callback: () => void) => {
 			callback();
 		});
 	}
 
 	async destroy() {
-		if (this.recvTransport) this.recvTransport.close();
+		if (this.recvTransport) {
+			this.recvTransport.close();
+		}
+
 		this.recvTransport = null;
 	}
 }
