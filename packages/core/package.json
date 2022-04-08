@@ -3,8 +3,5 @@
 	"main": "dist/onehop-core.cjs.js",
 	"module": "dist/onehop-core.esm.js",
 	"typings": "dist/onehop-core.cjs.d.ts",
-	"packageManager": "yarn@3.2.0",
-	"devDependencies": {
-		"typed-emitter": "^2.1.0"
-	}
+	"packageManager": "yarn@3.2.0"
 }

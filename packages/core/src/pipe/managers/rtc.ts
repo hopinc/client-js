@@ -1,20 +1,17 @@
 import * as mediasoup from 'mediasoup-client';
-import {EventEmitter} from 'events';
-import TypedEmitter from 'typed-emitter';
+import {Sakuta} from '../../util/emitter';
 
 export type RTCManagerEvents = {
-	CONNECTION_UPDATE: (status: {
+	CONNECTION_UPDATE: {
 		status: 'connecting' | 'connected' | 'disconnected';
-	}) => void;
+	};
 };
 
-export class RTCManager extends (EventEmitter as new () => TypedEmitter<RTCManagerEvents>) {
+export class RTCManager extends Sakuta<RTCManagerEvents> {
 	private readonly device: mediasoup.Device;
 	private recvTransport: mediasoup.types.Transport | null;
 
 	constructor() {
-		// Issue with rule — not able to detect our type cast
-		// eslint-disable-next-line constructor-super
 		super();
 		this.device = new mediasoup.Device();
 		this.recvTransport = null;
