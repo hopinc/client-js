@@ -1,3 +1,5 @@
+import {TransportType} from '../transports/types';
+
 export interface NodeConfig {
 	capture: HTMLDivElement;
 	stream: HTMLVideoElement;
@@ -6,6 +8,11 @@ export interface NodeConfig {
 export interface HopStreamState {
 	volume: number;
 	muted: boolean;
+}
+
+export interface HopStreamOptions
+	extends Pick<HopStreamState, 'volume' | 'muted'> {
+	transport: TransportType;
 }
 
 /**
@@ -20,7 +27,7 @@ export class HopStream {
 	public static async from(
 		token: string,
 		nodes: NodeConfig,
-		state?: Partial<Pick<HopStreamState, 'volume' | 'muted'>>,
+		state?: HopStreamOptions,
 	) {
 		return new HopStream(token, nodes, {
 			volume: 1.0,

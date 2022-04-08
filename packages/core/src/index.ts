@@ -1,1 +1,2 @@
-export {mount} from './mount';
+import * as pipe from './pipe';
+export {pipe};

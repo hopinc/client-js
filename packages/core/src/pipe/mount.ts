@@ -1,4 +1,4 @@
-import {HopStream, NodeConfig} from './stream';
+import {HopStream, NodeConfig} from './managers/stream';
 
 /**
  * Join a client into a room and start streaming to
