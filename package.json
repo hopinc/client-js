@@ -6,7 +6,7 @@
 	"scripts": {
 		"build": "yarn preconstruct build",
 		"dev": "yarn preconstruct dev",
-		"lint": "yarn eslint ."
+		"lint": "yarn eslint \"./{apps,packages}/**/*.{ts,tsx}\""
 	},
 	"workspaces": [
 		"packages/*",
