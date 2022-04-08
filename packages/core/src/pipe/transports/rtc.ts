@@ -10,6 +10,10 @@ export const rtcTransport: Transport = {
 			async pause() {
 				node.pause();
 			},
+			async destroy() {
+				await this.pause();
+				node.remove();
+			},
 		};
 	},
 };

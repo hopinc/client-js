@@ -895,7 +895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/debug@npm:^4.0.0":
+"@types/debug@npm:^4.0.0, @types/debug@npm:^4.1.7":
   version: 4.1.7
   resolution: "@types/debug@npm:4.1.7"
   dependencies:
@@ -938,6 +938,13 @@ __metadata:
   version: 0.0.50
   resolution: "@types/estree@npm:0.0.50"
   checksum: 9a2b6a4a8c117f34d08fbda5e8f69b1dfb109f7d149b60b00fd7a9fb6ac545c078bc590aa4ec2f0a256d680cf72c88b3b28b60c326ee38a7bc8ee1ee95624922
+  languageName: node
+  linkType: hard
+
+"@types/events@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/events@npm:3.0.0"
+  checksum: 9a424c2da210957d5636e0763e8c9fc3aaeee35bf411284ddec62a56a6abe31de9c7c2e713dabdd8a76ff98b47db2bd52f61310be6609641d6234cc842ecbbe3
   languageName: node
   linkType: hard
 
@@ -1353,6 +1360,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"awaitqueue@npm:^2.3.3":
+  version: 2.3.3
+  resolution: "awaitqueue@npm:2.3.3"
+  checksum: 7b2350041a87ae8abfa279c683d902e8fd17af3b33f04c1ed506e6d218b5813a9b381ba9b1d1b35dcc4414a79f57bf17ca8064933139f396ab94e1cf89073bd5
+  languageName: node
+  linkType: hard
+
 "babel-plugin-dynamic-import-node@npm:^2.3.3":
   version: 2.3.3
   resolution: "babel-plugin-dynamic-import-node@npm:2.3.3"
@@ -1373,6 +1387,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  languageName: node
+  linkType: hard
+
+"bowser@npm:^2.11.0":
+  version: 2.11.0
+  resolution: "bowser@npm:2.11.0"
+  checksum: 29c3f01f22e703fa6644fc3b684307442df4240b6e10f6cfe1b61c6ca5721073189ca97cdeedb376081148c8518e33b1d818a57f781d70b0b70e1f31fb48814f
   languageName: node
   linkType: hard
 
@@ -1732,7 +1753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3":
   version: 4.3.4
   resolution: "debug@npm:4.3.4"
   dependencies:
@@ -2159,6 +2180,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"event-target-shim@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "event-target-shim@npm:5.0.1"
+  checksum: 1ffe3bb22a6d51bdeb6bf6f7cf97d2ff4a74b017ad12284cc9e6a279e727dc30a5de6bb613e5596ff4dc3e517841339ad09a7eec44266eccb1aa201a30448166
+  languageName: node
+  linkType: hard
+
+"events@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "events@npm:3.3.0"
+  checksum: f6f487ad2198aa41d878fa31452f1a3c00958f46e9019286ff4787c84aac329332ab45c9cdc8c445928fc6d7ded294b9e005a7fce9426488518017831b272780
+  languageName: node
+  linkType: hard
+
 "execa@npm:^0.8.0":
   version: 0.8.0
   resolution: "execa@npm:0.8.0"
@@ -2187,6 +2222,16 @@ __metadata:
   version: 3.0.2
   resolution: "extend@npm:3.0.2"
   checksum: a50a8309ca65ea5d426382ff09f33586527882cf532931cb08ca786ea3146c0553310bda688710ff61d7668eba9f96b923fe1420cdf56a2c3eaf30fcab87b515
+  languageName: node
+  linkType: hard
+
+"fake-mediastreamtrack@npm:^1.1.6":
+  version: 1.1.6
+  resolution: "fake-mediastreamtrack@npm:1.1.6"
+  dependencies:
+    event-target-shim: ^5.0.1
+    uuid: ^8.1.0
+  checksum: 829bcb5f4cba7071869911c3e7815a3ef68c4b55e630f09a9c70a77ca01f721ed26cfb0ed33a89dd5a8e372c887bd722518e1f735dce7347cf23803e23d53e5d
   languageName: node
   linkType: hard
 
@@ -2508,6 +2553,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"h264-profile-level-id@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "h264-profile-level-id@npm:1.0.1"
+  dependencies:
+    debug: ^4.1.1
+  checksum: 6058ee6bf6a44120370ef81e16a4f0ea0d15f9ea7a8d78193f665b57157652d2a4b5b6023cab3bd4b48f0bd1350574b339eb3d72f131e9820a3291a7a714bec1
+  languageName: node
+  linkType: hard
+
 "hard-rejection@npm:^2.1.0":
   version: 2.1.0
   resolution: "hard-rejection@npm:2.1.0"
@@ -2601,6 +2655,7 @@ __metadata:
     eslint: ^8.12.0
     eslint-config-xo: ^0.40.0
     eslint-config-xo-typescript: ^0.50.0
+    mediasoup-client: ^3.6.51
     prettier: ^2.6.2
     typescript: ^4.6.3
   languageName: unknown
@@ -3392,6 +3447,24 @@ __metadata:
   version: 1.0.1
   resolution: "mdurl@npm:1.0.1"
   checksum: 71731ecba943926bfbf9f9b51e28b5945f9411c4eda80894221b47cc105afa43ba2da820732b436f0798fd3edbbffcd1fc1415843c41a87fea08a41cc1e3d02b
+  languageName: node
+  linkType: hard
+
+"mediasoup-client@npm:^3.6.51":
+  version: 3.6.51
+  resolution: "mediasoup-client@npm:3.6.51"
+  dependencies:
+    "@types/debug": ^4.1.7
+    "@types/events": ^3.0.0
+    awaitqueue: ^2.3.3
+    bowser: ^2.11.0
+    debug: ^4.3.3
+    events: ^3.3.0
+    fake-mediastreamtrack: ^1.1.6
+    h264-profile-level-id: ^1.0.1
+    sdp-transform: ^2.14.1
+    supports-color: ^9.2.1
+  checksum: d73345cff86bacbeb91634a72e8fa95fab35e4d0712f306f43dc175feed6c24e287ea91a2c11a5e36a819b88b7a578caaee56dec8faab4f6ab3ad459c444d511
   languageName: node
   linkType: hard
 
@@ -4840,6 +4913,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sdp-transform@npm:^2.14.1":
+  version: 2.14.1
+  resolution: "sdp-transform@npm:2.14.1"
+  bin:
+    sdp-verify: checker.js
+  checksum: 8b3179786db1a0f1ebfdacb1ac0dfe2833e63e8c64b638884cec212455061d53beaa8d9c8bf76fdbd5f844b7885f3892adec27e87734cfbc2b3e5c65e18a489b
+  languageName: node
+  linkType: hard
+
 "section-matter@npm:^1.0.0":
   version: 1.0.0
   resolution: "section-matter@npm:1.0.0"
@@ -5192,6 +5274,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"supports-color@npm:^9.2.1":
+  version: 9.2.2
+  resolution: "supports-color@npm:9.2.2"
+  checksum: 976d84877402fc38c1d43b1fde20b0a8dc0283273f21cfebe4ff7507d27543cdfbeec7db108a96b82d694465f06d64e8577562b05d0520b41710088e0a33cc50
+  languageName: node
+  linkType: hard
+
 "supports-preserve-symlinks-flag@npm:^1.0.0":
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
@@ -5536,6 +5625,15 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.1.0":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
   languageName: node
   linkType: hard
 

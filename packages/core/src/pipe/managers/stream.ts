@@ -71,4 +71,8 @@ export class HopStream {
 	async pause() {
 		await this.transport.pause();
 	}
+
+	async destroy() {
+		await this.transport.destroy();
+	}
 }
