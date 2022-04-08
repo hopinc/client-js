@@ -5,21 +5,26 @@ import {HopStream, NodeConfig} from './stream';
  * @param token The join token provided by Hop's API
  * @returns Created DOM nodes and the stream instance
  */
-export function mount(token: string): {nodes: NodeConfig; stream: HopStream};
+export async function mount(
+	token: string,
+): Promise<{nodes: NodeConfig; stream: HopStream}>;
 /**
  * Join a client into a room and start streaming to
  * @param token The join token provided by Hop's API
  * @param nodes The HTML nodes to attach the stream to
  * @returns The stream instance
  */
-export function mount(token: string, nodes: NodeConfig): HopStream;
-export function mount(token: string, nodes?: NodeConfig) {
+export async function mount(
+	token: string,
+	nodes: NodeConfig,
+): Promise<HopStream>;
+export async function mount(token: string, nodes?: NodeConfig) {
 	const mergedNodes = nodes ?? {
 		stream: document.createElement('video'),
 		capture: document.createElement('div'),
 	};
 
-	const stream = new HopStream(token, nodes ?? mergedNodes);
+	const stream = await HopStream.from(token, nodes ?? mergedNodes);
 
 	if (nodes) {
 		return stream;
@@ -30,5 +35,3 @@ export function mount(token: string, nodes?: NodeConfig) {
 		stream,
 	};
 }
-
-export type MountFunction = typeof mount;
