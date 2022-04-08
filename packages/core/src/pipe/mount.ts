@@ -1,4 +1,5 @@
 import {HopStream, NodeConfig} from './managers/stream';
+import {TransportType} from './transports/types';
 
 /**
  * Join a client into a room and start streaming to
@@ -7,6 +8,7 @@ import {HopStream, NodeConfig} from './managers/stream';
  */
 export async function mount(
 	token: string,
+	transport: TransportType,
 ): Promise<{nodes: NodeConfig; stream: HopStream}>;
 /**
  * Join a client into a room and start streaming to
@@ -16,15 +18,22 @@ export async function mount(
  */
 export async function mount(
 	token: string,
+	transport: TransportType,
 	nodes: NodeConfig,
 ): Promise<HopStream>;
-export async function mount(token: string, nodes?: NodeConfig) {
+export async function mount(
+	token: string,
+	transport: TransportType,
+	nodes?: NodeConfig,
+) {
 	const mergedNodes = nodes ?? {
 		stream: document.createElement('video'),
 		capture: document.createElement('div'),
 	};
 
-	const stream = await HopStream.from(token, nodes ?? mergedNodes);
+	const stream = await HopStream.from(token, nodes ?? mergedNodes, {
+		transport,
+	});
 
 	if (nodes) {
 		return stream;

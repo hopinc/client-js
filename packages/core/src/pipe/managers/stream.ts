@@ -11,7 +11,7 @@ export interface HopStreamState {
 }
 
 export interface HopStreamOptions
-	extends Pick<HopStreamState, 'volume' | 'muted'> {
+	extends Partial<Pick<HopStreamState, 'volume' | 'muted'>> {
 	transport: TransportType;
 }
 
@@ -27,12 +27,12 @@ export class HopStream {
 	public static async from(
 		token: string,
 		nodes: NodeConfig,
-		state?: HopStreamOptions,
+		options: HopStreamOptions,
 	) {
 		return new HopStream(token, nodes, {
 			volume: 1.0,
 			muted: false,
-			...state,
+			...options,
 		});
 	}
 
@@ -41,9 +41,15 @@ export class HopStream {
 	 * @param token The join token to connect to a room
 	 * @param nodes The HTML nodes to render and capture to
 	 */
-	private constructor(token: string, nodes: NodeConfig, state: HopStreamState) {
+	private constructor(
+		token: string,
+		nodes: NodeConfig,
+		options: Required<HopStreamOptions>,
+	) {
 		this.token = token;
 		this.nodes = nodes;
-		this.state = state;
+		this.state = {
+			muted: options.muted,
+		};
 	}
 }

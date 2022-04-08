@@ -1,1 +1,2 @@
-export {mount} from './mount';
+import {mount} from './mount';
+export const rooms = {mount};
