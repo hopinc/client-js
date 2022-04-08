@@ -1,7 +1,7 @@
 import {Transport} from './types';
 
 export const hlsTransport: Transport = {
-	mount(node) {
+	mount() {
 		throw new Error('Function not implemented.');
 	},
 };

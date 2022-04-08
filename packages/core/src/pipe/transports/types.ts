@@ -1,9 +1,8 @@
 export type TransportType = 'rtc' | 'hls';
 
 export interface TransportInstance {
-	play(): void;
-	pause(): void;
-	disconnect(): void;
+	play(): Promise<void>;
+	pause(): Promise<void>;
 }
 
 export interface Transport {
