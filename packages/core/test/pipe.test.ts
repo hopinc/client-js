@@ -1,3 +1,7 @@
+import assert from 'assert';
 import {pipe} from '@onehop/core';
 
-const {nodes, stream} = await pipe.rooms.mount('', 'rtc');
+void pipe.rooms.mount('', 'rtc').then(({stream, nodes}) => {
+	assert(stream, 'Stream does not exist');
+	assert(nodes, 'Nodes do not exist');
+});

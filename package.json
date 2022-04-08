@@ -5,7 +5,8 @@
 	"packageManager": "yarn@3.2.0",
 	"scripts": {
 		"build": "yarn preconstruct build",
-		"dev": "yarn preconstruct dev"
+		"dev": "yarn preconstruct dev",
+		"lint": "yarn eslint ."
 	},
 	"workspaces": [
 		"packages/*",
