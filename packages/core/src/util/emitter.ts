@@ -1,6 +1,7 @@
-type Listener<P extends Record<string, unknown>, Key extends keyof P> = (
-	event: SakutaEvent<P, Key>,
-) => unknown;
+export type SakutaListener<
+	P extends Record<string, unknown>,
+	Key extends keyof P,
+> = (event: SakutaEvent<P, Key>) => unknown;
 
 export class Sakuta<Payloads extends Record<string, unknown>> {
 	private readonly listeners;
@@ -8,21 +9,25 @@ export class Sakuta<Payloads extends Record<string, unknown>> {
 	public constructor() {
 		this.listeners = new Map<
 			keyof Payloads,
-			Array<Listener<Payloads, keyof Payloads>>
+			Array<SakutaListener<Payloads, keyof Payloads>>
 		>();
 	}
 
-	public on<K extends keyof Payloads>(key: K, listener: Listener<Payloads, K>) {
+	public on<K extends keyof Payloads>(
+		key: K,
+		listener: SakutaListener<Payloads, K>,
+	) {
 		const existing = this.listeners.get(key) ?? [];
 		const merged = [...existing, listener] as Array<
-			Listener<Payloads, keyof Payloads>
+			SakutaListener<Payloads, keyof Payloads>
 		>;
+
 		this.listeners.set(key, merged);
 	}
 
 	public off<K extends keyof Payloads>(
 		key: K,
-		listener: Listener<Payloads, K>,
+		listener: SakutaListener<Payloads, K>,
 	) {
 		const list = this.listeners.get(key);
 
@@ -30,19 +35,35 @@ export class Sakuta<Payloads extends Record<string, unknown>> {
 			throw new Error("Cannot remove listener for key that doesn't exist.");
 		}
 
-		const filtered = list.filter(item => item !== listener);
-		this.listeners.set(key, filtered);
+		if (list.length === 0) {
+			this.listeners.delete(key);
+			return;
+		}
+
+		this.listeners.set(
+			key,
+			list.filter(item => item !== listener),
+		);
 	}
 
-	public emit<K extends keyof Payloads>(key: K, data: Payloads[K]) {
+	protected emit<K extends keyof Payloads>(key: K, data: Payloads[K]) {
 		const listeners = this.listeners.get(key);
 
 		if (!listeners) {
 			return;
 		}
 
+		// In theory, shouldn't happen because we should have already checked
+		// in the .off call
+		if (listeners.length === 0) {
+			this.listeners.delete(key);
+			return;
+		}
+
+		const event = new SakutaEvent(this, key, data);
+
 		for (const listener of listeners) {
-			listener(new SakutaEvent(this, key, data));
+			listener(event);
 		}
 	}
 }
