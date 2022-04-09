@@ -687,6 +687,8 @@ __metadata:
 "@onehop/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@onehop/core@workspace:packages/core"
+  dependencies:
+    "@onehop/mediasoup-client": ^3.6.51
   languageName: unknown
   linkType: soft
 
@@ -701,6 +703,24 @@ __metadata:
     react-dom: ^18.0.0
   languageName: unknown
   linkType: soft
+
+"@onehop/mediasoup-client@npm:^3.6.51":
+  version: 3.6.51
+  resolution: "@onehop/mediasoup-client@npm:3.6.51"
+  dependencies:
+    "@types/debug": ^4.1.7
+    "@types/events": ^3.0.0
+    awaitqueue: ^2.3.3
+    bowser: ^2.11.0
+    debug: ^4.3.3
+    events: ^3.3.0
+    fake-mediastreamtrack: ^1.1.6
+    h264-profile-level-id: ^1.0.1
+    sdp-transform: ^2.14.1
+    supports-color: ^9.2.1
+  checksum: 0c65d9ca007311522d3d7c8cb5b405fc63c463e048ec40dcf03263db8619132a672ac6008fcb5bade5f2d4bbf25918cd6d70f855696a9cae856712332a39bca4
+  languageName: node
+  linkType: hard
 
 "@onehop/react@workspace:packages/react":
   version: 0.0.0-use.local
@@ -2655,7 +2675,6 @@ __metadata:
     eslint: ^8.12.0
     eslint-config-xo: ^0.40.0
     eslint-config-xo-typescript: ^0.50.0
-    mediasoup-client: ^3.6.51
     prettier: ^2.6.2
     typescript: ^4.6.3
   languageName: unknown
@@ -3447,24 +3466,6 @@ __metadata:
   version: 1.0.1
   resolution: "mdurl@npm:1.0.1"
   checksum: 71731ecba943926bfbf9f9b51e28b5945f9411c4eda80894221b47cc105afa43ba2da820732b436f0798fd3edbbffcd1fc1415843c41a87fea08a41cc1e3d02b
-  languageName: node
-  linkType: hard
-
-"mediasoup-client@npm:^3.6.51":
-  version: 3.6.51
-  resolution: "mediasoup-client@npm:3.6.51"
-  dependencies:
-    "@types/debug": ^4.1.7
-    "@types/events": ^3.0.0
-    awaitqueue: ^2.3.3
-    bowser: ^2.11.0
-    debug: ^4.3.3
-    events: ^3.3.0
-    fake-mediastreamtrack: ^1.1.6
-    h264-profile-level-id: ^1.0.1
-    sdp-transform: ^2.14.1
-    supports-color: ^9.2.1
-  checksum: d73345cff86bacbeb91634a72e8fa95fab35e4d0712f306f43dc175feed6c24e287ea91a2c11a5e36a819b88b7a578caaee56dec8faab4f6ab3ad459c444d511
   languageName: node
   linkType: hard
 

@@ -1,4 +1,4 @@
-import * as mediasoup from 'mediasoup-client';
+import * as mediasoup from '@onehop/mediasoup-client';
 import {Emitter} from '../../util/emitter';
 
 export type RTCManagerEvents = {
@@ -26,10 +26,6 @@ export class RTCManager extends Emitter<RTCManagerEvents> {
 		this.recvTransport = null;
 
 		void this.initWebRtc();
-	}
-
-	async initWebRtc() {
-		//
 	}
 
 	async createRecvTransport(data: mediasoup.types.TransportOptions) {
@@ -73,5 +69,9 @@ export class RTCManager extends Emitter<RTCManagerEvents> {
 		}
 
 		this.recvTransport = null;
+	}
+
+	private async initWebRtc() {
+		//
 	}
 }
