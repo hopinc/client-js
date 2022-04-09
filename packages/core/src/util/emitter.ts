@@ -1,8 +1,8 @@
 type Listener<P extends Record<string, unknown>, Key extends keyof P> = (
-	event: SakutaEvent<P, Key>,
+	event: Event<P, Key>,
 ) => unknown;
 
-export class Sakuta<Payloads extends Record<string, unknown>> {
+export class Emitter<Payloads extends Record<string, unknown>> {
 	private readonly listeners;
 
 	public constructor() {
@@ -42,17 +42,17 @@ export class Sakuta<Payloads extends Record<string, unknown>> {
 		}
 
 		for (const listener of listeners) {
-			listener(new SakutaEvent(this, key, data));
+			listener(new Event(this, key, data));
 		}
 	}
 }
 
-export class SakutaEvent<P extends Record<string, unknown>, K extends keyof P> {
-	public readonly instance: Sakuta<P>;
+export class Event<P extends Record<string, unknown>, K extends keyof P> {
+	public readonly instance: Emitter<P>;
 	public readonly key: K;
 	public readonly data: P[K];
 
-	constructor(instance: Sakuta<P>, key: K, data: P[K]) {
+	constructor(instance: Emitter<P>, key: K, data: P[K]) {
 		this.instance = instance;
 		this.key = key;
 		this.data = data;

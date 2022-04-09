@@ -1,5 +1,5 @@
 import * as mediasoup from 'mediasoup-client';
-import {Sakuta} from '../../util/emitter';
+import {Emitter} from '../../util/emitter';
 
 export type RTCManagerEvents = {
 	CONNECTION_UPDATE: {
@@ -7,7 +7,7 @@ export type RTCManagerEvents = {
 	};
 };
 
-export class RTCManager extends Sakuta<RTCManagerEvents> {
+export class RTCManager extends Emitter<RTCManagerEvents> {
 	private readonly device: mediasoup.Device;
 	private recvTransport: mediasoup.types.Transport | null;
 
