@@ -9,13 +9,26 @@ export type RTCManagerEvents = {
 
 export class RTCManager extends Emitter<RTCManagerEvents> {
 	private readonly device: mediasoup.Device;
+	private producers: mediasoup.types.Producer[];
+	private consumers: any[];
 	private recvTransport: mediasoup.types.Transport | null;
+
+	private readonly iceServers = [
+		{urls: 'stun:stun.l.google.com:19302'},
+		{urls: 'stun:stun1.l.google.com:19302'},
+	];
 
 	constructor() {
 		super();
 		this.device = new mediasoup.Device();
+		this.producers = [];
+		this.consumers = [];
 		this.recvTransport = null;
+
+		this.initWebRtc();
 	}
+
+	async initWebRtc() {}
 
 	async createRecvTransport(data: mediasoup.types.TransportOptions) {
 		this.recvTransport = this.device.createRecvTransport(data);
