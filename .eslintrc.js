@@ -16,5 +16,6 @@ module.exports = {
 		'@typescript-eslint/naming-convention': 'off',
 		'@typescript-eslint/indent': 'off',
 		'@typescript-eslint/quotes': 'off',
+		'operator-linebreak': 'off',
 	},
 };
