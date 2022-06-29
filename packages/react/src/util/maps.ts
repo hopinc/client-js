@@ -47,12 +47,6 @@ export class ObservableMap<K, V> implements Map<K, V> {
 		return 'ObservableMap';
 	}
 
-	private emit(payload: ListenerPayload<K, V>) {
-		for (const listener of this.listeners) {
-			listener(this, payload);
-		}
-	}
-
 	clear(): void {
 		this.map.clear();
 		this.emit({type: 'clear'});
@@ -109,5 +103,11 @@ export class ObservableMap<K, V> implements Map<K, V> {
 
 	removeListener(listener: Listener<K, V>) {
 		this.listeners.delete(listener);
+	}
+
+	private emit(payload: ListenerPayload<K, V>) {
+		for (const listener of this.listeners) {
+			listener(this, payload);
+		}
 	}
 }

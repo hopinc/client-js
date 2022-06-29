@@ -1,14 +1,11 @@
 import type {API, Id} from '@onehop/js';
 import {createContext, Dispatch, SetStateAction, useContext} from 'react';
-import {LeapEdgeClient} from '@onehop/leap-edge-js';
-import {useMap} from './maps';
+import {
+	LeapEdgeClient,
+	LeapEdgeAuthenticationParameters,
+} from '@onehop/leap-edge-js';
 import {ObservableMap, useObservableMap} from '../util/maps';
 import {resolveSetStateAction} from '../util/state';
-
-// TODO: Export these from leap-edge-js
-type LeapEdgeAuthenticationParameters = ConstructorParameters<
-	typeof LeapEdgeClient
->[0];
 
 export class ClientContext {
 	private static leap: LeapEdgeClient | null = null;
@@ -19,7 +16,7 @@ export class ClientContext {
 	>();
 
 	useChannelState(channel: Id<'channel'>) {
-		return useObservableMap(this.stateCache).get(channel);
+		return useObservableMap(this.stateCache).get(channel) ?? null;
 	}
 
 	getStateCache() {
@@ -39,6 +36,10 @@ export class ClientContext {
 
 		ClientContext.leap = new LeapEdgeClient(auth);
 		ClientContext.leap.connect();
+
+		ClientContext.leap.on('serviceEvent', state => {
+			state.data;
+		});
 
 		return ClientContext.leap;
 	}
