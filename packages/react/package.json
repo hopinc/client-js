@@ -9,7 +9,11 @@
 		"react": "*"
 	},
 	"devDependencies": {
-		"@types/react": "^18.0.0",
-		"react": "^18.0.0"
+		"@types/react": "^18.0.14",
+		"react": "^18.2.0"
+	},
+	"dependencies": {
+		"@onehop/js": "beta",
+		"@onehop/leap-edge-js": "^0.0.1"
 	}
 }

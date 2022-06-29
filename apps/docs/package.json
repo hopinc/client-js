@@ -7,10 +7,10 @@
 		"start": "next start"
 	},
 	"dependencies": {
-		"next": "^12.1.4",
-		"nextra": "2.0.0-alpha.48",
-		"nextra-theme-docs": "2.0.0-alpha.48",
-		"react": "^18.0.0",
-		"react-dom": "^18.0.0"
+		"next": "^12.2.0",
+		"nextra": "alpha",
+		"nextra-theme-docs": "alpha",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
 	}
 }
