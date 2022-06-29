@@ -50,18 +50,18 @@ export function useClientContext() {
 	return useContext(clientContext);
 }
 
-export function useReadChannelState<T extends API.Channels.State>(
-	channel: Id<'channel'>,
-): T {
+export function useReadChannelState<
+	T extends API.Channels.State = API.Channels.State,
+>(channel: Id<'channel'>): T {
 	const client = useClientContext();
 	const state = client.useChannelState(channel);
 
 	return state as T;
 }
 
-export function useSetChannelState<T extends API.Channels.State>(
-	channel: Id<'channel'>,
-): Dispatch<SetStateAction<T>> {
+export function useSetChannelState<
+	T extends API.Channels.State = API.Channels.State,
+>(channel: Id<'channel'>): Dispatch<SetStateAction<T>> {
 	const client = useClientContext();
 	const state = useObservableMap(client.getStateCache());
 	const oldState = client.useChannelState(channel);
@@ -72,9 +72,9 @@ export function useSetChannelState<T extends API.Channels.State>(
 	};
 }
 
-export function useChannelState<T extends API.Channels.State>(
-	channel: Id<'channel'>,
-) {
+export function useChannelState<
+	T extends API.Channels.State = API.Channels.State,
+>(channel: Id<'channel'>) {
 	return [
 		useReadChannelState<T>(channel),
 		useSetChannelState<T>(channel),
