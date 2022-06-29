@@ -1,16 +1,27 @@
 import {useEffect, useState} from 'react';
 
+export type ListenerPayload<K, V> =
+	| {type: 'clear'}
+	| {type: 'set'; key: K; value: V}
+	| {type: 'delete'; key: K};
+
 export type Listener<K, V> = (
 	instance: ObservableMap<K, V>,
-	key: K,
-	value: V,
+	payload: ListenerPayload<K, V>,
 ) => unknown;
 
-export function useObservableMap<K, V>(map: ObservableMap<K, V>) {
+export function useObservableMap<K, V>(
+	map: ObservableMap<K, V>,
+	listenOnlyFor?: Array<ListenerPayload<K, V>['type']>,
+) {
 	const [storeState, setStoreState] = useState({map});
 
 	useEffect(() => {
-		const onChange: Listener<K, V> = (_, key, value) => {
+		const onChange: Listener<K, V> = (instance, payload) => {
+			if (listenOnlyFor && !listenOnlyFor.includes(payload.type)) {
+				return;
+			}
+
 			setStoreState({map});
 		};
 
@@ -36,12 +47,22 @@ export class ObservableMap<K, V> implements Map<K, V> {
 		return 'ObservableMap';
 	}
 
+	private emit(payload: ListenerPayload<K, V>) {
+		for (const listener of this.listeners) {
+			listener(this, payload);
+		}
+	}
+
 	clear(): void {
 		this.map.clear();
+		this.emit({type: 'clear'});
 	}
 
 	delete(key: K): boolean {
-		return this.map.delete(key);
+		const success = this.map.delete(key);
+		this.emit({type: 'delete', key});
+
+		return success;
 	}
 
 	forEach(
@@ -61,10 +82,7 @@ export class ObservableMap<K, V> implements Map<K, V> {
 
 	set(key: K, value: V): this {
 		this.map.set(key, value);
-
-		for (const listener of this.listeners) {
-			listener(this, key, value);
-		}
+		this.emit({type: 'set', key, value});
 
 		return this;
 	}
