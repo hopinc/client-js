@@ -1137,12 +1137,12 @@ __metadata:
   linkType: hard
 
 "@onehop/leap-edge-js@npm:beta":
-  version: 0.0.3
-  resolution: "@onehop/leap-edge-js@npm:0.0.3"
+  version: 0.0.4
+  resolution: "@onehop/leap-edge-js@npm:0.0.4"
   dependencies:
     eventemitter3: ^4.0.7
     ws: ^8.8.0
-  checksum: 6585a59b0894ff341977ee0267041a2773dbba6236f9bebf8b270789f75c10ae351758cc87b52a24e658de52febdf3820e794b0872f1f238136aab51c0a737f4
+  checksum: 406f73abe87b6567fc5fb1fcb3b6892caf79e8013512f84303316b223947d8abe1bc587393b638462eaf7cf16d935bc7e1609045503bb737db1f73a9a069fe14
   languageName: node
   linkType: hard
 

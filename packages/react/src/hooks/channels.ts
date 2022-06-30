@@ -1,10 +1,18 @@
-import type {API} from '@onehop/js';
+import {API} from '@onehop/js';
 import {
 	LeapEdgeAuthenticationParameters,
 	LeapEdgeClient,
 	LeapConnectionState,
+	LeapServiceEvent,
+	EncapsulatingServicePayload,
 } from '@onehop/leap-edge-js';
-import {createContext, Dispatch, SetStateAction, useContext} from 'react';
+import {
+	createContext,
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useEffect,
+} from 'react';
 import {ObservableMap, useObservableMap} from '../util/maps';
 import {resolveSetStateAction} from '../util/state';
 import {atom, useAtom} from '../util/atom';
@@ -12,18 +20,12 @@ import {atom, useAtom} from '../util/atom';
 import {AVAILABLE} from '../leap/handlers/AVAILABLE';
 import {INIT} from '../leap/handlers/INIT';
 import {UNAVAILABLE} from '../leap/handlers/UNAVAILABLE';
-
-// TODO: Export this from @onehop/leap-edge-js
-type LeapServiceEvent = LeapEdgeClient['on'] extends (
-	event: 'serviceEvent',
-	listener: (data: infer R) => any,
-) => any
-	? R
-	: never;
-
-type EncapsulationServicePayload = Parameters<
-	LeapEdgeClient['sendServicePayload']
->[0];
+import {STATE_UPDATE} from '../leap/handlers/STATE_UPDATE';
+import {
+	ChannelMessageListenerKey,
+	getMessageListenerKey,
+	MESSAGE,
+} from '../leap/handlers/MESSAGE';
 
 export type ClientStateData<T extends API.Channels.State> = {
 	state: T | null;
@@ -35,6 +37,11 @@ export class ClientContext {
 		INIT,
 		AVAILABLE,
 		UNAVAILABLE,
+		STATE_UPDATE,
+		MESSAGE,
+
+		// Deprecated
+		EVENT: MESSAGE,
 	};
 
 	public static readonly CONNECTION_STATE = atom<LeapConnectionState | null>(
@@ -46,6 +53,11 @@ export class ClientContext {
 	private readonly channelStateMap = new ObservableMap<
 		API.Channels.Channel['id'],
 		ClientStateData<API.Channels.State>
+	>();
+
+	private readonly channelMessageListeners = new Map<
+		ChannelMessageListenerKey,
+		Set<(data: unknown) => unknown>
 	>();
 
 	connect(auth: LeapEdgeAuthenticationParameters) {
@@ -100,6 +112,10 @@ export class ClientContext {
 		return this.channelStateMap;
 	}
 
+	getMessageListeners() {
+		return this.channelMessageListeners;
+	}
+
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
 		this.getLeap().sendServicePayload({
 			e: 'SUBSCRIBE',
@@ -116,7 +132,7 @@ export class ClientContext {
 		});
 	}
 
-	send(data: EncapsulationServicePayload) {
+	send(data: EncapsulatingServicePayload) {
 		this.getLeap().sendServicePayload(data);
 	}
 
@@ -146,6 +162,38 @@ export const clientContext = createContext(new ClientContext());
 
 export function useClientContext(): ClientContext {
 	return useContext(clientContext);
+}
+
+export function useChannelMessage<T = any>(
+	channel: API.Channels.Channel['id'],
+	event: string,
+	listener: (data: T) => unknown,
+) {
+	const client = useClientContext();
+	const map = client.getMessageListeners();
+
+	useEffect(() => {
+		const key = getMessageListenerKey(channel, event);
+		const listeners = map.get(key) ?? new Set();
+
+		const castListener = listener as (data: unknown) => unknown;
+
+		map.set(key, listeners.add(castListener));
+
+		return () => {
+			const currentListeners = map.get(key);
+
+			if (!currentListeners) {
+				return;
+			}
+
+			currentListeners.delete(castListener);
+
+			if (currentListeners.size === 0) {
+				map.delete(key);
+			}
+		};
+	}, []);
 }
 
 export function useClientConnectionState() {

@@ -17,18 +17,16 @@ export function useObservableMap<K, V>(
 	const [storeState, setStoreState] = useState({map});
 
 	useEffect(() => {
-		const onChange: Listener<K, V> = (instance, payload) => {
+		const listening = map.addListener((instance, payload) => {
 			if (listenOnlyFor && !listenOnlyFor.includes(payload.type)) {
 				return;
 			}
 
 			setStoreState({map});
-		};
-
-		map.addListener(onChange);
+		});
 
 		return () => {
-			map.removeListener(onChange);
+			listening.remove();
 		};
 	}, [map]);
 
@@ -83,7 +81,7 @@ export class ObservableMap<K, V> implements Map<K, V> {
 		callbackfn: (value: V, key: K, map: Map<K, V>) => void,
 		thisArg?: any,
 	): void {
-		return this.map.forEach(callbackfn, thisArg);
+		this.map.forEach(callbackfn, thisArg);
 	}
 
 	get(key: K): V | undefined {
@@ -99,6 +97,21 @@ export class ObservableMap<K, V> implements Map<K, V> {
 		this.notify({type: 'set', key, value});
 
 		return this;
+	}
+
+	patch(key: K, value: Partial<V>): this {
+		const old = this.map.get(key);
+
+		if (old === undefined) {
+			throw new Error(
+				'Cannot patch a value that does not already exist. Use `.set` instead.',
+			);
+		}
+
+		return this.set(key, {
+			...old,
+			...value,
+		});
 	}
 
 	merge(map: Map<K, V>) {
@@ -124,6 +137,12 @@ export class ObservableMap<K, V> implements Map<K, V> {
 
 	addListener(listener: Listener<K, V>) {
 		this.listeners.add(listener);
+
+		return {
+			remove: () => {
+				this.listeners.delete(listener);
+			},
+		};
 	}
 
 	removeListener(listener: Listener<K, V>) {

@@ -2,22 +2,34 @@ import {
 	useClientContext,
 	useReadChannelState,
 	useClientConnectionState,
+	useChannelMessage,
 } from '@onehop/react/src/hooks/channels';
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
 import {Hop} from '@onehop/js';
 
+const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';
+const channel = 'channel_MjY4NTU2NDgwMjc1MjEwMjY';
+
 function Main() {
-	const state = useReadChannelState('channel_MjY4NTU2NDgwMjc1MjEwMjY');
+	const state = useReadChannelState(channel);
+
+	const [messages, setMessage] = useState<string[]>([]);
+
+	useChannelMessage<{message: string}>(
+		channel,
+		'MESSAGE',
+		useCallback(data => {
+			setMessage(old => [...old, data.message]);
+		}, []),
+	);
 
 	return (
 		<div>
-			<pre>{JSON.stringify(state, null, 4)}</pre>
+			<pre>{JSON.stringify({state, messages}, null, 4)}</pre>
 		</div>
 	);
 }
-
-const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';
 
 export default function App() {
 	const client = useClientContext();

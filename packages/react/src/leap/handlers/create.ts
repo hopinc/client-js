@@ -13,11 +13,11 @@ export function createLeapEvent<D, R, G extends boolean = true>(config: {
 	) => Promise<R>;
 }) {
 	return {
-		handle: (
+		async handle(
 			client: ClientContext,
 			channelId: API.Channels.Channel['id'] | null,
 			data: D,
-		) => {
+		) {
 			const requireChannelId = config.requireChannelId !== false;
 
 			if (!channelId && requireChannelId) {
