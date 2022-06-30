@@ -11,6 +11,10 @@ export const atom = <T>(initialValue?: T) => {
 
 	const notify = () => {
 		if ('uninitialized' in atomValue) {
+			// In theory this would never happen
+			// because the value would have
+			// already been set and therefore
+			// not unintialized
 			return;
 		}
 
@@ -31,8 +35,8 @@ export const atom = <T>(initialValue?: T) => {
 		},
 
 		set(value: T) {
-			notify();
 			atomValue = {value};
+			notify();
 		},
 
 		addListener(listener: Listener<T>) {

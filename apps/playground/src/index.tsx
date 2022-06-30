@@ -6,7 +6,7 @@ import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 
 function Main() {
-	const {state} = useReadChannelState('abc123');
+	const state = useReadChannelState('abc123');
 
 	return (
 		<div>

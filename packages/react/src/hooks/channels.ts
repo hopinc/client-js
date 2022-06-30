@@ -29,7 +29,7 @@ type EncapsulationServicePayload = Parameters<
 export type ClientStateData<T extends API.Channels.State> = {
 	error: LeapClientError | null;
 	state: T | null;
-	subscription: 'available' | 'pending' | 'rejected';
+	subscription: 'available' | 'pending' | 'unavailable';
 };
 
 export class ClientContext {
