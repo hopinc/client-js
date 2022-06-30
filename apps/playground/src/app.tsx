@@ -12,7 +12,7 @@ const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';
 const channel = 'channel_MjY4NTU2NDgwMjc1MjEwMjY';
 
 function Main() {
-	const state = useReadChannelState(channel);
+	const {state, subscription} = useReadChannelState(channel);
 
 	const [messages, setMessage] = useState<string[]>([]);
 
@@ -26,7 +26,7 @@ function Main() {
 
 	return (
 		<div>
-			<pre>{JSON.stringify({state, messages}, null, 4)}</pre>
+			<pre>{JSON.stringify({state, subscription, messages}, null, 4)}</pre>
 		</div>
 	);
 }
