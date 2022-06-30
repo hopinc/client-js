@@ -4,7 +4,7 @@ import {createLeapEvent} from './create';
 
 export type Data = {
 	channels: API.Channels.Channel[];
-	metadata: unknown;
+	metadata: API.Channels.State;
 	cid: string;
 	connection_count: number;
 	scope: 'project' | 'token';
@@ -23,7 +23,6 @@ export const INIT = createLeapEvent({
 			client.subscribeToChannel(channel.id);
 
 			localState.set(channel.id, {
-				error: null,
 				state: channel.state,
 				subscription: 'pending',
 			});

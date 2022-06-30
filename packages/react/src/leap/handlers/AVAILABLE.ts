@@ -10,7 +10,6 @@ export const AVAILABLE = createLeapEvent({
 		},
 	) {
 		client.getChannelStateMap().set(channelId, {
-			error: null,
 			state: data.channel.state,
 			subscription: 'available',
 		});

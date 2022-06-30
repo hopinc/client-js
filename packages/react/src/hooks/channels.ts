@@ -12,8 +12,6 @@ import {AVAILABLE} from '../leap/handlers/AVAILABLE';
 import {INIT} from '../leap/handlers/INIT';
 import {UNAVAILABLE} from '../leap/handlers/UNAVAILABLE';
 
-type LeapClientError = 'UNAUTHORIZED';
-
 // TODO: Export this from @onehop/leap-edge-js
 type LeapServiceEvent = LeapEdgeClient['on'] extends (
 	event: 'serviceEvent',
@@ -27,7 +25,6 @@ type EncapsulationServicePayload = Parameters<
 >[0];
 
 export type ClientStateData<T extends API.Channels.State> = {
-	error: LeapClientError | null;
 	state: T | null;
 	subscription: 'available' | 'pending' | 'unavailable';
 };
@@ -46,9 +43,9 @@ export class ClientContext {
 		ClientStateData<API.Channels.State>
 	>();
 
-	connect(auth: LeapEdgeAuthenticationParameters) {
+	connect(auth: LeapEdgeAuthenticationParameters): Promise<void> {
 		if (ClientContext.leap) {
-			throw new Error('Cannot connect multiple times!');
+			return Promise.resolve();
 		}
 
 		const controller = new AbortController();
@@ -174,7 +171,6 @@ export function useReadChannelState<
 
 		const state: ClientStateData<T> = {
 			state: null,
-			error: null,
 			subscription: 'pending',
 		};
 
@@ -207,8 +203,7 @@ export function useSetChannelState<
 		});
 
 		state.set(channel, {
-			error: oldState.error,
-			subscription: oldState?.subscription,
+			subscription: oldState.subscription,
 			state: newState,
 		});
 	};
