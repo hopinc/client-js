@@ -1116,14 +1116,14 @@ __metadata:
   linkType: soft
 
 "@onehop/js@npm:beta":
-  version: 0.0.59
-  resolution: "@onehop/js@npm:0.0.59"
+  version: 0.0.60
+  resolution: "@onehop/js@npm:0.0.60"
   dependencies:
     "@onehop/leap-edge-js": ^0.0.1
     cross-fetch: ^3.1.5
     qs: ^6.10.5
     zod: ^3.17.3
-  checksum: 224843d3c15c576e8dcbc408bcf66ef924c94f2d7b1f0427bffb57699a8c253ccf43f3768eb6c66feb7f2956b6094c3caa4bab0f86f30f03df3fea01657e3d3d
+  checksum: 3055b587a898f86cb02a885902752f0b4f47e97ccc8607d040de2d0debb64b5e4f20d490dca63513a5608ea32497c7afd73e04ca6a24f321f11d650d7d751f1d
   languageName: node
   linkType: hard
 
@@ -1137,11 +1137,12 @@ __metadata:
   linkType: hard
 
 "@onehop/leap-edge-js@npm:beta":
-  version: 0.0.2
-  resolution: "@onehop/leap-edge-js@npm:0.0.2"
+  version: 0.0.3
+  resolution: "@onehop/leap-edge-js@npm:0.0.3"
   dependencies:
+    eventemitter3: ^4.0.7
     ws: ^8.8.0
-  checksum: 5c462dffb6c429a74c17f6140d03764fb367adc1617e1208da69b29e1a6c47168b9e12bba52193640e1b13fe60c6544da8a7092363162d5e8d61ef6d62feea7b
+  checksum: 6585a59b0894ff341977ee0267041a2773dbba6236f9bebf8b270789f75c10ae351758cc87b52a24e658de52febdf3820e794b0872f1f238136aab51c0a737f4
   languageName: node
   linkType: hard
 
@@ -2913,6 +2914,13 @@ __metadata:
   version: 2.0.3
   resolution: "esutils@npm:2.0.3"
   checksum: 22b5b08f74737379a840b8ed2036a5fb35826c709ab000683b092d9054e5c2a82c27818f12604bfc2a9a76b90b6834ef081edbc1c7ae30d1627012e067c6ec87
+  languageName: node
+  linkType: hard
+
+"eventemitter3@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "eventemitter3@npm:4.0.7"
+  checksum: 1875311c42fcfe9c707b2712c32664a245629b42bb0a5a84439762dd0fd637fc54d078155ea83c2af9e0323c9ac13687e03cfba79b03af9f40c89b4960099374
   languageName: node
   linkType: hard
 

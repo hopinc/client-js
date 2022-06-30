@@ -1,12 +1,40 @@
-import {useReadChannelState} from '@onehop/react/src/hooks/channels';
+import {
+	useClientContext,
+	useReadChannelState,
+} from '@onehop/react/src/hooks/channels';
+import {useEffect, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 
-const channel = `channel_dsadsf`;
+function Main() {
+	const {state} = useReadChannelState('abc123');
+
+	return (
+		<div>
+			<pre>{JSON.stringify(state, null, 4)}</pre>
+		</div>
+	);
+}
 
 export default function App() {
-	const state = useReadChannelState<{lastMessageTime: number}>(channel);
+	const [loaded, setLoaded] = useState(false);
 
-	return <div>{state.lastMessageTime}</div>;
+	const client = useClientContext();
+
+	useEffect(() => {
+		client
+			.connect({
+				projectId: 'project_MTc2Mzc5ODU1ODIxMDg2NzM',
+				token:
+					'leap_token_c19kOGJjZTRiMGFlM2Q3YjNmN2FlYzg5MzlkMGFkYjliM18yNTYzNjE3MTYwNDQzOTA0MQ',
+			})
+			.then(() => setLoaded(true));
+	}, []);
+
+	if (loaded) {
+		return <Main />;
+	}
+
+	return <p>loading</p>;
 }
 
 createRoot(document.getElementById('root')!).render(<App />);
