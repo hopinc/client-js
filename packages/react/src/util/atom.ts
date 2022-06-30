@@ -1,7 +1,34 @@
+import {useEffect, useState} from 'react';
+
 export type AtomValue<T> = {value: T} | {uninitialized: true; value: undefined};
 export type Listener<T> = (value: T) => unknown;
 
-export const atom = <T>(initialValue?: T) => {
+export interface Atom<T> {
+	get(): T;
+	set(value: T): void;
+	addListener(listener: Listener<T>): void;
+	removeListener(listener: Listener<T>): void;
+}
+
+export function useAtom<T>(atom: Atom<T>) {
+	const [value, setValue] = useState({atom});
+
+	useEffect(() => {
+		const listener = () => {
+			setValue({atom});
+		};
+
+		atom.addListener(listener);
+
+		return () => {
+			atom.removeListener(listener);
+		};
+	}, [atom]);
+
+	return value.atom.get();
+}
+
+export const atom = <T>(initialValue?: T): Atom<T> => {
 	let atomValue: AtomValue<T> =
 		initialValue === undefined
 			? {uninitialized: true, value: undefined}
@@ -48,3 +75,7 @@ export const atom = <T>(initialValue?: T) => {
 		},
 	};
 };
+
+const count = atom(0);
+
+count.get();

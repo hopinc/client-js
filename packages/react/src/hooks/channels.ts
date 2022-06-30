@@ -7,6 +7,7 @@ import {
 import {createContext, Dispatch, SetStateAction, useContext} from 'react';
 import {ObservableMap, useObservableMap} from '../util/maps';
 import {resolveSetStateAction} from '../util/state';
+import {atom, useAtom} from '../util/atom';
 
 import {AVAILABLE} from '../leap/handlers/AVAILABLE';
 import {INIT} from '../leap/handlers/INIT';
@@ -36,6 +37,10 @@ export class ClientContext {
 		UNAVAILABLE,
 	};
 
+	public static readonly CONNECTION_STATE = atom<LeapConnectionState | null>(
+		null,
+	);
+
 	private static leap: LeapEdgeClient | null = null;
 
 	private readonly channelStateMap = new ObservableMap<
@@ -43,39 +48,25 @@ export class ClientContext {
 		ClientStateData<API.Channels.State>
 	>();
 
-	connect(auth: LeapEdgeAuthenticationParameters): Promise<void> {
+	connect(auth: LeapEdgeAuthenticationParameters) {
 		if (ClientContext.leap) {
-			return Promise.resolve();
+			return;
 		}
 
-		const controller = new AbortController();
+		const leap = this.getLeap(auth);
 
-		const timeout = setTimeout(() => {
-			controller.abort();
-		}, 10_000);
+		const serviceEvent = async (message: LeapServiceEvent) => {
+			await this.handleServiceMessage(message);
+		};
 
-		return new Promise<void>((resolve, reject) => {
-			const leap = this.getLeap(auth);
+		const connectionStateUpdate = (state: LeapConnectionState) => {
+			ClientContext.CONNECTION_STATE.set(state);
+		};
 
-			const resolver = (state: LeapConnectionState) => {
-				if (state === LeapConnectionState.CONNECTED) {
-					resolve();
-					clearTimeout(timeout);
-					leap.off('connectionStateUpdate', resolver);
-					return;
-				}
-			};
+		leap.on('serviceEvent', serviceEvent);
+		leap.on('connectionStateUpdate', connectionStateUpdate);
 
-			controller.signal.addEventListener('abort', () => {
-				leap.off('connectionStateUpdate', resolver);
-				reject();
-			});
-
-			leap.on('connectionStateUpdate', resolver);
-			leap.on('serviceEvent', message => this.handleServiceMessage(message));
-
-			this.getLeap().connect();
-		});
+		this.getLeap().connect();
 	}
 
 	async handleServiceMessage(message: LeapServiceEvent) {
@@ -94,12 +85,8 @@ export class ClientContext {
 		}
 
 		try {
-			await handler.handle(
-				this,
-				message.channelId as API.Channels.Channel['id'] | null,
-				message.data as any,
-			);
-		} catch (error) {
+			await handler.handle(this, message.channelId, message.data as any);
+		} catch (error: unknown) {
 			console.warn('[@onehop/react] Handling service message failed');
 			console.warn(error);
 		}
@@ -135,6 +122,10 @@ export class ClientContext {
 
 	private getLeap(auth?: LeapEdgeAuthenticationParameters) {
 		if (ClientContext.leap) {
+			if (auth) {
+				ClientContext.leap.auth = auth;
+			}
+
 			return ClientContext.leap;
 		}
 
@@ -155,6 +146,10 @@ export const clientContext = createContext(new ClientContext());
 
 export function useClientContext(): ClientContext {
 	return useContext(clientContext);
+}
+
+export function useClientConnectionState() {
+	return useAtom(ClientContext.CONNECTION_STATE);
 }
 
 export function useReadChannelState<

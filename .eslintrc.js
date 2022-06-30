@@ -10,12 +10,12 @@ module.exports = {
 	},
 	ignorePatterns: ['**/*.js', '**/dist/**/*'],
 	rules: {
-		// Rules that we don't need/unnecessary
 		'@typescript-eslint/triple-slash-reference': 'off',
 		'@typescript-eslint/ban-types': 'off',
 		'@typescript-eslint/naming-convention': 'off',
 		'@typescript-eslint/indent': 'off',
 		'@typescript-eslint/quotes': 'off',
 		'operator-linebreak': 'off',
+		'jsx-quotes': 'off',
 	},
 };

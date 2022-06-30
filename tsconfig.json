@@ -14,7 +14,9 @@
 		"jsx": "react-jsx",
 		"noFallthroughCasesInSwitch": true,
 		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+		"useUnknownInCatchVariables": true,
+		"allowUnreachableCode": false
 	},
 	"exclude": ["node_modules", "dist"],
 	"include": ["./**/*.ts", "./**/*.tsx"]
