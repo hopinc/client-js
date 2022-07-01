@@ -27,9 +27,12 @@ import {
 	MESSAGE,
 } from '../leap/handlers/MESSAGE';
 
+export type LeapChannelSubscriptionError = 'NOT_GRANTED' | 'UNKNOWN';
+
 export type ClientStateData<T extends API.Channels.State> = {
 	state: T | null;
 	subscription: 'available' | 'pending' | 'unavailable';
+	error: LeapChannelSubscriptionError | null;
 };
 
 export class ClientContext {
@@ -214,6 +217,7 @@ export function useReadChannelState<
 
 		const state: ClientStateData<T> = {
 			state: null,
+			error: null,
 			subscription: 'pending',
 		};
 
@@ -245,8 +249,7 @@ export function useSetChannelState<
 			d: newState,
 		});
 
-		state.set(channel, {
-			subscription: oldState.subscription,
+		state.patch(channel, {
 			state: newState,
 		});
 	};

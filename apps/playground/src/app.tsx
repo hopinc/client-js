@@ -3,6 +3,7 @@ import {
 	useReadChannelState,
 	useClientConnectionState,
 	useChannelMessage,
+	useChannelState,
 } from '@onehop/react/src/hooks/channels';
 import {useCallback, useState} from 'react';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
@@ -16,13 +17,11 @@ function Main() {
 
 	const [messages, setMessage] = useState<string[]>([]);
 
-	useChannelMessage<{message: string}>(
-		channel,
-		'MESSAGE',
-		useCallback(data => {
-			setMessage(old => [...old, data.message]);
-		}, []),
-	);
+	const handler = useCallback((data: {message: string}) => {
+		setMessage(old => [...old, data.message]);
+	}, []);
+
+	useChannelMessage(channel, 'SEND_MESSAGE', handler);
 
 	return (
 		<div>
@@ -41,7 +40,7 @@ export default function App() {
 		setLoading(true);
 
 		const hop = new Hop(
-			'bearer_c19lNDFmODVkNDRjYmY3ZWJjZGFhMTE0ZTM0YWYzMWIwYl8xMjg4MDU3NzYyMjUzMjA5OQ',
+			'bearer_c19kODY0YjE5MDBmY2UwYTE3OWM1MzhmZDYxYzczMzkyMF8yNzQ0MDIyMzU3MzEzNTM2MQ',
 			'https://api-staging.hop.io',
 		);
 
