@@ -3,7 +3,6 @@ import {
 	useReadChannelState,
 	useClientConnectionState,
 	useChannelMessage,
-	useChannelState,
 } from '@onehop/react/src/hooks/channels';
 import {useCallback, useState} from 'react';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
@@ -13,7 +12,7 @@ const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';
 const channel = 'channel_MjY4NTU2NDgwMjc1MjEwMjY';
 
 function Main() {
-	const {state, subscription} = useReadChannelState(channel);
+	const {state, subscription, error} = useReadChannelState(channel);
 
 	const [messages, setMessage] = useState<string[]>([]);
 
@@ -25,7 +24,9 @@ function Main() {
 
 	return (
 		<div>
-			<pre>{JSON.stringify({state, subscription, messages}, null, 4)}</pre>
+			<pre>
+				{JSON.stringify({state, error, subscription, messages}, null, 4)}
+			</pre>
 		</div>
 	);
 }
