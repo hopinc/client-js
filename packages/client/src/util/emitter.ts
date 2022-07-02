@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/parameter-properties */
+
 export type HopEmitterListener<
 	P extends Record<string, unknown>,
 	Key extends keyof P,
@@ -79,7 +81,7 @@ class HopEmitterInitialiser<
 	}
 }
 
-export function emitter<Payloads extends Record<string, unknown>>() {
+export function create<Payloads extends Record<string, unknown>>() {
 	return HopEmitterInitialiser.create<Payloads>();
 }
 

@@ -1,5 +1,5 @@
 import {API} from '@onehop/js';
-import {ClientStateData} from '../../hooks/channels';
+import {ClientStateData} from '@onehop/react/src/hooks/channels';
 import {createLeapEvent} from './create';
 
 export type Data = {

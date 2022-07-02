@@ -1097,9 +1097,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@onehop/core@workspace:packages/core":
+"@onehop/client@workspace:^, @onehop/client@workspace:packages/client":
   version: 0.0.0-use.local
-  resolution: "@onehop/core@workspace:packages/core"
+  resolution: "@onehop/client@workspace:packages/client"
+  dependencies:
+    "@onehop/js": beta
+    "@onehop/leap-edge-js": beta
   languageName: unknown
   linkType: soft
 
@@ -1150,6 +1153,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@onehop/react@workspace:packages/react"
   dependencies:
+    "@onehop/client": "workspace:^"
     "@onehop/js": beta
     "@onehop/leap-edge-js": beta
     "@types/react": ^18.0.14

@@ -1,42 +1,25 @@
-import {useCallback, useState} from 'react';
+import {util} from '@onehop/client';
+import {useState, useEffect} from 'react';
 
-export interface Actions<K, V> {
-	set: (key: K, value: V) => void;
-	setAll: (entries: Map<K, V>) => void;
-	remove: (key: K) => void;
-	reset: Map<K, V>['clear'];
-}
+export function useObservableMap<K, V>(
+	map: util.maps.ObservableMap<K, V>,
+	listenOnlyFor?: Array<util.maps.ListenerPayload<K, V>['type']>,
+) {
+	const [storeState, setStoreState] = useState({map});
 
-export function useMap<K, V>(
-	initialState: () => Map<K, V> = () => new Map(),
-): [Omit<Map<K, V>, 'set' | 'clear' | 'delete'>, Actions<K, V>] {
-	const [map, setMap] = useState(initialState);
+	useEffect(() => {
+		const listening = map.addListener((instance, payload) => {
+			if (listenOnlyFor && !listenOnlyFor.includes(payload.type)) {
+				return;
+			}
 
-	const actions: Actions<K, V> = {
-		set: useCallback((key, value) => {
-			setMap(prev => {
-				const copy = new Map(prev);
-				copy.set(key, value);
-				return copy;
-			});
-		}, []),
+			setStoreState({map});
+		});
 
-		setAll: useCallback(entries => {
-			setMap(() => new Map(entries));
-		}, []),
+		return () => {
+			listening.remove();
+		};
+	}, [map]);
 
-		remove: useCallback(key => {
-			setMap(prev => {
-				const copy = new Map(prev);
-				copy.delete(key);
-				return copy;
-			});
-		}, []),
-
-		reset: useCallback(() => {
-			setMap(() => new Map());
-		}, []),
-	};
-
-	return [map, actions];
+	return storeState.map;
 }

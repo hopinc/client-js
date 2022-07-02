@@ -1,5 +1,3 @@
-import {useEffect, useState} from 'react';
-
 export type AtomValue<T> = {value: T} | {uninitialized: true; value: undefined};
 export type Listener<T> = (value: T) => unknown;
 
@@ -14,22 +12,6 @@ export interface Atom<T> {
 	removeListener(listener: Listener<T>): void;
 }
 
-export function useAtom<T>(atom: Atom<T>) {
-	const [value, setValue] = useState({atom});
-
-	useEffect(() => {
-		const listening = atom.addListener(() => {
-			setValue({atom});
-		});
-
-		return () => {
-			listening.remove();
-		};
-	}, [atom]);
-
-	return value.atom.get();
-}
-
 /**
  * An atom, inspired much by Jotai, is a single bit of readible
  * state that can be observed and written to. It's useful for
@@ -39,7 +21,7 @@ export function useAtom<T>(atom: Atom<T>) {
  * @param initialValue An initial value to assign to the atom
  * @returns A readible and observable state object
  */
-export const atom = <T>(initialValue?: T): Atom<T> => {
+export function create<T>(initialValue?: T): Atom<T> {
 	let atomValue: AtomValue<T> =
 		initialValue === undefined
 			? {uninitialized: true, value: undefined}
@@ -91,4 +73,4 @@ export const atom = <T>(initialValue?: T): Atom<T> => {
 			listeners.delete(listener);
 		},
 	};
-};
+}

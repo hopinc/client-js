@@ -1,5 +1,5 @@
 import {API} from '@onehop/js';
-import {ClientContext} from '../../hooks/channels';
+import {ClientContext} from '@onehop/react/src/hooks/channels';
 
 export function createLeapEvent<D, R, G extends boolean = true>(config: {
 	requireChannelId?: G;

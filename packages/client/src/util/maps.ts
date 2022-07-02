@@ -1,5 +1,3 @@
-import {useEffect, useState} from 'react';
-
 export type ListenerPayload<K, V> =
 	| {type: 'clear' | 'merge'}
 	| {type: 'set'; key: K; value: V}
@@ -9,29 +7,6 @@ export type Listener<K, V> = (
 	instance: ObservableMap<K, V>,
 	payload: ListenerPayload<K, V>,
 ) => unknown;
-
-export function useObservableMap<K, V>(
-	map: ObservableMap<K, V>,
-	listenOnlyFor?: Array<ListenerPayload<K, V>['type']>,
-) {
-	const [storeState, setStoreState] = useState({map});
-
-	useEffect(() => {
-		const listening = map.addListener((instance, payload) => {
-			if (listenOnlyFor && !listenOnlyFor.includes(payload.type)) {
-				return;
-			}
-
-			setStoreState({map});
-		});
-
-		return () => {
-			listening.remove();
-		};
-	}, [map]);
-
-	return storeState.map;
-}
 
 export function useObservableMapGet<K, V>(map: ObservableMap<K, V>, key: K) {
 	const [storeState, setStoreState] = useState(() => map.get(key));

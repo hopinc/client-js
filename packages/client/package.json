@@ -1,0 +1,11 @@
+{
+	"name": "@onehop/client",
+	"main": "dist/onehop-client.cjs.js",
+	"module": "dist/onehop-client.esm.js",
+	"typings": "dist/onehop-client.cjs.d.ts",
+	"packageManager": "yarn@3.2.0",
+	"dependencies": {
+		"@onehop/js": "beta",
+		"@onehop/leap-edge-js": "beta"
+	}
+}

@@ -1,7 +1,0 @@
-{
-	"name": "@onehop/core",
-	"main": "dist/onehop-core.cjs.js",
-	"module": "dist/onehop-core.esm.js",
-	"typings": "dist/onehop-core.cjs.d.ts",
-	"packageManager": "yarn@3.2.0"
-}
