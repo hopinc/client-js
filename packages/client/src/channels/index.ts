@@ -75,7 +75,7 @@ export class ChannelClient {
 
 		if (!handler) {
 			console.warn(
-				'[@onehop/react] Leap: Received unsupported opcode!',
+				'[@onehop/client] Channels: Received unsupported opcode!',
 				message,
 			);
 
@@ -85,7 +85,7 @@ export class ChannelClient {
 		try {
 			await handler.handle(this, message.channelId, message.data as any);
 		} catch (error: unknown) {
-			console.warn('[@onehop/react] Handling service message failed');
+			console.warn('[@onehop/client] Handling service message failed');
 			console.warn(error);
 		}
 	}
