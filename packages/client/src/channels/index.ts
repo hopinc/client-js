@@ -23,7 +23,7 @@ export type ClientStateData<T extends API.Channels.State> = {
 };
 
 export class ChannelsClient {
-	public static readonly SUPPORTED_OPCODES = {
+	public static readonly SUPPORTED_EVENTS = {
 		INIT,
 		AVAILABLE,
 		UNAVAILABLE,
@@ -31,10 +31,11 @@ export class ChannelsClient {
 		MESSAGE,
 	};
 
-	public static readonly CONNECTION_STATE =
-		atoms.create<LeapConnectionState | null>(null);
+	private readonly connectionState = atoms.create<LeapConnectionState | null>(
+		null,
+	);
 
-	private static leap: LeapEdgeClient | null = null;
+	private leap: LeapEdgeClient | null = null;
 
 	private readonly channelStateMap = new maps.ObservableMap<
 		API.Channels.Channel['id'],
@@ -47,7 +48,7 @@ export class ChannelsClient {
 	>();
 
 	connect(auth: LeapEdgeAuthenticationParameters) {
-		if (ChannelsClient.leap) {
+		if (this.leap) {
 			return;
 		}
 
@@ -58,7 +59,7 @@ export class ChannelsClient {
 		};
 
 		const connectionStateUpdate = (state: LeapConnectionState) => {
-			ChannelsClient.CONNECTION_STATE.set(state);
+			this.connectionState.set(state);
 		};
 
 		leap.on('serviceEvent', serviceEvent);
@@ -67,35 +68,24 @@ export class ChannelsClient {
 		this.getLeap().connect();
 	}
 
-	async handleServiceMessage(message: LeapServiceEvent) {
-		const handler =
-			ChannelsClient.SUPPORTED_OPCODES[
-				message.eventType as keyof typeof ChannelsClient.SUPPORTED_OPCODES
-			];
-
-		if (!handler) {
-			console.warn(
-				'[@onehop/client] Channels: Received unsupported opcode!',
-				message,
-			);
-
-			return;
-		}
-
-		try {
-			await handler.handle(this, message.channelId, message.data as any);
-		} catch (error: unknown) {
-			console.warn('[@onehop/client] Handling service message failed');
-			console.warn(error);
-		}
-	}
-
 	getChannelStateMap() {
 		return this.channelStateMap;
 	}
 
 	getMessageListeners() {
 		return this.channelMessageListeners;
+	}
+
+	getConnectionState(
+		fullAtom?: false,
+	): atoms.Infer<typeof this.connectionState>;
+	getConnectionState(fullAtom: true): typeof this.connectionState;
+	getConnectionState(fullAtom = false) {
+		if (fullAtom) {
+			return this.connectionState;
+		}
+
+		return this.connectionState.get();
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
@@ -140,17 +130,40 @@ export class ChannelsClient {
 		});
 	}
 
+	private async handleServiceMessage(message: LeapServiceEvent) {
+		const handler =
+			ChannelsClient.SUPPORTED_EVENTS[
+				message.eventType as keyof typeof ChannelsClient.SUPPORTED_EVENTS
+			];
+
+		if (!handler) {
+			console.warn(
+				'[@onehop/client] Channels: Received unsupported opcode!',
+				message,
+			);
+
+			return;
+		}
+
+		try {
+			await handler.handle(this, message.channelId, message.data as any);
+		} catch (error: unknown) {
+			console.warn('[@onehop/client] Handling service message failed');
+			console.warn(error);
+		}
+	}
+
 	private send(data: EncapsulatingServicePayload) {
 		this.getLeap().sendServicePayload(data);
 	}
 
 	private getLeap(auth?: LeapEdgeAuthenticationParameters) {
-		if (ChannelsClient.leap) {
+		if (this.leap) {
 			if (auth) {
-				ChannelsClient.leap.auth = auth;
+				this.leap.auth = auth;
 			}
 
-			return ChannelsClient.leap;
+			return this.leap;
 		}
 
 		if (!auth) {
@@ -159,9 +172,9 @@ export class ChannelsClient {
 			);
 		}
 
-		ChannelsClient.leap = new LeapEdgeClient(auth);
-		ChannelsClient.leap.connect();
+		this.leap = new LeapEdgeClient(auth);
+		this.leap.connect();
 
-		return ChannelsClient.leap;
+		return this.leap;
 	}
 }

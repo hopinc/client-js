@@ -61,7 +61,9 @@ export function useChannelMessage<T = any>(
 }
 
 export function useChannelsConnectionState() {
-	return useAtom(ChannelsClient.CONNECTION_STATE);
+	const client = useChannels();
+
+	return useAtom(client.getConnectionState(true));
 }
 
 export function useReadChannelState<

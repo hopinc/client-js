@@ -12,6 +12,8 @@ export interface Atom<T> {
 	removeListener(listener: Listener<T>): void;
 }
 
+export type Infer<T> = T extends Atom<infer V> ? V : never;
+
 /**
  * An atom, inspired much by Jotai, is a single bit of readible
  * state that can be observed and written to. It's useful for
