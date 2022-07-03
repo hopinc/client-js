@@ -869,9 +869,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@onehop/client-playground@workspace:apps/playground":
+"@onehop-client-apps/client-playground@workspace:apps/playground":
   version: 0.0.0-use.local
-  resolution: "@onehop/client-playground@workspace:apps/playground"
+  resolution: "@onehop-client-apps/client-playground@workspace:apps/playground"
   dependencies:
     "@types/react": ^18.0.14
     "@types/react-dom": ^18.0.5
@@ -882,18 +882,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@onehop/client@workspace:^, @onehop/client@workspace:packages/client":
+"@onehop-client-apps/docs@workspace:apps/docs":
   version: 0.0.0-use.local
-  resolution: "@onehop/client@workspace:packages/client"
-  dependencies:
-    "@onehop/js": beta
-    "@onehop/leap-edge-js": beta
-  languageName: unknown
-  linkType: soft
-
-"@onehop/docs@workspace:apps/docs":
-  version: 0.0.0-use.local
-  resolution: "@onehop/docs@workspace:apps/docs"
+  resolution: "@onehop-client-apps/docs@workspace:apps/docs"
   dependencies:
     next: ^12.2.0
     nextra: alpha
@@ -903,34 +894,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@onehop/js@npm:beta":
-  version: 0.0.66
-  resolution: "@onehop/js@npm:0.0.66"
+"@onehop/client@workspace:^, @onehop/client@workspace:packages/client":
+  version: 0.0.0-use.local
+  resolution: "@onehop/client@workspace:packages/client"
   dependencies:
-    "@onehop/leap-edge-js": ^0.0.1
+    "@onehop/js": ^1.0.1
+    "@onehop/leap-edge-js": ^1.0.0
+  languageName: unknown
+  linkType: soft
+
+"@onehop/js@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@onehop/js@npm:1.0.1"
+  dependencies:
     cross-fetch: ^3.1.5
     qs: ^6.11.0
     zod: ^3.17.3
-  checksum: 77973d754de02ad67b8f24e7379416d14e7d2e0b36a1229ed706152c278e959f6a4350f571707834ea32d96b04c855531cab6dc62968d9fa954207e9f4d9fbc5
+  checksum: e1ed9529624a074e8a1f7df4e47bdfafa5243401b0d39791cbffb37f417d7d106b421059204b0bdda70865ad4804288525a85553295b5b27f02bea82e1276af4
   languageName: node
   linkType: hard
 
-"@onehop/leap-edge-js@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "@onehop/leap-edge-js@npm:0.0.1"
-  dependencies:
-    ws: ^8.8.0
-  checksum: 79f2dadbc48efdaba6d4439d6a22bb013cf9b02ffb533b8a60274c99f95025c5aa11507c16ad390cc6bd1466da283f4c43a91e3f3982ea627556f2ae17cb21d5
-  languageName: node
-  linkType: hard
-
-"@onehop/leap-edge-js@npm:beta":
-  version: 0.0.4
-  resolution: "@onehop/leap-edge-js@npm:0.0.4"
+"@onehop/leap-edge-js@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@onehop/leap-edge-js@npm:1.0.0"
   dependencies:
     eventemitter3: ^4.0.7
     ws: ^8.8.0
-  checksum: 406f73abe87b6567fc5fb1fcb3b6892caf79e8013512f84303316b223947d8abe1bc587393b638462eaf7cf16d935bc7e1609045503bb737db1f73a9a069fe14
+  checksum: 7974e70a5c9b383a7ad4450e218f50b3f70edaf9804a9c0a1f61ab297a9e3bb92f84d710e17ae9d27e8ca4f01934c73624af7816f905b4ab0eee1705c9e68a53
   languageName: node
   linkType: hard
 
@@ -939,12 +929,11 @@ __metadata:
   resolution: "@onehop/react@workspace:packages/react"
   dependencies:
     "@onehop/client": "workspace:^"
-    "@onehop/js": beta
-    "@onehop/leap-edge-js": beta
+    "@onehop/js": ^1.0.1
+    "@onehop/leap-edge-js": ^1.0.0
     "@types/react": ^18.0.14
     react: ^18.2.0
   peerDependencies:
-    "@onehop/core": "workspace:^"
     react: "*"
   languageName: unknown
   linkType: soft
@@ -1305,7 +1294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.30.3":
+"@typescript-eslint/eslint-plugin@npm:^5.30.4":
   version: 5.30.4
   resolution: "@typescript-eslint/eslint-plugin@npm:5.30.4"
   dependencies:
@@ -1328,7 +1317,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.30.3":
+"@typescript-eslint/parser@npm:^5.30.4":
   version: 5.30.4
   resolution: "@typescript-eslint/parser@npm:5.30.4"
   dependencies:
@@ -3125,8 +3114,8 @@ __metadata:
     "@babel/preset-react": ^7.18.6
     "@babel/preset-typescript": ^7.18.6
     "@preconstruct/cli": ^2.1.6
-    "@typescript-eslint/eslint-plugin": ^5.30.3
-    "@typescript-eslint/parser": ^5.30.3
+    "@typescript-eslint/eslint-plugin": ^5.30.4
+    "@typescript-eslint/parser": ^5.30.4
     alistair: ^1.4.3
     eslint: ^8.19.0
     eslint-config-xo: ^0.41.0

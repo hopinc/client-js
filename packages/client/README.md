@@ -1,3 +1,3 @@
-# @onehop/core
+# @onehop/client
 
-Hop's Client SDK Core
+Hop's client

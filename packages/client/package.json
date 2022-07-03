@@ -5,9 +5,17 @@
 	"typings": "dist/onehop-client.cjs.d.ts",
 	"packageManager": "yarn@3.2.1",
 	"description": "Client library for hop.io",
+	"scripts": {
+		"release": "yarn npm publish --tolerate-republish"
+	},
+	"files": [
+		"README.md",
+		"dist",
+		"package.json"
+	],
 	"dependencies": {
-		"@onehop/js": "beta",
-		"@onehop/leap-edge-js": "beta"
+		"@onehop/js": "^1.0.1",
+		"@onehop/leap-edge-js": "^1.0.0"
 	},
 	"author": "Hop Development Team",
 	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/client",

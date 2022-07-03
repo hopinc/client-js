@@ -1,5 +1,5 @@
 {
-	"name": "@onehop/docs",
+	"name": "@onehop-client-apps/docs",
 	"packageManager": "yarn@3.2.1",
 	"scripts": {
 		"dev": "next",

@@ -1,5 +1,5 @@
 {
-	"name": "@onehop/client-playground",
+	"name": "@onehop-client-apps/client-playground",
 	"packageManager": "yarn@3.2.1",
 	"dependencies": {
 		"@types/react": "^18.0.14",
