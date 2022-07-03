@@ -8,26 +8,6 @@ export type Listener<K, V> = (
 	payload: ListenerPayload<K, V>,
 ) => unknown;
 
-export function useObservableMapGet<K, V>(map: ObservableMap<K, V>, key: K) {
-	const [storeState, setStoreState] = useState(() => map.get(key));
-
-	useEffect(() => {
-		const onChange: Listener<K, V> = (instance, payload) => {
-			if ('key' in payload) {
-				setStoreState(map.get(key));
-			}
-		};
-
-		map.addListener(onChange);
-
-		return () => {
-			map.removeListener(onChange);
-		};
-	}, [key, map]);
-
-	return storeState;
-}
-
 export class ObservableMap<K, V> implements Map<K, V> {
 	private map = new Map<K, V>();
 	private readonly listeners = new Set<Listener<K, V>>();

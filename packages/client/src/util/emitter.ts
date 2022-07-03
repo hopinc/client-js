@@ -15,6 +15,13 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 		>();
 	}
 
+	public createListener<K extends keyof Payloads>(
+		key: K,
+		fn: HopEmitterListener<Payloads, K>,
+	) {
+		return fn;
+	}
+
 	public on<K extends keyof Payloads>(
 		key: K,
 		listener: HopEmitterListener<Payloads, K>,

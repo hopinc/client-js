@@ -4,24 +4,26 @@ import {
 	useSendChannelMessage,
 } from '@onehop/react';
 import {useCallback, useState} from 'react';
+import {hop} from './hop';
 
 export const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';
 export const channel = 'channel_MjY4NTU2NDgwMjc1MjEwMjY';
-
 export const event = 'SEND_MESSAGE';
 export type SendMessage = {message: string};
 
 function SendMessageComponent() {
 	const [message, setMessage] = useState('');
 
-	const send = useSendChannelMessage<SendMessage>(channel, event);
+	const send = async (payload: SendMessage) => {
+		await hop.channels.publishMessage(channel, event, payload);
+	};
 
 	return (
 		<div>
 			<form
-				onSubmit={e => {
+				onSubmit={async e => {
 					e.preventDefault();
-					send({message});
+					await send({message});
 				}}
 			>
 				<input

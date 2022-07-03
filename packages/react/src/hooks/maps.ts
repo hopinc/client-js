@@ -23,3 +23,28 @@ export function useObservableMap<K, V>(
 
 	return storeState.map;
 }
+
+export function useObservableMapGet<K, V>(
+	map: util.maps.ObservableMap<K, V>,
+	key: K,
+) {
+	const [storeState, setStoreState] = useState(() => map.get(key));
+
+	useEffect(() => {
+		const onChange: util.maps.Listener<K, V> = (instance, payload) => {
+			if ('key' in payload) {
+				setStoreState(map.get(key));
+			} else if (payload.type === 'clear') {
+				setStoreState(undefined);
+			}
+		};
+
+		map.addListener(onChange);
+
+		return () => {
+			map.removeListener(onChange);
+		};
+	}, [key, map]);
+
+	return storeState;
+}

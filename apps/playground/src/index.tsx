@@ -8,6 +8,7 @@ import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
 
 import {Main, project} from './app';
+import {hop} from './hop';
 
 function App() {
 	const client = useChannels();
@@ -18,11 +19,6 @@ function App() {
 
 	const getToken = async () => {
 		setLoading(true);
-
-		const hop = new Hop(
-			'bearer_c19kODY0YjE5MDBmY2UwYTE3OWM1MzhmZDYxYzczMzkyMF8yNzQ0MDIyMzU3MzEzNTM2MQ',
-			'https://api-staging.hop.io',
-		);
 
 		try {
 			const {id: token} = await hop.channels.tokens.create(

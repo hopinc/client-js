@@ -57,6 +57,11 @@ export function create<T>(initialValue?: T): Atom<T> {
 		},
 
 		set(value: T) {
+			// Be efficient and don't update
+			if (atomValue.value === value) {
+				return;
+			}
+
 			atomValue = {value};
 			notify();
 		},

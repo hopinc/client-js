@@ -1,7 +1,12 @@
 import {API} from '@onehop/js';
-import {ChannelsClient} from '..';
+import {LeapServiceEvent} from '@onehop/leap-edge-js';
+import type {ChannelsClient} from '..';
 
-export function createLeapEvent<D, R, G extends boolean = true>(config: {
+export interface LeapHandler {
+	handle(client: ChannelsClient, event: LeapServiceEvent): Promise<void>;
+}
+
+export function createLeapEvent<D, G extends boolean = true>(config: {
 	requireChannelId?: G;
 
 	handle: (
@@ -10,26 +15,24 @@ export function createLeapEvent<D, R, G extends boolean = true>(config: {
 			? API.Channels.Channel['id']
 			: API.Channels.Channel['id'] | null,
 		data: D,
-	) => Promise<R>;
-}) {
+	) => Promise<void>;
+}): LeapHandler {
 	return {
-		async handle(
-			client: ChannelsClient,
-			channelId: API.Channels.Channel['id'] | null,
-			data: D,
-		) {
+		async handle(client: ChannelsClient, event: LeapServiceEvent) {
 			const requireChannelId = config.requireChannelId !== false;
 
-			if (!channelId && requireChannelId) {
-				throw new Error('Required channel ID for setting unavailable state.');
+			if (!event.channelId && requireChannelId) {
+				throw new Error(
+					`Received opcode for ${event.eventType} but expected a channel ID that was not there.`,
+				);
 			}
 
-			return config.handle(
+			await config.handle(
 				client,
-				channelId as G extends true
+				event.channelId as G extends true
 					? API.Channels.Channel['id']
 					: API.Channels.Channel['id'] | null,
-				data,
+				event.data as any,
 			);
 		},
 	};

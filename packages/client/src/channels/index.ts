@@ -8,7 +8,9 @@ import {
 } from '@onehop/leap-edge-js';
 
 import {atoms, maps, channels} from '../util';
+
 import {AVAILABLE} from './handlers/AVAILABLE';
+import {LeapHandler} from './handlers/create';
 import {INIT} from './handlers/INIT';
 import {MESSAGE} from './handlers/MESSAGE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
@@ -23,7 +25,7 @@ export type ClientStateData<T extends API.Channels.State> = {
 };
 
 export class ChannelsClient {
-	public static readonly SUPPORTED_EVENTS = {
+	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
 		INIT,
 		AVAILABLE,
 		UNAVAILABLE,
@@ -55,17 +57,26 @@ export class ChannelsClient {
 		const leap = this.getLeap(auth);
 
 		const serviceEvent = async (message: LeapServiceEvent) => {
-			await this.handleServiceMessage(message);
+			await this.handleServiceEvent(message);
 		};
 
-		const connectionStateUpdate = (state: LeapConnectionState) => {
-			this.connectionState.set(state);
+		const connectionStateUpdate = async (state: LeapConnectionState) => {
+			await this.handleConnectionStateUpdate(state);
 		};
 
 		leap.on('serviceEvent', serviceEvent);
 		leap.on('connectionStateUpdate', connectionStateUpdate);
 
 		this.getLeap().connect();
+	}
+
+	getCurrentSubscriptions() {
+		return [...this.channelStateMap.entries()]
+			.filter(entry => {
+				const [, {subscription}] = entry;
+				return subscription === 'available';
+			})
+			.map(entry => entry[0]);
 	}
 
 	getChannelStateMap() {
@@ -130,23 +141,26 @@ export class ChannelsClient {
 		});
 	}
 
-	private async handleServiceMessage(message: LeapServiceEvent) {
-		const handler =
-			ChannelsClient.SUPPORTED_EVENTS[
-				message.eventType as keyof typeof ChannelsClient.SUPPORTED_EVENTS
-			];
+	private async handleConnectionStateUpdate(state: LeapConnectionState) {
+		this.connectionState.set(state);
+	}
+
+	private async handleServiceEvent(event: LeapServiceEvent) {
+		const handler = ChannelsClient.SUPPORTED_EVENTS[event.eventType] as
+			| LeapHandler
+			| undefined;
 
 		if (!handler) {
 			console.warn(
 				'[@onehop/client] Channels: Received unsupported opcode!',
-				message,
+				event,
 			);
 
 			return;
 		}
 
 		try {
-			await handler.handle(this, message.channelId, message.data as any);
+			await handler.handle(this, event);
 		} catch (error: unknown) {
 			console.warn('[@onehop/client] Handling service message failed');
 			console.warn(error);
