@@ -23,6 +23,5 @@
 		"react"
 	],
 	"license": "MIT",
-	"repository": "https://github.com/hopinc/hop-client-js.git",
-	"version": "0.0.1"
+	"repository": "https://github.com/hopinc/hop-client-js.git"
 }
