@@ -1,17 +1,13 @@
-import {
-	useClientConnectionState,
-	useClientContext,
-} from '@onehop/react/src/hooks/channels';
+import {useChannels, useClientContext, ConnectionState} from '@onehop/react';
 import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Hop} from '@onehop/js';
-import {LeapConnectionState} from '@onehop/leap-edge-js';
 
 import {project, Main} from './app';
 
 function App() {
 	const client = useClientContext();
-	const state = useClientConnectionState();
+	const state = useChannels();
 
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<unknown>(null);
@@ -41,7 +37,7 @@ function App() {
 		}
 	};
 
-	if (state === LeapConnectionState.CONNECTED) {
+	if (state === ConnectionState.CONNECTED) {
 		return <Main />;
 	}
 

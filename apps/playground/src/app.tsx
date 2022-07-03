@@ -1,7 +1,4 @@
-import {
-	useReadChannelState,
-	useChannelMessage,
-} from '@onehop/react/src/hooks/channels';
+import {useReadChannelState, useChannelMessage} from '@onehop/react';
 import {useCallback, useState} from 'react';
 
 export const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';

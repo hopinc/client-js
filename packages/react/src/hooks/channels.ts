@@ -7,12 +7,11 @@ import {
 	useEffect,
 } from 'react';
 import {resolveSetStateAction} from '../util/state';
-import {ChannelClient, ClientStateData} from '@onehop/client';
-import {getMessageListenerKey} from '@onehop/client/src/channels/handlers/MESSAGE';
+import {ChannelClient, ClientStateData, util} from '@onehop/client';
 import {useAtom} from './atoms';
 import {useObservableMap} from './maps';
 
-export const clientContext = createContext(new ChannelClient());
+const clientContext = createContext(new ChannelClient());
 
 export function useClientContext(): ChannelClient {
 	return useContext(clientContext);
@@ -27,7 +26,7 @@ export function useChannelMessage<T = any>(
 	const map = client.getMessageListeners();
 
 	useEffect(() => {
-		const key = getMessageListenerKey(channel, event);
+		const key = util.channels.getMessageListenerKey(channel, event);
 		const listeners = map.get(key) ?? new Set();
 
 		const castListener = listener as (data: unknown) => unknown;
@@ -50,7 +49,7 @@ export function useChannelMessage<T = any>(
 	}, []);
 }
 
-export function useClientConnectionState() {
+export function useChannels() {
 	return useAtom(ChannelClient.CONNECTION_STATE);
 }
 

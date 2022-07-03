@@ -7,10 +7,10 @@ import {
 	EncapsulatingServicePayload,
 } from '@onehop/leap-edge-js';
 
-import {atoms, maps} from '../util';
+import {atoms, maps, channels} from '../util';
 import {AVAILABLE} from './handlers/AVAILABLE';
 import {INIT} from './handlers/INIT';
-import {MESSAGE, ChannelMessageListenerKey} from './handlers/MESSAGE';
+import {MESSAGE} from './handlers/MESSAGE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
 
@@ -42,7 +42,7 @@ export class ChannelClient {
 	>();
 
 	private readonly channelMessageListeners = new Map<
-		ChannelMessageListenerKey,
+		channels.ChannelMessageListenerKey,
 		Set<(data: unknown) => unknown>
 	>();
 

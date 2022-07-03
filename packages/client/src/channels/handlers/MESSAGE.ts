@@ -1,14 +1,5 @@
-import {API} from '@onehop/js';
+import {getMessageListenerKey} from '../../util/channels';
 import {createLeapEvent} from './create';
-
-export const getMessageListenerKey = (
-	channel: API.Channels.Channel['id'],
-	event: string,
-) => `${channel}:${event}` as const;
-
-export type ChannelMessageListenerKey = ReturnType<
-	typeof getMessageListenerKey
->;
 
 export const MESSAGE = createLeapEvent({
 	async handle(

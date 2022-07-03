@@ -1,1 +1,2 @@
-export {useMap} from './hooks/maps';
+export * from './hooks/channels';
+export {LeapConnectionState as ConnectionState} from '@onehop/leap-edge-js';
