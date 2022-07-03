@@ -1,11 +1,11 @@
 import {API} from '@onehop/js';
-import {ChannelClient} from '..';
+import {ChannelsClient} from '..';
 
 export function createLeapEvent<D, R, G extends boolean = true>(config: {
 	requireChannelId?: G;
 
 	handle: (
-		client: ChannelClient,
+		client: ChannelsClient,
 		channelId: G extends true
 			? API.Channels.Channel['id']
 			: API.Channels.Channel['id'] | null,
@@ -14,7 +14,7 @@ export function createLeapEvent<D, R, G extends boolean = true>(config: {
 }) {
 	return {
 		async handle(
-			client: ChannelClient,
+			client: ChannelsClient,
 			channelId: API.Channels.Channel['id'] | null,
 			data: D,
 		) {

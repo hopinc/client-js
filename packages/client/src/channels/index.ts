@@ -22,7 +22,7 @@ export type ClientStateData<T extends API.Channels.State> = {
 	error: LeapChannelSubscriptionError | null;
 };
 
-export class ChannelClient {
+export class ChannelsClient {
 	public static readonly SUPPORTED_OPCODES = {
 		INIT,
 		AVAILABLE,
@@ -47,7 +47,7 @@ export class ChannelClient {
 	>();
 
 	connect(auth: LeapEdgeAuthenticationParameters) {
-		if (ChannelClient.leap) {
+		if (ChannelsClient.leap) {
 			return;
 		}
 
@@ -58,7 +58,7 @@ export class ChannelClient {
 		};
 
 		const connectionStateUpdate = (state: LeapConnectionState) => {
-			ChannelClient.CONNECTION_STATE.set(state);
+			ChannelsClient.CONNECTION_STATE.set(state);
 		};
 
 		leap.on('serviceEvent', serviceEvent);
@@ -69,8 +69,8 @@ export class ChannelClient {
 
 	async handleServiceMessage(message: LeapServiceEvent) {
 		const handler =
-			ChannelClient.SUPPORTED_OPCODES[
-				message.eventType as keyof typeof ChannelClient.SUPPORTED_OPCODES
+			ChannelsClient.SUPPORTED_OPCODES[
+				message.eventType as keyof typeof ChannelsClient.SUPPORTED_OPCODES
 			];
 
 		if (!handler) {
@@ -99,7 +99,7 @@ export class ChannelClient {
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
-		this.getLeap().sendServicePayload({
+		this.send({
 			e: 'SUBSCRIBE',
 			d: null,
 			c: channel,
@@ -107,24 +107,50 @@ export class ChannelClient {
 	}
 
 	unsubscribeFromChannel(channel: API.Channels.Channel['id']) {
-		this.getLeap().sendServicePayload({
+		this.send({
 			e: 'UNSUBSCRIBE',
 			d: null,
 			c: channel,
 		});
 	}
 
-	send(data: EncapsulatingServicePayload) {
+	setChannelState(
+		channel: API.Channels.Channel['id'],
+		state: API.Channels.State,
+	) {
+		this.send({
+			e: 'SET_CHANNEL_STATE',
+			c: channel,
+			d: state,
+		});
+	}
+
+	sendMessage(
+		channel: API.Channels.Channel['id'],
+		event: string,
+		payload: unknown,
+	) {
+		this.send({
+			e: 'MESSAGE',
+			c: channel,
+			d: {
+				e: event,
+				d: payload,
+			},
+		});
+	}
+
+	private send(data: EncapsulatingServicePayload) {
 		this.getLeap().sendServicePayload(data);
 	}
 
 	private getLeap(auth?: LeapEdgeAuthenticationParameters) {
-		if (ChannelClient.leap) {
+		if (ChannelsClient.leap) {
 			if (auth) {
-				ChannelClient.leap.auth = auth;
+				ChannelsClient.leap.auth = auth;
 			}
 
-			return ChannelClient.leap;
+			return ChannelsClient.leap;
 		}
 
 		if (!auth) {
@@ -133,9 +159,9 @@ export class ChannelClient {
 			);
 		}
 
-		ChannelClient.leap = new LeapEdgeClient(auth);
-		ChannelClient.leap.connect();
+		ChannelsClient.leap = new LeapEdgeClient(auth);
+		ChannelsClient.leap.connect();
 
-		return ChannelClient.leap;
+		return ChannelsClient.leap;
 	}
 }

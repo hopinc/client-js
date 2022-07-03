@@ -1,4 +1,4 @@
-import {LeapChannelSubscriptionError} from '@onehop/react/src/hooks/channels';
+import type {LeapChannelSubscriptionError} from '../index';
 import {createLeapEvent} from './create';
 
 export const UNAVAILABLE = createLeapEvent({

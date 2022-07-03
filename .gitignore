@@ -8,3 +8,4 @@ dist
 !.yarn/sdks
 node_modules
 .next
+yarn-error.log

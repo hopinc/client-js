@@ -1,3 +1,4 @@
+import {ChannelsClient, ClientStateData, util} from '@onehop/client';
 import {API} from '@onehop/js';
 import {
 	createContext,
@@ -7,14 +8,24 @@ import {
 	useEffect,
 } from 'react';
 import {resolveSetStateAction} from '../util/state';
-import {ChannelClient, ClientStateData, util} from '@onehop/client';
 import {useAtom} from './atoms';
 import {useObservableMap} from './maps';
 
-const clientContext = createContext(new ChannelClient());
+const clientContext = createContext(new ChannelsClient());
 
-export function useClientContext(): ChannelClient {
+export function useChannels(): ChannelsClient {
 	return useContext(clientContext);
+}
+
+export function useSendChannelMessage<T = any>(
+	channel: string,
+	eventName: string,
+) {
+	const client = useChannels();
+
+	return (data: T) => {
+		client.sendMessage(channel, eventName, data);
+	};
 }
 
 export function useChannelMessage<T = any>(
@@ -22,7 +33,7 @@ export function useChannelMessage<T = any>(
 	event: string,
 	listener: (data: T) => unknown,
 ) {
-	const client = useClientContext();
+	const client = useChannels();
 	const map = client.getMessageListeners();
 
 	useEffect(() => {
@@ -49,14 +60,14 @@ export function useChannelMessage<T = any>(
 	}, []);
 }
 
-export function useChannels() {
-	return useAtom(ChannelClient.CONNECTION_STATE);
+export function useChannelsConnectionState() {
+	return useAtom(ChannelsClient.CONNECTION_STATE);
 }
 
 export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): ClientStateData<T> {
-	const client = useClientContext();
+	const client = useChannels();
 	const map = client.getChannelStateMap();
 	const state = useObservableMap(map);
 	const data = state.get(channel) as ClientStateData<T> | undefined;
@@ -81,7 +92,7 @@ export function useReadChannelState<
 export function useSetChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): Dispatch<SetStateAction<T>> {
-	const client = useClientContext();
+	const client = useChannels();
 	const state = useObservableMap(client.getChannelStateMap());
 	const oldState = state.get(channel);
 
@@ -92,11 +103,7 @@ export function useSetChannelState<
 
 		const newState = resolveSetStateAction<T>(oldState.state as T, value);
 
-		client.send({
-			e: 'SET_CHANNEL_STATE',
-			c: channel,
-			d: newState,
-		});
+		client.setChannelState(channel, newState);
 
 		state.patch(channel, {
 			state: newState,

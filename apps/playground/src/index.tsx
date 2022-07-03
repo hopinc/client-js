@@ -1,13 +1,17 @@
-import {useChannels, useClientContext, ConnectionState} from '@onehop/react';
+import {Hop} from '@onehop/js';
+import {
+	ConnectionState,
+	useChannels,
+	useChannelsConnectionState,
+} from '@onehop/react';
 import {useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {Hop} from '@onehop/js';
 
-import {project, Main} from './app';
+import {Main, project} from './app';
 
 function App() {
-	const client = useClientContext();
-	const state = useChannels();
+	const client = useChannels();
+	const state = useChannelsConnectionState();
 
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<unknown>(null);
