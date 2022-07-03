@@ -1,4 +1,4 @@
-import {ChannelsClient, ClientStateData, util} from '@onehop/client';
+import {channels, util} from '@onehop/client';
 import {API} from '@onehop/js';
 import {
 	createContext,
@@ -11,9 +11,9 @@ import {resolveSetStateAction} from '../util/state';
 import {useAtom} from './atoms';
 import {useObservableMap} from './maps';
 
-const clientContext = createContext(new ChannelsClient());
+const clientContext = createContext(new channels.Client());
 
-export function useChannels(): ChannelsClient {
+export function useChannels(): channels.Client {
 	return useContext(clientContext);
 }
 
@@ -37,25 +37,14 @@ export function useChannelMessage<T = any>(
 	const map = client.getMessageListeners();
 
 	useEffect(() => {
-		const key = util.channels.getMessageListenerKey(channel, event);
-		const listeners = map.get(key) ?? new Set();
-
-		const castListener = listener as (data: unknown) => unknown;
-
-		map.set(key, listeners.add(castListener));
+		const subscription = client.addMessageSubscription(
+			channel,
+			event,
+			listener,
+		);
 
 		return () => {
-			const currentListeners = map.get(key);
-
-			if (!currentListeners) {
-				return;
-			}
-
-			currentListeners.delete(castListener);
-
-			if (currentListeners.size === 0) {
-				map.delete(key);
-			}
+			subscription.unsubscribe();
 		};
 	}, []);
 }
@@ -68,16 +57,16 @@ export function useChannelsConnectionState() {
 
 export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
->(channel: API.Channels.Channel['id']): ClientStateData<T> {
+>(channel: API.Channels.Channel['id']): channels.ClientStateData<T> {
 	const client = useChannels();
 	const map = client.getChannelStateMap();
 	const state = useObservableMap(map);
-	const data = state.get(channel) as ClientStateData<T> | undefined;
+	const data = state.get(channel) as channels.ClientStateData<T> | undefined;
 
 	if (!data) {
 		client.subscribeToChannel(channel);
 
-		const state: ClientStateData<T> = {
+		const state: channels.ClientStateData<T> = {
 			state: null,
 			error: null,
 			subscription: 'pending',
@@ -117,7 +106,7 @@ export function useChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(
 	channel: API.Channels.Channel['id'],
-): [data: ClientStateData<T>, setState: Dispatch<SetStateAction<T>>] {
+): [data: channels.ClientStateData<T>, setState: Dispatch<SetStateAction<T>>] {
 	const state = useReadChannelState<T>(channel);
 	const setState = useSetChannelState<T>(channel);
 

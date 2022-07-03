@@ -3,7 +3,7 @@
 	"main": "dist/onehop-react.cjs.js",
 	"module": "dist/onehop-react.esm.js",
 	"typings": "dist/onehop-react.cjs.d.ts",
-	"packageManager": "yarn@3.2.0",
+	"packageManager": "yarn@3.2.1",
 	"peerDependencies": {
 		"@onehop/core": "workspace:^",
 		"react": "*"
@@ -16,5 +16,20 @@
 		"@onehop/client": "workspace:^",
 		"@onehop/js": "beta",
 		"@onehop/leap-edge-js": "beta"
+	},
+	"author": "Hop Development Team",
+	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/react",
+	"keywords": [
+		"realtime",
+		"channels",
+		"pipe",
+		"client",
+		"react"
+	],
+	"license": "MIT",
+	"repository": "https://github.com/hopinc/hop-client-js.git",
+	"version": "0.0.1",
+	"publishConfig": {
+		"access": "public"
 	}
 }

@@ -24,7 +24,7 @@ export type ClientStateData<T extends API.Channels.State> = {
 	error: LeapChannelSubscriptionError | null;
 };
 
-export class ChannelsClient {
+export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
 		INIT,
 		AVAILABLE,
@@ -70,6 +70,35 @@ export class ChannelsClient {
 		this.getLeap().connect();
 	}
 
+	addMessageSubscription<T>(
+		channel: API.Channels.Channel['id'],
+		eventName: string,
+		listener: (data: T) => unknown,
+	) {
+		const map = this.getMessageListeners();
+		const key = channels.getMessageListenerKey(channel, eventName);
+		const listeners = map.get(key) ?? new Set();
+
+		const castListener = listener as (data: unknown) => unknown;
+		map.set(key, listeners.add(castListener));
+
+		return {
+			unsubscribe() {
+				const currentListeners = map.get(key);
+
+				if (!currentListeners) {
+					return;
+				}
+
+				currentListeners.delete(castListener);
+
+				if (currentListeners.size === 0) {
+					map.delete(key);
+				}
+			},
+		};
+	}
+
 	getCurrentSubscriptions() {
 		return [...this.channelStateMap.entries()]
 			.filter(entry => {
@@ -87,10 +116,8 @@ export class ChannelsClient {
 		return this.channelMessageListeners;
 	}
 
-	getConnectionState(
-		fullAtom?: false,
-	): atoms.Infer<typeof this.connectionState>;
-	getConnectionState(fullAtom: true): typeof this.connectionState;
+	getConnectionState(fullAtom?: false): LeapConnectionState | null;
+	getConnectionState(fullAtom: true): atoms.Atom<LeapConnectionState>;
 	getConnectionState(fullAtom = false) {
 		if (fullAtom) {
 			return this.connectionState;
@@ -146,7 +173,7 @@ export class ChannelsClient {
 	}
 
 	private async handleServiceEvent(event: LeapServiceEvent) {
-		const handler = ChannelsClient.SUPPORTED_EVENTS[event.eventType] as
+		const handler = Client.SUPPORTED_EVENTS[event.eventType] as
 			| LeapHandler
 			| undefined;
 

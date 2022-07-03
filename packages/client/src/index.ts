@@ -1,5 +1,4 @@
 import * as util from './util';
+import * as channels from './channels';
 
-export {util};
-
-export * from './channels';
+export {util, channels};

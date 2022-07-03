@@ -1,8 +1,4 @@
-import {
-	useReadChannelState,
-	useChannelMessage,
-	useSendChannelMessage,
-} from '@onehop/react';
+import {useReadChannelState, useChannelMessage} from '@onehop/react';
 import {useCallback, useState} from 'react';
 import {hop} from './hop';
 

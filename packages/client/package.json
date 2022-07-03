@@ -3,9 +3,24 @@
 	"main": "dist/onehop-client.cjs.js",
 	"module": "dist/onehop-client.esm.js",
 	"typings": "dist/onehop-client.cjs.d.ts",
-	"packageManager": "yarn@3.2.0",
+	"packageManager": "yarn@3.2.1",
 	"dependencies": {
 		"@onehop/js": "beta",
 		"@onehop/leap-edge-js": "beta"
+	},
+	"author": "Hop Development Team",
+	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/client",
+	"keywords": [
+		"realtime",
+		"channels",
+		"pipe",
+		"client",
+		"react"
+	],
+	"license": "MIT",
+	"repository": "https://github.com/hopinc/hop-client-js.git",
+	"version": "0.0.1",
+	"publishConfig": {
+		"access": "public"
 	}
 }

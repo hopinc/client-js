@@ -1,12 +1,14 @@
 {
 	"name": "hop-client-js",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"license": "MIT",
 	"packageManager": "yarn@3.2.1",
+	"description": "Root workspace for hop's client library",
 	"scripts": {
 		"build": "yarn preconstruct build",
 		"dev": "yarn preconstruct dev",
-		"lint": "yarn eslint \"./{apps,packages}/**/*.{ts,tsx}\""
+		"lint": "yarn eslint \"./{apps,packages}/**/*.{ts,tsx}\"",
+		"release": "yarn build && yarn constraints --fix && yarn workspaces foreach run publish"
 	},
 	"workspaces": [
 		"packages/*",
@@ -29,5 +31,15 @@
 		"eslint-config-xo-typescript": "^0.51.1",
 		"prettier": "^2.7.1",
 		"typescript": "^4.7.4"
-	}
+	},
+	"author": "Hop Development Team",
+	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/.",
+	"keywords": [
+		"realtime",
+		"channels",
+		"pipe",
+		"client",
+		"react"
+	],
+	"repository": "https://github.com/hopinc/hop-client-js.git"
 }

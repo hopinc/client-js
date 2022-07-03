@@ -1,16 +1,16 @@
 import {API} from '@onehop/js';
 import {LeapServiceEvent} from '@onehop/leap-edge-js';
-import type {ChannelsClient} from '..';
+import type {Client} from '..';
 
 export interface LeapHandler {
-	handle(client: ChannelsClient, event: LeapServiceEvent): Promise<void>;
+	handle(client: Client, event: LeapServiceEvent): Promise<void>;
 }
 
 export function createLeapEvent<D, G extends boolean = true>(config: {
 	requireChannelId?: G;
 
 	handle: (
-		client: ChannelsClient,
+		client: Client,
 		channelId: G extends true
 			? API.Channels.Channel['id']
 			: API.Channels.Channel['id'] | null,
@@ -18,7 +18,7 @@ export function createLeapEvent<D, G extends boolean = true>(config: {
 	) => Promise<void>;
 }): LeapHandler {
 	return {
-		async handle(client: ChannelsClient, event: LeapServiceEvent) {
+		async handle(client: Client, event: LeapServiceEvent) {
 			const requireChannelId = config.requireChannelId !== false;
 
 			if (!event.channelId && requireChannelId) {

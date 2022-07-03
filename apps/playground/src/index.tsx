@@ -1,4 +1,3 @@
-import {Hop} from '@onehop/js';
 import {
 	ConnectionState,
 	useChannels,
