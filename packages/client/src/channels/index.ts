@@ -14,6 +14,7 @@ import {LeapHandler} from './handlers/create';
 import {INIT} from './handlers/INIT';
 import {MESSAGE} from './handlers/MESSAGE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
+import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
 
 export type LeapChannelSubscriptionError = 'NOT_GRANTED' | 'UNKNOWN';
@@ -31,6 +32,7 @@ export class Client {
 		UNAVAILABLE,
 		STATE_UPDATE,
 		MESSAGE,
+		TOKEN_STATE_UPDATE,
 	};
 
 	private readonly connectionState = atoms.create<LeapConnectionState | null>(
