@@ -51,6 +51,11 @@ export class Client {
 		Set<(data: unknown) => unknown>
 	>();
 
+	private readonly directMessageListeners = new Map<
+		string,
+		Set<(data: unknown) => unknown>
+	>();
+
 	connect(auth: LeapEdgeAuthenticationParameters) {
 		if (this.leap) {
 			return;
@@ -118,6 +123,10 @@ export class Client {
 		return this.channelMessageListeners;
 	}
 
+	getDirectMessageListeners() {
+		return this.directMessageListeners;
+	}
+
 	getConnectionState(fullAtom?: false): LeapConnectionState | null;
 	getConnectionState(fullAtom: true): atoms.Atom<LeapConnectionState>;
 	getConnectionState(fullAtom = false) {
@@ -129,14 +138,26 @@ export class Client {
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
+		const state: ClientStateData<API.Channels.State> = {
+			subscription: 'pending',
+			state: null,
+			error: null,
+		};
+
+		this.channelStateMap.set(channel, state);
+
 		this.send({
 			e: 'SUBSCRIBE',
 			d: null,
 			c: channel,
 		});
+
+		return state;
 	}
 
 	unsubscribeFromChannel(channel: API.Channels.Channel['id']) {
+		this.channelStateMap.delete(channel);
+
 		this.send({
 			e: 'UNSUBSCRIBE',
 			d: null,

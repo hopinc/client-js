@@ -1,5 +1,5 @@
 import {API} from '@onehop/js';
-import {ClientStateData} from '@onehop/react/src/hooks/channels';
+import {ClientStateData} from '..';
 import {createLeapEvent} from './create';
 
 export type Data = {
@@ -25,6 +25,7 @@ export const INIT = createLeapEvent({
 			localState.set(channel.id, {
 				state: channel.state,
 				subscription: 'pending',
+				error: null,
 			});
 		}
 

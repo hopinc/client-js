@@ -72,8 +72,6 @@ export function useReadChannelState<
 			subscription: 'pending',
 		};
 
-		map.set(channel, state);
-
 		return state;
 	}
 
