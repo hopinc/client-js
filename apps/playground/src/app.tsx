@@ -28,9 +28,9 @@ export function Main() {
 	};
 
 	return (
-		<div>
+		<>
+			<video ref={ref} controls />
 			<button onClick={click}>play</button>
-			<video ref={ref} />
-		</div>
+		</>
 	);
 }
