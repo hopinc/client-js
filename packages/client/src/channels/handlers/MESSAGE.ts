@@ -12,12 +12,17 @@ export const MESSAGE = createLeapEvent({
 	) {
 		const {e: event, d: messageData} = data;
 
-		const listeners = client
-			.getMessageListeners()
-			.get(getMessageListenerKey(channel, event));
+		const key = getMessageListenerKey(channel, event);
+
+		const listeners = client.getMessageListeners().get(key);
 
 		if (!listeners) {
 			console.warn('Received a message that nobody wants to listen for');
+			return;
+		}
+
+		if (listeners.size === 0) {
+			client.getMessageListeners().delete(key);
 			return;
 		}
 
