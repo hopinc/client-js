@@ -1,63 +1,28 @@
-import {useReadChannelState, useChannelMessage} from '@onehop/react';
-import {useCallback, useState} from 'react';
-import {hop} from './hop';
+import {mount} from '@onehop/client/src/pipe';
+import {useRef} from 'react';
 
-export const project = 'project_MTc2Mzc5ODU1ODIxMDg2NzM';
-export const channel = 'channel_MjY4NTU2NDgwMjc1MjEwMjY';
-export const event = 'SEND_MESSAGE';
-export type SendMessage = {message: string};
+export function Main() {
+	const ref = useRef<HTMLVideoElement | null>(null);
 
-function SendMessageComponent() {
-	const [message, setMessage] = useState('');
+	const click = async () => {
+		if (!ref.current) {
+			return;
+		}
 
-	const send = async (payload: SendMessage) => {
-		await hop.channels.publishMessage(channel, event, payload);
+		const controls = mount(
+			ref.current,
+			'https://ove.deploy.hop.io:3334/v.vanilla/pipe_room_phin/llhls.m3u8',
+		);
+
+		await ref.current.play();
+
+		controls.sync();
 	};
 
 	return (
 		<div>
-			<form
-				onSubmit={async e => {
-					e.preventDefault();
-					await send({message});
-				}}
-			>
-				<input
-					placeholder="message"
-					type="text"
-					value={message}
-					onChange={e => {
-						setMessage(e.target.value);
-					}}
-				/>
-
-				<button type="submit">Send</button>
-			</form>
-		</div>
-	);
-}
-
-function ShowMessagesComponent() {
-	const [messages, setMessage] = useState<string[]>([]);
-
-	const handler = useCallback((data: SendMessage) => {
-		setMessage(old => [...old, data.message]);
-	}, []);
-
-	useChannelMessage(channel, event, handler);
-
-	return <pre>{JSON.stringify({messages})}</pre>;
-}
-
-export function Main() {
-	const {state, subscription, error} = useReadChannelState(channel);
-
-	return (
-		<div>
-			<pre>{JSON.stringify({state, error, subscription}, null, 4)}</pre>
-
-			<ShowMessagesComponent />
-			<SendMessageComponent />
+			<button onClick={click}>play</button>
+			<video ref={ref} />
 		</div>
 	);
 }
