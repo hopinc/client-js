@@ -7,19 +7,24 @@ const defaultConfig: Partial<HlsConfig> = {
 	backBufferLength: 5,
 	autoStartLoad: true,
 	enableWorker: true,
-	liveSyncDuration: 0,
 	liveBackBufferLength: 5,
+	abrBandWidthFactor: 1,
 };
 
 export class Controls {
 	private readonly node;
-	private readonly hls;
+	private readonly _hls;
 
 	public constructor(node: HTMLVideoElement, hls?: Hls) {
 		this.node = node;
-		this.hls = hls;
+		this._hls = hls;
 	}
 
+	/**
+	 * Syncs to live edge
+	 *
+	 * @param distance The seconds to sync from live edge (e.g. a buffer)
+	 */
 	sync(distance = 0) {
 		this.node.currentTime = this.node.duration - distance;
 	}
@@ -37,7 +42,17 @@ export class Controls {
 	}
 
 	destroy() {
-		this.hls?.destroy();
+		this.hls.destroy();
+	}
+
+	get hls() {
+		if (!this._hls) {
+			throw new Error(
+				'Cannot get HLS instance as video is being streamed natively.',
+			);
+		}
+
+		return this._hls;
 	}
 }
 
@@ -68,10 +83,6 @@ export function mount(
 
 	instance.loadSource(url);
 	instance.attachMedia(node);
-
-	instance.on(Hls.Events.LEVEL_LOADED, (event, data) => {
-		console.log('Level: ', data.level);
-	});
 
 	return new Controls(node, instance);
 }

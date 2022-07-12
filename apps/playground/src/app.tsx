@@ -16,7 +16,15 @@ export function Main() {
 
 		await ref.current.play();
 
-		controls.sync();
+		controls.sync(0);
+
+		setInterval(() => {
+			console.log(
+				ref.current!.currentTime,
+				ref.current!.duration,
+				controls.hls.bandwidthEstimate,
+			);
+		}, 500);
 	};
 
 	return (
