@@ -1,4 +1,4 @@
 import * as util from './util';
-import * as channels from './leap';
+import * as leap from './leap';
 
-export {util, channels};
+export {util, leap};

@@ -1,4 +1,4 @@
-import {channels, util} from '@onehop/client';
+import {leap} from '@onehop/client';
 import {API} from '@onehop/js';
 import {
 	createContext,
@@ -11,10 +11,10 @@ import {resolveSetStateAction} from '../util/state';
 import {useAtom} from './atoms';
 import {useObservableMap} from './maps';
 
-const clientContext = createContext(new channels.Client());
+const leapContext = createContext(new leap.Client());
 
-export function useChannels(): channels.Client {
-	return useContext(clientContext);
+export function useChannels(): leap.Client {
+	return useContext(leapContext);
 }
 
 export function useSendChannelMessage<T = any>(
@@ -57,16 +57,16 @@ export function useChannelsConnectionState() {
 
 export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
->(channel: API.Channels.Channel['id']): channels.ClientStateData<T> {
+>(channel: API.Channels.Channel['id']): leap.ChannelStateData<T> {
 	const client = useChannels();
 	const map = client.getChannelStateMap();
 	const state = useObservableMap(map);
-	const data = state.get(channel) as channels.ClientStateData<T> | undefined;
+	const data = state.get(channel) as leap.ChannelStateData<T> | undefined;
 
 	if (!data) {
 		client.subscribeToChannel(channel);
 
-		const state: channels.ClientStateData<T> = {
+		const state: leap.ChannelStateData<T> = {
 			state: null,
 			error: null,
 			subscription: 'pending',
@@ -104,7 +104,7 @@ export function useChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(
 	channel: API.Channels.Channel['id'],
-): [data: channels.ClientStateData<T>, setState: Dispatch<SetStateAction<T>>] {
+): [data: leap.ChannelStateData<T>, setState: Dispatch<SetStateAction<T>>] {
 	const state = useReadChannelState<T>(channel);
 	const setState = useSetChannelState<T>(channel);
 

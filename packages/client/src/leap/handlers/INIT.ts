@@ -1,5 +1,5 @@
 import {API} from '@onehop/js';
-import {ClientStateData} from '..';
+import {ChannelStateData} from '..';
 import {createLeapEvent} from './create';
 
 export type Data = {
@@ -16,7 +16,7 @@ export const INIT = createLeapEvent({
 	async handle(client, channelId, data: Data) {
 		const localState = new Map<
 			API.Channels.Channel['id'],
-			ClientStateData<API.Channels.State>
+			ChannelStateData<API.Channels.State>
 		>();
 
 		for (const channel of data.channels) {

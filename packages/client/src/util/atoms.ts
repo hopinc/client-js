@@ -23,7 +23,7 @@ export type Infer<T> = T extends Atom<infer V> ? V : never;
  * @param initialValue An initial value to assign to the atom
  * @returns A readible and observable state object
  */
-export function create<T>(initialValue?: T): Atom<T> {
+function atom<T>(initialValue?: T): Atom<T> {
 	let atomValue: AtomValue<T> =
 		initialValue === undefined
 			? {uninitialized: true, value: undefined}
@@ -81,3 +81,5 @@ export function create<T>(initialValue?: T): Atom<T> {
 		},
 	};
 }
+
+export {atom as create};
