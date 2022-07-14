@@ -17,7 +17,7 @@ import {MESSAGE} from './handlers/MESSAGE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
-import {ChannelStateData} from './types';
+import {ChannelStateData, RoomStateData} from './types';
 
 export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
@@ -45,6 +45,11 @@ export class Client {
 		Set<(data: unknown) => unknown>
 	>();
 
+	private readonly roomStateMap = new maps.ObservableMap<
+		API.Pipe.Room['id'],
+		RoomStateData
+	>();
+
 	private readonly directMessageListeners = new Map<
 		string,
 		Set<(data: unknown) => unknown>
@@ -69,6 +74,18 @@ export class Client {
 		leap.on('connectionStateUpdate', connectionStateUpdate);
 
 		this.getLeap().connect();
+	}
+
+	subscribeToPipe(roomId: API.Pipe.Room['id']) {
+		this.send({
+			e: 'PIPE_ROOM_SUBSCRIBE',
+			c: roomId,
+			d: null,
+		});
+
+		this.roomStateMap.set(roomId, {
+			subscription: 'pending',
+		});
 	}
 
 	addMessageSubscription<T>(

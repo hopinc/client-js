@@ -9,19 +9,14 @@ import {
 } from 'react';
 import {resolveSetStateAction} from '../util/state';
 import {useAtom} from './atoms';
+import {useLeap} from './leap';
 import {useObservableMap} from './maps';
-
-const leapContext = createContext(new leap.Client());
-
-export function useChannels(): leap.Client {
-	return useContext(leapContext);
-}
 
 export function useSendChannelMessage<T = any>(
 	channel: string,
 	eventName: string,
 ) {
-	const client = useChannels();
+	const client = useLeap();
 
 	return (data: T) => {
 		client.sendMessage(channel, eventName, data);
@@ -33,7 +28,7 @@ export function useChannelMessage<T = any>(
 	event: string,
 	listener: (data: T) => unknown,
 ) {
-	const client = useChannels();
+	const client = useLeap();
 	const map = client.getMessageListeners();
 
 	useEffect(() => {
@@ -50,7 +45,7 @@ export function useChannelMessage<T = any>(
 }
 
 export function useChannelsConnectionState() {
-	const client = useChannels();
+	const client = useLeap();
 
 	return useAtom(client.getConnectionState(true));
 }
@@ -58,7 +53,7 @@ export function useChannelsConnectionState() {
 export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): leap.ChannelStateData<T> {
-	const client = useChannels();
+	const client = useLeap();
 	const map = client.getChannelStateMap();
 	const state = useObservableMap(map);
 	const data = state.get(channel) as leap.ChannelStateData<T> | undefined;
@@ -81,7 +76,7 @@ export function useReadChannelState<
 export function useSetChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): Dispatch<SetStateAction<T>> {
-	const client = useChannels();
+	const client = useLeap();
 	const state = useObservableMap(client.getChannelStateMap());
 	const oldState = state.get(channel);
 
