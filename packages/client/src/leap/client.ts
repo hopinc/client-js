@@ -9,6 +9,7 @@ import {
 } from '@onehop/leap-edge-js';
 
 import {atoms, maps, channels} from '../util';
+import {ChannelStateData, RoomStateData} from './types';
 
 import {LeapHandler} from './handlers/create';
 import {AVAILABLE} from './handlers/AVAILABLE';
@@ -17,7 +18,8 @@ import {MESSAGE} from './handlers/MESSAGE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
-import {ChannelStateData, RoomStateData} from './types';
+import {PIPE_ROOM_AVAILABLE} from './handlers/PIPE_ROOM_AVAILABLE';
+import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 
 export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
@@ -27,6 +29,9 @@ export class Client {
 		STATE_UPDATE,
 		TOKEN_STATE_UPDATE,
 		MESSAGE,
+
+		PIPE_ROOM_AVAILABLE,
+		PIPE_ROOM_UPDATE,
 	};
 
 	private readonly connectionState = atoms.create<LeapConnectionState | null>(
