@@ -1,4 +1,5 @@
 import {API} from '@onehop/js';
+import {Payload as PIPE_ROOM_AVAILABLE_PAYLOAD} from './handlers/PIPE_ROOM_AVAILABLE';
 
 export type LeapChannelSubscriptionError = 'NOT_GRANTED' | 'UNKNOWN';
 
@@ -10,6 +11,10 @@ export type ChannelStateData<T extends API.Channels.State> = {
 	error: LeapChannelSubscriptionError | null;
 };
 
-export type RoomStateData = {
-	subscription: GenericSubscriptionState;
-};
+export type RoomStateData =
+	| {subscription: Exclude<GenericSubscriptionState, 'available'>}
+	| {
+			subscription: 'available';
+			room: API.Pipe.Room;
+			connection: PIPE_ROOM_AVAILABLE_PAYLOAD['connection'];
+	  };

@@ -45,14 +45,14 @@ export class Client {
 		Set<(data: unknown) => unknown>
 	>();
 
-	private readonly roomStateMap = new maps.ObservableMap<
-		API.Pipe.Room['id'],
-		RoomStateData
-	>();
-
 	private readonly directMessageListeners = new Map<
 		string,
 		Set<(data: unknown) => unknown>
+	>();
+
+	private readonly roomStateMap = new maps.ObservableMap<
+		API.Pipe.Room['id'],
+		RoomStateData
 	>();
 
 	connect(auth: LeapEdgeAuthenticationParameters) {
@@ -76,7 +76,7 @@ export class Client {
 		this.getLeap().connect();
 	}
 
-	subscribeToPipe(roomId: API.Pipe.Room['id']) {
+	subscribeToPipeRoom(roomId: API.Pipe.Room['id']) {
 		this.send({
 			e: 'PIPE_ROOM_SUBSCRIBE',
 			c: roomId,
@@ -128,6 +128,10 @@ export class Client {
 
 	getChannelStateMap() {
 		return this.channelStateMap;
+	}
+
+	getRoomStateMap() {
+		return this.roomStateMap;
 	}
 
 	getMessageListeners() {

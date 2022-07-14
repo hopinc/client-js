@@ -17,5 +17,6 @@ module.exports = {
 		'@typescript-eslint/quotes': 'off',
 		'operator-linebreak': 'off',
 		'jsx-quotes': 'off',
+		'no-mixed-spaces-and-tabs': 'off',
 	},
 };
