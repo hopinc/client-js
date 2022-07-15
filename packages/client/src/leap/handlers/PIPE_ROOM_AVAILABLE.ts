@@ -1,4 +1,4 @@
-import {API, id} from '@onehop/js';
+import {API} from '@onehop/js';
 import {createLeapEvent} from './create';
 
 export interface Connection {
@@ -13,8 +13,10 @@ export interface Payload {
 }
 
 export const PIPE_ROOM_AVAILABLE = createLeapEvent({
-	async handle(client, room, data: Payload) {
-		client.getRoomStateMap().set(id(room, 'pipe_room'), {
+	requireId: false,
+
+	async handle(client, _, data: Payload) {
+		client.getRoomStateMap().set(data.pipe_room.id, {
 			subscription: 'available',
 			room: data.pipe_room,
 			connection: data.connection,

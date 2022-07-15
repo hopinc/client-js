@@ -1,14 +1,7 @@
 import {leap} from '@onehop/client';
 import {API} from '@onehop/js';
-import {
-	createContext,
-	Dispatch,
-	SetStateAction,
-	useContext,
-	useEffect,
-} from 'react';
+import {Dispatch, SetStateAction, useEffect} from 'react';
 import {resolveSetStateAction} from '../util/state';
-import {useAtom} from './atoms';
 import {useLeap} from './leap';
 import {useObservableMap} from './maps';
 
@@ -42,12 +35,6 @@ export function useChannelMessage<T = any>(
 			subscription.unsubscribe();
 		};
 	}, []);
-}
-
-export function useChannelsConnectionState() {
-	const client = useLeap();
-
-	return useAtom(client.getConnectionState(true));
 }
 
 export function useReadChannelState<
