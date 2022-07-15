@@ -898,7 +898,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@onehop/client@workspace:packages/client"
   dependencies:
-    "@onehop/js": ^1.0.7
+    "@onehop/js": ^1.0.8
     "@onehop/leap-edge-js": ^1.0.0
   languageName: unknown
   linkType: soft
@@ -914,14 +914,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@onehop/js@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@onehop/js@npm:1.0.7"
+"@onehop/js@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "@onehop/js@npm:1.0.8"
   dependencies:
     cross-fetch: ^3.1.5
     qs: ^6.11.0
     zod: ^3.17.3
-  checksum: f3b6bc7c43c4dd23afe3d2680193cd69364b6681d4c1ead04f358821a35a702f6d52764b01740e156ce03aaea4105bc2bea3895c5b30de0827f382ec3998a139
+  checksum: 933fa623eb1bc1f31d96fe67c8ba4ffa48462aaff33697fa14199e88fd3f14cb888ba80fdfa6045444a3558d6f998e797e940fef357db895da3a1ed0920394e0
   languageName: node
   linkType: hard
 

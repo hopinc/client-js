@@ -14,7 +14,7 @@ export interface Payload {
 
 export const PIPE_ROOM_AVAILABLE = createLeapEvent({
 	async handle(client, room, data: Payload) {
-		client.getRoomStateMap().set(id(room, 'room'), {
+		client.getRoomStateMap().set(id(room, 'pipe_room'), {
 			subscription: 'available',
 			room: data.pipe_room,
 			connection: data.connection,

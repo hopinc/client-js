@@ -14,7 +14,7 @@
 		"package.json"
 	],
 	"dependencies": {
-		"@onehop/js": "^1.0.7",
+		"@onehop/js": "^1.0.8",
 		"@onehop/leap-edge-js": "^1.0.0"
 	},
 	"author": "Hop Development Team",
