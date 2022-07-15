@@ -81,11 +81,13 @@ export class Client {
 		this.getLeap().connect();
 	}
 
-	subscribeToPipeRoom(roomId: API.Pipe.Room['id']) {
+	subscribeToPipeRoom(roomId: API.Pipe.Room['id'], joinToken: string) {
 		this.send({
 			e: 'PIPE_ROOM_SUBSCRIBE',
-			c: roomId,
-			d: null,
+			c: null,
+			d: {
+				join_token: joinToken,
+			},
 		});
 
 		this.roomStateMap.set(roomId, {
