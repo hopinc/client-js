@@ -10,7 +10,7 @@ export const UNAVAILABLE = createLeapEvent({
 		client.getChannelStateMap().set(channel, {
 			state: null,
 			subscription: 'unavailable',
-			error: data.error_code ?? null,
+			error: data,
 		});
 	},
 });
