@@ -9,7 +9,7 @@ export interface Connection {
 
 export interface Payload {
 	pipe_room: API.Pipe.Room;
-	connection: {llhls: Connection | null; webrtc: Connection | null};
+	connection: {llhls?: Connection; webrtc?: Connection};
 }
 
 export const PIPE_ROOM_AVAILABLE = createLeapEvent({

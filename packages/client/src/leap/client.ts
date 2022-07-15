@@ -34,8 +34,8 @@ export class Client {
 		PIPE_ROOM_UPDATE,
 	};
 
-	private readonly connectionState = atoms.create<LeapConnectionState | null>(
-		null,
+	private readonly connectionState = atoms.create<LeapConnectionState>(
+		LeapConnectionState.IDLE,
 	);
 
 	private leap: LeapEdgeClient | null = null;
@@ -149,7 +149,7 @@ export class Client {
 		return this.directMessageListeners;
 	}
 
-	getConnectionState(fullAtom?: false): LeapConnectionState | null;
+	getConnectionState(fullAtom?: false): LeapConnectionState;
 	getConnectionState(fullAtom: true): atoms.Atom<LeapConnectionState>;
 	getConnectionState(fullAtom = false) {
 		if (fullAtom) {
