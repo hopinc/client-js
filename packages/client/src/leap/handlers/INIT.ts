@@ -11,7 +11,7 @@ export type Data = {
 };
 
 export const INIT = createLeapEvent({
-	requireChannelId: false,
+	requireId: false,
 
 	async handle(client, channelId, data: Data) {
 		const localState = new Map<

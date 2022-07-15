@@ -7,7 +7,7 @@ export interface LeapHandler {
 }
 
 export function createLeapEvent<D, G extends boolean = true>(config: {
-	requireChannelId?: G;
+	requireId?: G;
 
 	handle: (
 		client: Client,
@@ -19,21 +19,15 @@ export function createLeapEvent<D, G extends boolean = true>(config: {
 }): LeapHandler {
 	return {
 		async handle(client: Client, event: LeapServiceEvent) {
-			const requireChannelId = config.requireChannelId !== false;
+			const requireId = config.requireId !== false;
 
-			if (!event.channelId && requireChannelId) {
+			if (!event.channelId && requireId) {
 				throw new Error(
-					`Received opcode for ${event.eventType} but expected a channel ID that was not there.`,
+					`Received opcode for ${event.eventType} but expected an ID that was not there.`,
 				);
 			}
 
-			await config.handle(
-				client,
-				event.channelId as G extends true
-					? API.Channels.Channel['id']
-					: API.Channels.Channel['id'] | null,
-				event.data as any,
-			);
+			await config.handle(client, event.channelId!, event.data as any);
 		},
 	};
 }
