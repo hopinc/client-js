@@ -3,8 +3,6 @@ import {createLeapEvent} from './create';
 
 export interface Connection {
 	edge_endpoint: string;
-	type: 'webrtc' | 'llhls';
-	serving_pop: string;
 }
 
 export interface Payload {
