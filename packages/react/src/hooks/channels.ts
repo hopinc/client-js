@@ -3,7 +3,7 @@ import {API} from '@onehop/js';
 import {Dispatch, SetStateAction, useEffect} from 'react';
 import {resolveSetStateAction} from '../util/state';
 import {useLeap} from './leap';
-import {useObservableMap} from './maps';
+import {useObservableMap, useObservableMapGet} from './maps';
 
 export function useSendChannelMessage<T = any>(
 	channel: string,
@@ -41,9 +41,10 @@ export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): leap.ChannelStateData<T> {
 	const client = useLeap();
-	const map = client.getChannelStateMap();
-	const state = useObservableMap(map);
-	const data = state.get(channel) as leap.ChannelStateData<T> | undefined;
+
+	const data = useObservableMapGet(client.getChannelStateMap(), channel) as
+		| leap.ChannelStateData<T>
+		| undefined;
 
 	if (!data) {
 		client.subscribeToChannel(channel);
@@ -64,8 +65,7 @@ export function useSetChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): Dispatch<SetStateAction<T>> {
 	const client = useLeap();
-	const state = useObservableMap(client.getChannelStateMap());
-	const oldState = state.get(channel);
+	const oldState = useObservableMapGet(client.getChannelStateMap(), channel);
 
 	return value => {
 		if (!oldState) {
@@ -76,7 +76,7 @@ export function useSetChannelState<
 
 		client.setChannelState(channel, newState);
 
-		state.patch(channel, {
+		client.getChannelStateMap().patch(channel, {
 			state: newState,
 		});
 	};
