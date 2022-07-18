@@ -16,7 +16,7 @@ export const PIPE_ROOM_AVAILABLE = createLeapEvent({
 	requireId: false,
 
 	async handle(client, _, data: Payload) {
-		client.getRoomStateMap().set(data.pipe_room.id, {
+		client.getRoomStateMap().set(data.pipe_room.join_token, {
 			subscription: 'available',
 			room: data.pipe_room,
 			connection: data.connection,

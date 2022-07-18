@@ -26,13 +26,15 @@ export function useObservableMap<K, V>(
 
 export function useObservableMapGet<K, V>(
 	map: util.maps.ObservableMap<K, V>,
-	key: K,
+	key: K | undefined,
 ) {
-	const [storeState, setStoreState] = useState(() => map.get(key));
+	const [storeState, setStoreState] = useState(() =>
+		key ? map.get(key) : undefined,
+	);
 
 	useEffect(() => {
 		const onChange: util.maps.Listener<K, V> = (instance, payload) => {
-			if ('key' in payload) {
+			if ('key' in payload && key) {
 				setStoreState(map.get(key));
 			} else if (payload.type === 'clear') {
 				setStoreState(undefined);

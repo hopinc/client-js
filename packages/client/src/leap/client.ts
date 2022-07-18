@@ -1,25 +1,25 @@
 import {API} from '@onehop/js';
 
 import {
-	LeapConnectionState,
-	LeapEdgeClient,
-	LeapEdgeAuthenticationParameters,
-	LeapServiceEvent,
 	EncapsulatingServicePayload,
+	LeapConnectionState,
+	LeapEdgeAuthenticationParameters,
+	LeapEdgeClient,
+	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
 
-import {atoms, maps, channels} from '../util';
+import {atoms, channels, maps} from '../util';
 import {ChannelStateData, RoomStateData} from './types';
 
-import {LeapHandler} from './handlers/create';
 import {AVAILABLE} from './handlers/AVAILABLE';
+import {LeapHandler} from './handlers/create';
 import {INIT} from './handlers/INIT';
 import {MESSAGE} from './handlers/MESSAGE';
+import {PIPE_ROOM_AVAILABLE} from './handlers/PIPE_ROOM_AVAILABLE';
+import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
-import {PIPE_ROOM_AVAILABLE} from './handlers/PIPE_ROOM_AVAILABLE';
-import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 
 export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
@@ -29,10 +29,25 @@ export class Client {
 		STATE_UPDATE,
 		TOKEN_STATE_UPDATE,
 		MESSAGE,
-
 		PIPE_ROOM_AVAILABLE,
 		PIPE_ROOM_UPDATE,
 	};
+
+	public static getInstance(auth: LeapEdgeAuthenticationParameters) {
+		if (Client.instance) {
+			return Client.instance;
+		}
+
+		const client = new Client();
+
+		client.connect(auth);
+
+		Client.instance = client;
+
+		return client;
+	}
+
+	private static instance: Client | null = null;
 
 	private readonly connectionState = atoms.create<LeapConnectionState>(
 		LeapConnectionState.IDLE,
@@ -56,7 +71,7 @@ export class Client {
 	>();
 
 	private readonly roomStateMap = new maps.ObservableMap<
-		API.Pipe.Room['id'],
+		API.Pipe.Room['join_token'],
 		RoomStateData
 	>();
 
@@ -81,16 +96,14 @@ export class Client {
 		this.getLeap().connect();
 	}
 
-	subscribeToPipeRoom(roomId: API.Pipe.Room['id'], joinToken: string) {
+	subscribeToPipeRoom(joinToken: string) {
 		this.send({
 			e: 'PIPE_ROOM_SUBSCRIBE',
 			c: null,
-			d: {
-				join_token: joinToken,
-			},
+			d: {join_token: joinToken},
 		});
 
-		this.roomStateMap.set(roomId, {
+		this.roomStateMap.set(joinToken, {
 			subscription: 'pending',
 		});
 	}
@@ -264,3 +277,5 @@ export class Client {
 		return this.leap;
 	}
 }
+
+export const instance = new Client();

@@ -22,7 +22,7 @@
 	},
 	"dependencies": {
 		"@onehop/client": "workspace:^",
-		"@onehop/js": "^1.0.1",
+		"@onehop/js": "^1.0.10",
 		"@onehop/leap-edge-js": "^1.0.0"
 	},
 	"author": "Hop Development Team",

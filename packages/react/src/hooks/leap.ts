@@ -3,7 +3,7 @@ import {LeapEdgeAuthenticationParameters} from '@onehop/leap-edge-js';
 import {createContext, useContext} from 'react';
 import {useAtom} from './atoms';
 
-const leapContext = createContext(new leap.Client());
+const leapContext = createContext(leap.instance);
 
 export function useLeap(): leap.Client {
 	return useContext(leapContext);
