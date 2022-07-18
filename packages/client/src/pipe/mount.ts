@@ -1,6 +1,7 @@
 import Hls, {HlsConfig} from 'hls.js';
 
 const LIVE_LLHLS_SYNC_BCE = 3;
+const WCL_DELAY_LES = 5;
 
 const defaultConfig: Partial<HlsConfig> = {
 	lowLatencyMode: true,
@@ -69,13 +70,31 @@ export function mount(
 		});
 	}
 
-	node.onplay = () => {
+	const syncToBCE = () => {
 		node.currentTime = node.duration - LIVE_LLHLS_SYNC_BCE;
+	};
+
+	node.onplay = () => {
+		syncToBCE();
 	};
 
 	const instance = new Hls({
 		...defaultConfig,
 		...hlsConfigOverride,
+	});
+
+	const liveSync = setInterval(() => {
+		if (
+			node &&
+			!node.paused &&
+			instance.latency > LIVE_LLHLS_SYNC_BCE + WCL_DELAY_LES
+		) {
+			syncToBCE();
+		}
+	}, 1000);
+
+	instance.on(Hls.Events.MEDIA_DETACHING, () => {
+		clearInterval(liveSync);
 	});
 
 	instance.loadSource(url);
