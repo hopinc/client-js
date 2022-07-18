@@ -1,6 +1,6 @@
 import Hls, {HlsConfig} from 'hls.js';
 
-const APPLE_HLS_MIME = 'application/vnd.apple.mpegurl';
+const LIVE_LLHLS_SYNC_BCE = 3;
 
 const defaultConfig: Partial<HlsConfig> = {
 	lowLatencyMode: true,
@@ -61,13 +61,6 @@ export function mount(
 	url: string,
 	hlsConfigOverride?: Partial<HlsConfig>,
 ): Controls {
-	// Safari supports HLS directly, so we can simply play it here
-	// without having to use hls.js (yay!)
-	if (node.canPlayType(APPLE_HLS_MIME)) {
-		node.src = url;
-		return new Controls(node);
-	}
-
 	if (!Hls.isSupported()) {
 		throw new Error('HLS Will not work in this browser', {
 			cause: new Error(
@@ -75,6 +68,10 @@ export function mount(
 			),
 		});
 	}
+
+	node.onplay = () => {
+		node.currentTime = node.duration - LIVE_LLHLS_SYNC_BCE;
+	};
 
 	const instance = new Hls({
 		...defaultConfig,
