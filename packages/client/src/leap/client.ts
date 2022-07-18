@@ -92,6 +92,7 @@ export class Client {
 
 		this.roomStateMap.set(joinToken, {
 			subscription: 'pending',
+			room: null,
 		});
 	}
 
