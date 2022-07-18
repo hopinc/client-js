@@ -37,7 +37,7 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 		}
 
 		leap.subscribeToPipeRoom(config.joinToken);
-	}, [connectionState]);
+	}, [connectionState, autojoin, config.joinToken, stream?.subscription]);
 
 	const canPlay =
 		connectionState === LeapConnectionState.CONNECTED &&
