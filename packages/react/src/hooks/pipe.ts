@@ -61,6 +61,7 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 	}, [canPlay, ref.current]);
 
 	return {
+		live: stream?.room?.state === 'live',
 		canPlay,
 		subscription: stream?.subscription ?? ('non_existent' as const),
 		join() {

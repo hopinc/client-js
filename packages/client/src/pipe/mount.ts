@@ -4,7 +4,7 @@ const APPLE_HLS_MIME = 'application/vnd.apple.mpegurl';
 
 const defaultConfig: Partial<HlsConfig> = {
 	lowLatencyMode: true,
-	backBufferLength: 5,
+	backBufferLength: 10,
 	autoStartLoad: true,
 	enableWorker: true,
 	liveBackBufferLength: 5,
