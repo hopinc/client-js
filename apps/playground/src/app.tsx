@@ -1,5 +1,5 @@
 import {hop} from '@onehop/client';
-import {useRef} from 'react';
+import {useEffect, useRef} from 'react';
 import {usePipeRoom} from '@onehop/react/src/hooks/pipe';
 
 const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
@@ -17,6 +17,16 @@ export function Main() {
 		joinToken,
 		ref: videoRef,
 	});
+
+	useEffect(() => {
+		const unsubscribe = room.events.on('STREAM_LIVE', event => {
+			console.log(event.data.id, 'is now live');
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
 	return (
 		<>
