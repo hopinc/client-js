@@ -15,7 +15,8 @@
 	],
 	"dependencies": {
 		"@onehop/js": "^1.0.10",
-		"@onehop/leap-edge-js": "^1.0.0"
+		"@onehop/leap-edge-js": "^1.0.0",
+		"hls.js": "^1.1.5"
 	},
 	"author": "Hop Development Team",
 	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/client",
@@ -28,7 +29,7 @@
 	],
 	"license": "MIT",
 	"repository": "https://github.com/hopinc/hop-client-js.git",
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"publishConfig": {
 		"access": "public"
 	}

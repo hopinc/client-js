@@ -1,14 +1,15 @@
 import Hls, {HlsConfig} from 'hls.js';
 
-const APPLE_HLS_MIME = 'application/vnd.apple.mpegurl';
+const LIVE_LLHLS_SYNC_BCE = 3;
+const WCL_DELAY_LES = 5;
 
 const defaultConfig: Partial<HlsConfig> = {
 	lowLatencyMode: true,
-	backBufferLength: 5,
+	backBufferLength: 10,
 	autoStartLoad: true,
 	enableWorker: true,
-	liveBackBufferLength: 5,
 	abrBandWidthFactor: 1,
+	liveSyncDuration: LIVE_LLHLS_SYNC_BCE,
 };
 
 export class Controls {
@@ -62,13 +63,6 @@ export function mount(
 	url: string,
 	hlsConfigOverride?: Partial<HlsConfig>,
 ): Controls {
-	// Safari supports HLS directly, so we can simply play it here
-	// without having to use hls.js (yay!)
-	if (node.canPlayType(APPLE_HLS_MIME)) {
-		node.src = url;
-		return new Controls(node);
-	}
-
 	if (!Hls.isSupported()) {
 		throw new Error('HLS Will not work in this browser', {
 			cause: new Error(
@@ -77,9 +71,31 @@ export function mount(
 		});
 	}
 
+	const syncToBCE = () => {
+		node.currentTime = node.duration - LIVE_LLHLS_SYNC_BCE;
+	};
+
+	node.onplay = () => {
+		syncToBCE();
+	};
+
 	const instance = new Hls({
 		...defaultConfig,
 		...hlsConfigOverride,
+	});
+
+	const liveSync = setInterval(() => {
+		if (
+			node &&
+			!node.paused &&
+			instance.latency > LIVE_LLHLS_SYNC_BCE + WCL_DELAY_LES
+		) {
+			syncToBCE();
+		}
+	}, 1000);
+
+	instance.on(Hls.Events.MEDIA_DETACHING, () => {
+		clearInterval(liveSync);
 	});
 
 	instance.loadSource(url);

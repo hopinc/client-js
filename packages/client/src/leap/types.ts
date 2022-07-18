@@ -12,8 +12,8 @@ export type ChannelStateData<T extends API.Channels.State> = {
 };
 
 export type RoomStateData =
-	| {subscription: 'pending'}
-	| {subscription: 'unavailable'; error: UnavailableError}
+	| {subscription: 'pending'; room: null}
+	| {subscription: 'unavailable'; room: null; error: UnavailableError}
 	| {
 			subscription: 'available';
 			room: API.Pipe.Room;

@@ -4,7 +4,7 @@ import {usePipeRoom} from '@onehop/react/src/hooks/pipe';
 
 const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
 const joinToken =
-	'prjt_c180ZDhiMjAxNWE3NDI4NTE4MWEyODc4NWQ3YmRhMmUxOV8zMzAzMjgxMTAwMjU2ODcxNQ';
+	'prjt_c184OWUxYzhjMjcyOGEwMjVjY2Y5MzcyZTZjM2YwYjQ0OF8zMjUzNzY4NzQwNTgzODM0MQ';
 
 hop.init({
 	projectId,
@@ -22,7 +22,11 @@ export function Main() {
 		<>
 			<pre>
 				{JSON.stringify(
-					{canPlay: room.canPlay, subscription: room.subscription},
+					{
+						live: room.live,
+						canPlay: room.canPlay,
+						subscription: room.subscription,
+					},
 					null,
 					4,
 				)}
