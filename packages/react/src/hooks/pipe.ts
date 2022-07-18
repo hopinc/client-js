@@ -1,17 +1,16 @@
 import {pipe} from '@onehop/client';
-import type {Controls} from '@onehop/client/src/pipe';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
-import {RefObject, useEffect, useState} from 'react';
-import {ConnectionState} from '..';
+import {RefObject, useEffect} from 'react';
 import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet} from './maps';
 
 export interface Config {
 	joinToken: string | null;
 	ref: RefObject<HTMLVideoElement | null>;
+	autojoin?: boolean;
 }
 
-export function usePipeRoom({ref, ...config}: Config) {
+export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 	const leap = useLeap();
 	const connectionState = useConnectionState();
 
@@ -20,7 +19,25 @@ export function usePipeRoom({ref, ...config}: Config) {
 		config.joinToken ?? undefined,
 	);
 
-	const [controls, setControls] = useState<Controls | null>(null);
+	useEffect(() => {
+		if (connectionState !== LeapConnectionState.CONNECTED) {
+			return;
+		}
+
+		if (!autojoin) {
+			return;
+		}
+
+		if (autojoin && stream?.subscription === 'available') {
+			return;
+		}
+
+		if (!config.joinToken) {
+			return;
+		}
+
+		leap.subscribeToPipeRoom(config.joinToken);
+	}, [connectionState]);
 
 	const canPlay =
 		connectionState === LeapConnectionState.CONNECTED &&
@@ -38,8 +55,6 @@ export function usePipeRoom({ref, ...config}: Config) {
 			stream.connection.llhls!.edge_endpoint,
 		);
 
-		setControls(controls);
-
 		return () => {
 			controls.destroy();
 		};
@@ -47,7 +62,6 @@ export function usePipeRoom({ref, ...config}: Config) {
 
 	return {
 		canPlay,
-		controls,
 		subscription: stream?.subscription ?? ('non_existent' as const),
 		join() {
 			if (!config.joinToken) {
