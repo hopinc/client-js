@@ -35,6 +35,7 @@ export class Controls {
 
 	async play() {
 		await this.node.play();
+		this.sync(3.5);
 	}
 
 	get isPaused() {
