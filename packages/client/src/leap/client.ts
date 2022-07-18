@@ -45,8 +45,6 @@ export class Client {
 		ChannelStateData<API.Channels.State>
 	>();
 
-	private readonly pipeRoomListeners = new Map<>();
-
 	private readonly channelMessageListeners = new Map<
 		channels.ChannelMessageListenerKey,
 		Set<(data: unknown) => unknown>

@@ -11,7 +11,7 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 	protected constructor() {
 		this.listeners = new Map<
 			keyof Payloads,
-			Array<HopEmitterListener<Payloads, keyof Payloads>>
+			Set<HopEmitterListener<Payloads, keyof Payloads>>
 		>();
 	}
 
@@ -27,11 +27,18 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 		listener: HopEmitterListener<Payloads, K>,
 	) {
 		const existing = this.listeners.get(key) ?? [];
-		const merged = [...existing, listener] as Array<
+
+		const merged = new Set([...existing, listener]) as Set<
 			HopEmitterListener<Payloads, keyof Payloads>
 		>;
 
 		this.listeners.set(key, merged);
+
+		return () => {
+			this.listeners
+				.get(key)
+				?.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
+		};
 	}
 
 	public off<K extends keyof Payloads>(
@@ -44,15 +51,14 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 			throw new Error("Cannot remove listener for key that doesn't exist.");
 		}
 
-		if (list.length === 0) {
+		if (list.size === 0) {
 			this.listeners.delete(key);
 			return;
 		}
 
-		this.listeners.set(
-			key,
-			list.filter(item => item !== listener),
-		);
+		this.listeners
+			.get(key)
+			?.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
 	}
 
 	emit<K extends keyof Payloads>(key: K, data: Payloads[K]) {
@@ -64,7 +70,7 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 
 		// In theory, shouldn't happen because we should have already checked
 		// in the .off call
-		if (listeners.length === 0) {
+		if (listeners.size === 0) {
 			this.listeners.delete(key);
 			return;
 		}

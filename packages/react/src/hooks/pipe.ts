@@ -1,6 +1,7 @@
-import {pipe} from '@onehop/client';
+import {pipe, util} from '@onehop/client';
+import {API} from '@onehop/js';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
-import {RefObject, useEffect} from 'react';
+import {RefObject, useEffect, useMemo} from 'react';
 import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet} from './maps';
 
@@ -14,10 +15,31 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 	const leap = useLeap();
 	const connectionState = useConnectionState();
 
+	const events = useMemo(
+		() =>
+			util.emitter.create<{
+				STREAM_LIVE: API.Pipe.Room;
+				STREAM_OFFLINE: API.Pipe.Room;
+			}>(),
+		[],
+	);
+
 	const stream = useObservableMapGet(
 		leap.getRoomStateMap(),
 		config.joinToken ?? undefined,
 	);
+
+	useEffect(() => {
+		if (!stream?.room) {
+			return;
+		}
+
+		if (stream.room.state === 'live') {
+			events.emit('STREAM_LIVE', stream.room);
+		} else {
+			events.emit('STREAM_OFFLINE', stream.room);
+		}
+	}, [stream?.room?.state]);
 
 	useEffect(() => {
 		if (connectionState !== LeapConnectionState.CONNECTED) {
@@ -64,6 +86,7 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 		live: stream?.room?.state === 'live',
 		canPlay,
 		subscription: stream?.subscription ?? ('non_existent' as const),
+		events,
 		join() {
 			if (!config.joinToken) {
 				throw new Error(
