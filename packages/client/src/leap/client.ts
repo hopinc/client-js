@@ -29,25 +29,10 @@ export class Client {
 		STATE_UPDATE,
 		TOKEN_STATE_UPDATE,
 		MESSAGE,
+
 		PIPE_ROOM_AVAILABLE,
 		PIPE_ROOM_UPDATE,
 	};
-
-	public static getInstance(auth: LeapEdgeAuthenticationParameters) {
-		if (Client.instance) {
-			return Client.instance;
-		}
-
-		const client = new Client();
-
-		client.connect(auth);
-
-		Client.instance = client;
-
-		return client;
-	}
-
-	private static instance: Client | null = null;
 
 	private readonly connectionState = atoms.create<LeapConnectionState>(
 		LeapConnectionState.IDLE,

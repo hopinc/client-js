@@ -1,43 +1,38 @@
-import {
-	useConnectionState,
-	useConnect,
-	useLeap,
-	ConnectionState,
-} from '@onehop/react';
-import {pipe} from '@onehop/client';
-import {useEffect, useRef, useState} from 'react';
+import {hop} from '@onehop/client';
+import {useEffect, useRef} from 'react';
 import {usePipeRoom} from '@onehop/react/src/hooks/pipe';
+import {ConnectionState, useConnectionState} from '@onehop/react';
 
-const projectId = 'project_Mjg2MjczMDQzMjY4Njg5OTU';
-const roomId = 'pipe_room_MzI1NDQwNDA2MjY2NTUyMzg';
+const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
 const joinToken =
-	'prjt_c18yZjgyMjY3ZDAwNTllOTQ0MTkyYjNmNzU3OTZmYmI3Zl8zMjU0NDA0MDYyNjY1NTIzNw';
+	'prjt_c180ZDhiMjAxNWE3NDI4NTE4MWEyODc4NWQ3YmRhMmUxOV8zMzAzMjgxMTAwMjU2ODcxNQ';
+
+const c = hop.init({projectId});
 
 export function Main() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
-	const leap = useLeap();
+	const connectionState = useConnectionState();
 
-	const controls = usePipeRoom({
+	const room = usePipeRoom({
 		joinToken,
 		ref: videoRef,
 	});
 
 	useEffect(() => {
-		controls.join();
-	}, []);
+		if (connectionState !== ConnectionState.CONNECTED) {
+			return;
+		}
+
+		room.join();
+	}, [connectionState]);
 
 	return (
 		<>
-			{controls && <button onClick={controls.play}>play</button>}
-			<button
-				onClick={() => {
-					leap.connect({projectId});
-				}}
-			>
-				connect
-			</button>
+			<pre>{JSON.stringify(room, null, 4)}</pre>
 
-			{controls && <button onClick={async () => controls.play()}>play</button>}
+			<button disabled={!room.canPlay} onClick={room.controls?.play}>
+				play
+			</button>
 
 			<video ref={videoRef} />
 		</>
