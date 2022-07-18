@@ -7,8 +7,8 @@ const defaultConfig: Partial<HlsConfig> = {
 	backBufferLength: 10,
 	autoStartLoad: true,
 	enableWorker: true,
-	liveBackBufferLength: 5,
 	abrBandWidthFactor: 1,
+	liveSyncDuration: LIVE_LLHLS_SYNC_BCE,
 };
 
 export class Controls {
