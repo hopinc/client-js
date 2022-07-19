@@ -79,8 +79,6 @@ export class Client {
 
 		leap.on('serviceEvent', serviceEvent);
 		leap.on('connectionStateUpdate', connectionStateUpdate);
-
-		this.getLeap().connect();
 	}
 
 	subscribeToPipeRoom(joinToken: string) {
