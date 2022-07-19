@@ -30,18 +30,6 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 	);
 
 	useEffect(() => {
-		if (!stream?.room) {
-			return;
-		}
-
-		if (stream.room.state === 'live') {
-			events.emit('STREAM_LIVE', stream.room);
-		} else {
-			events.emit('STREAM_OFFLINE', stream.room);
-		}
-	}, [stream?.room?.state]);
-
-	useEffect(() => {
 		if (connectionState !== LeapConnectionState.CONNECTED) {
 			return;
 		}
@@ -58,9 +46,7 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 			return;
 		}
 
-		if (
-			leap.getRoomStateMap().get(config.joinToken)?.subscription === 'pending'
-		) {
+		if (leap.getRoomStateMap().has(config.joinToken)) {
 			return;
 		}
 
