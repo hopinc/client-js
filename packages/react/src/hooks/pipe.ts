@@ -64,8 +64,6 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 			return;
 		}
 
-		console.log('ok');
-
 		leap.subscribeToPipeRoom(config.joinToken);
 	}, [connectionState, autojoin, config.joinToken, stream?.subscription]);
 
