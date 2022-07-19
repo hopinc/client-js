@@ -1,9 +1,9 @@
 import {pipe, util} from '@onehop/client';
 import {API} from '@onehop/js';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
-import {RefObject, useEffect, useMemo} from 'react';
+import {RefObject, useCallback, useEffect, useMemo} from 'react';
 import {useConnectionState, useLeap} from './leap';
-import {useObservableMapGet} from './maps';
+import {useObservableMapGet, useObserveObservableMap} from './maps';
 
 export interface Config {
 	joinToken: string | null;
@@ -18,14 +18,35 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 	const events = useMemo(
 		() =>
 			util.emitter.create<{
-				STREAM_LIVE: API.Pipe.Room;
-				STREAM_OFFLINE: API.Pipe.Room;
+				ROOM_UPDATE: API.Pipe.Room;
 			}>(),
 		[],
 	);
 
+	const roomStateMap = leap.getRoomStateMap();
+
+	useObserveObservableMap(
+		roomStateMap,
+		useCallback(
+			m => {
+				if (!config.joinToken) {
+					return;
+				}
+
+				const data = m.get(config.joinToken);
+
+				if (!data || !data.room) {
+					return;
+				}
+
+				events.emit('ROOM_UPDATE', data.room);
+			},
+			[config.joinToken],
+		),
+	);
+
 	const stream = useObservableMapGet(
-		leap.getRoomStateMap(),
+		roomStateMap,
 		config.joinToken ?? undefined,
 	);
 

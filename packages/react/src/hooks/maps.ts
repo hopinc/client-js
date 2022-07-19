@@ -50,3 +50,16 @@ export function useObservableMapGet<K, V>(
 
 	return storeState;
 }
+
+export function useObserveObservableMap<K, V>(
+	map: util.maps.ObservableMap<K, V>,
+	listener: (map: util.maps.ObservableMap<K, V>) => unknown,
+) {
+	useEffect(() => {
+		const subscription = map.addListener(listener);
+
+		return () => {
+			subscription.remove();
+		};
+	}, [map]);
+}
