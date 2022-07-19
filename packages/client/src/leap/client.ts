@@ -20,6 +20,7 @@ import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
+import {PIPE_ROOM_UNAVAILABLE} from './handlers/PIPE_ROOM_UNAVAILABLE';
 
 export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
@@ -30,6 +31,7 @@ export class Client {
 		TOKEN_STATE_UPDATE,
 		MESSAGE,
 
+		PIPE_ROOM_UNAVAILABLE,
 		PIPE_ROOM_AVAILABLE,
 		PIPE_ROOM_UPDATE,
 	};

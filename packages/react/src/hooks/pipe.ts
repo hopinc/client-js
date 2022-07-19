@@ -58,6 +58,14 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 			return;
 		}
 
+		if (
+			leap.getRoomStateMap().get(config.joinToken)?.subscription === 'pending'
+		) {
+			return;
+		}
+
+		console.log('ok');
+
 		leap.subscribeToPipeRoom(config.joinToken);
 	}, [connectionState, autojoin, config.joinToken, stream?.subscription]);
 
