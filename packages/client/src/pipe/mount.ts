@@ -1,7 +1,7 @@
 import Hls, {HlsConfig} from 'hls.js';
 
-const LIVE_LLHLS_SYNC_BCE = 3;
-const WCL_DELAY_LES = 5;
+export const LIVE_LLHLS_SYNC_BCE = 3;
+export const WCL_DELAY_LES = 5;
 
 const defaultConfig: Partial<HlsConfig> = {
 	lowLatencyMode: true,
@@ -26,7 +26,7 @@ export class Controls {
 	 *
 	 * @param distance The seconds to sync from live edge (e.g. a buffer)
 	 */
-	sync(distance = 0) {
+	sync(distance = LIVE_LLHLS_SYNC_BCE) {
 		this.node.currentTime = this.node.duration - distance;
 	}
 
