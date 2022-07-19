@@ -4,7 +4,7 @@ import {usePipeRoom} from '@onehop/react/src/hooks/pipe';
 
 const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
 const joinToken =
-	'prjt_c184OWUxYzhjMjcyOGEwMjVjY2Y5MzcyZTZjM2YwYjQ0OF8zMjUzNzY4NzQwNTgzODM0MQ';
+	'prjt_c18yYzY5ZmJjMTRhOWM3MmIzZDVjYTViYTc1YWJkYjRhNl8zMzY4MTU2MzU2NTEyOTcyOQ';
 
 hop.init({
 	projectId,
