@@ -939,7 +939,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@preconstruct/cli@npm:^2.2.0":
+"@preconstruct/cli@npm:^2.2.1":
   version: 2.2.1
   resolution: "@preconstruct/cli@npm:2.2.1"
   dependencies:
@@ -1285,7 +1285,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.30.6":
+"@typescript-eslint/eslint-plugin@npm:^5.30.7":
   version: 5.30.7
   resolution: "@typescript-eslint/eslint-plugin@npm:5.30.7"
   dependencies:
@@ -1308,7 +1308,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.30.6":
+"@typescript-eslint/parser@npm:^5.30.7":
   version: 5.30.7
   resolution: "@typescript-eslint/parser@npm:5.30.7"
   dependencies:
@@ -2411,14 +2411,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-xo-typescript@npm:^0.51.1":
-  version: 0.51.1
-  resolution: "eslint-config-xo-typescript@npm:0.51.1"
+"eslint-config-xo-typescript@npm:^0.52.0":
+  version: 0.52.0
+  resolution: "eslint-config-xo-typescript@npm:0.52.0"
   peerDependencies:
-    "@typescript-eslint/eslint-plugin": ">=5.22.0"
+    "@typescript-eslint/eslint-plugin": ">=5.28.0"
+    "@typescript-eslint/parser": ">=5.28.0"
     eslint: ">=8.0.0"
     typescript: ">=4.4"
-  checksum: d9bd448ad9e957e1b988ddfdddfcd4ab0dd9105f904223be0efdaccb4e5248d7174a3d2e6222020bcb5ed8c8c57addcf522948a159dd191ddc408bb37fefe7d7
+  checksum: 4c4defdcced8cfead761142b44e811365397030d1667d35fcd8077c0038eb8fa9b5ca1672aa3aea121af37b4f0d8cb1092b57f22039a4fb8cc0a980e4a7f5d33
   languageName: node
   linkType: hard
 
@@ -3112,13 +3113,13 @@ __metadata:
   dependencies:
     "@babel/preset-react": ^7.18.6
     "@babel/preset-typescript": ^7.18.6
-    "@preconstruct/cli": ^2.2.0
-    "@typescript-eslint/eslint-plugin": ^5.30.6
-    "@typescript-eslint/parser": ^5.30.6
+    "@preconstruct/cli": ^2.2.1
+    "@typescript-eslint/eslint-plugin": ^5.30.7
+    "@typescript-eslint/parser": ^5.30.7
     alistair: ^1.4.3
     eslint: ^8.20.0
     eslint-config-xo: ^0.41.0
-    eslint-config-xo-typescript: ^0.51.1
+    eslint-config-xo-typescript: ^0.52.0
     hls.js: ^1.1.5
     prettier: ^2.7.1
     typescript: ^4.7.4
