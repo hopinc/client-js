@@ -3,7 +3,11 @@ import {Payload as PIPE_ROOM_AVAILABLE_PAYLOAD} from './handlers/PIPE_ROOM_AVAIL
 
 export type LeapChannelSubscriptionError = 'NOT_GRANTED' | 'UNKNOWN';
 
-export type GenericSubscriptionState = 'available' | 'pending' | 'unavailable';
+export type GenericSubscriptionState =
+	| 'available'
+	| 'pending'
+	| 'unavailable'
+	| 'non_existent';
 
 export type ChannelStateData<T extends API.Channels.State> = {
 	state: T | null;
@@ -12,8 +16,15 @@ export type ChannelStateData<T extends API.Channels.State> = {
 };
 
 export type RoomStateData =
-	| {subscription: 'pending'; room: null}
-	| {subscription: 'unavailable'; room: null; error: UnavailableError}
+	| {
+			subscription: 'pending';
+			room: null;
+	  }
+	| {
+			subscription: 'unavailable';
+			room: null;
+			error: UnavailableError;
+	  }
 	| {
 			subscription: 'available';
 			room: API.Pipe.Room;

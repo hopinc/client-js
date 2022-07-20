@@ -16,11 +16,11 @@ import {LeapHandler} from './handlers/create';
 import {INIT} from './handlers/INIT';
 import {MESSAGE} from './handlers/MESSAGE';
 import {PIPE_ROOM_AVAILABLE} from './handlers/PIPE_ROOM_AVAILABLE';
+import {PIPE_ROOM_UNAVAILABLE} from './handlers/PIPE_ROOM_UNAVAILABLE';
 import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
-import {PIPE_ROOM_UNAVAILABLE} from './handlers/PIPE_ROOM_UNAVAILABLE';
 
 export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
@@ -62,6 +62,10 @@ export class Client {
 		RoomStateData
 	>();
 
+	private readonly rawServiceEventListeners = new Set<
+		(message: LeapServiceEvent) => unknown
+	>();
+
 	connect(auth: LeapEdgeAuthenticationParameters) {
 		if (this.leap) {
 			return;
@@ -91,6 +95,51 @@ export class Client {
 		this.roomStateMap.set(joinToken, {
 			subscription: 'pending',
 			room: null,
+		});
+	}
+
+	unsubscribeFromRoom(joinToken: API.Pipe.Room['join_token']) {
+		const stream = this.roomStateMap.get(joinToken);
+
+		if (!stream) {
+			throw new Error('Not subscribed to that room!');
+		}
+
+		// This condition is annoying, because we don't know the room ID
+		// as we never received 'AVAILABLE'
+		// but we still want to make sure its no longer in this.roomStateMap
+		// and that the server isn't still processing our subscription
+
+		// Context: An app where there are multiple streams of something
+		// 1) User enters stream and subscribes (we don't receive PIPE_ROOM_AVAILABLE yet)
+		// 2) User realises they pressed wrong stream and quickly hits back
+		// 3) We never got the available message, so we never got the room id
+		// 4) How unsibcsribe
+
+		// This is a bit of a hack, but it works
+		if (stream.subscription !== 'available') {
+			const listener = (message: LeapServiceEvent) => {
+				if (message.eventType !== 'PIPE_ROOM_AVAILABLE') {
+					return;
+				}
+
+				this.unsubscribeFromRoom(joinToken);
+				this.rawServiceEventListeners.delete(listener);
+			};
+
+			this.rawServiceEventListeners.add(listener);
+
+			return;
+		}
+
+		this.roomStateMap.delete(joinToken);
+
+		this.send({
+			e: 'PIPE_ROOM_UNSUBSCRIBE',
+			d: {
+				id: stream.room.id,
+			},
+			c: null,
 		});
 	}
 

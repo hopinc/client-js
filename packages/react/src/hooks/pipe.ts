@@ -1,17 +1,63 @@
 import {pipe, util} from '@onehop/client';
 import {API} from '@onehop/js';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
-import {RefObject, useCallback, useEffect, useMemo} from 'react';
+import {
+	createContext,
+	RefObject,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+} from 'react';
 import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet, useObserveObservableMap} from './maps';
 
-export interface Config {
+export type Config = {
 	joinToken: string | null;
 	ref: RefObject<HTMLVideoElement | null>;
 	autojoin?: boolean;
+};
+
+export const trackedPipeComponents = createContext(
+	new util.maps.ObservableMap<
+		API.Pipe.Room['join_token'],
+		util.atoms.Atom<number>
+	>(),
+);
+
+export function useTrackedPipeComponentCount(joinToken: string | null) {
+	const map = useContext(trackedPipeComponents);
+	const state = useObservableMapGet(map, joinToken ?? undefined);
+
+	const leap = useLeap();
+
+	useEffect(() => {
+		if (!state && joinToken) {
+			map.set(joinToken, util.atoms.create(0));
+		}
+	}, [state, joinToken]);
+
+	useEffect(() => {
+		if (!joinToken || !state) {
+			return;
+		}
+
+		state.set(state.get() + 1);
+
+		return () => {
+			const value = state.get() - 1;
+
+			if (value === 0) {
+				leap.unsubscribeFromRoom(joinToken);
+				map.delete(joinToken);
+			} else {
+				state.set(value);
+			}
+		};
+	}, [joinToken, state]);
 }
 
-export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
+export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 	const leap = useLeap();
 	const connectionState = useConnectionState();
 
@@ -29,11 +75,11 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 		roomStateMap,
 		useCallback(
 			m => {
-				if (!config.joinToken) {
+				if (!joinToken) {
 					return;
 				}
 
-				const data = m.get(config.joinToken);
+				const data = m.get(joinToken);
 
 				if (!data || !data.room) {
 					return;
@@ -41,14 +87,13 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 
 				events.emit('ROOM_UPDATE', data.room);
 			},
-			[config.joinToken],
+			[joinToken],
 		),
 	);
 
-	const stream = useObservableMapGet(
-		roomStateMap,
-		config.joinToken ?? undefined,
-	);
+	const stream = useObservableMapGet(roomStateMap, joinToken ?? undefined);
+
+	useTrackedPipeComponentCount(joinToken);
 
 	useEffect(() => {
 		if (connectionState !== LeapConnectionState.CONNECTED) {
@@ -63,16 +108,16 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 			return;
 		}
 
-		if (!config.joinToken) {
+		if (!joinToken) {
 			return;
 		}
 
-		if (leap.getRoomStateMap().has(config.joinToken)) {
+		if (leap.getRoomStateMap().has(joinToken)) {
 			return;
 		}
 
-		leap.subscribeToPipeRoom(config.joinToken);
-	}, [connectionState, autojoin, config.joinToken, stream?.subscription]);
+		leap.subscribeToPipeRoom(joinToken);
+	}, [connectionState, autojoin, joinToken, stream?.subscription]);
 
 	const canPlay =
 		connectionState === LeapConnectionState.CONNECTED &&
@@ -101,13 +146,13 @@ export function usePipeRoom({ref, autojoin = true, ...config}: Config) {
 		subscription: stream?.subscription ?? ('non_existent' as const),
 		events,
 		join() {
-			if (!config.joinToken) {
+			if (!joinToken) {
 				throw new Error(
 					'Cannot join a room without a valid join token passed to `usePipeRoom`.',
 				);
 			}
 
-			leap.subscribeToPipeRoom(config.joinToken);
+			leap.subscribeToPipeRoom(joinToken);
 		},
 	};
 }
