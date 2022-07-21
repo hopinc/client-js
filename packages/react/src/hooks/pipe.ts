@@ -1,7 +1,6 @@
-import {pipe, util} from '@onehop/client';
+import {pipe, util, hls} from '@onehop/client';
 import {API} from '@onehop/js';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
-import Hls, {ErrorData, Events, FragBufferedData} from 'hls.js';
 import {
 	createContext,
 	RefObject,
@@ -142,8 +141,8 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 
 		setControls(controls);
 
-		const errorListener = (event: Events.ERROR, data: ErrorData) => {
-			if (data.details !== Hls.ErrorDetails.BUFFER_STALLED_ERROR) {
+		const errorListener = (event: hls.Events.ERROR, data: hls.ErrorData) => {
+			if (data.details !== hls.ErrorDetails.BUFFER_STALLED_ERROR) {
 				return;
 			}
 
@@ -152,22 +151,22 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 		};
 
 		const fragBufferedListener = (
-			event: Events.FRAG_BUFFERED,
-			data: FragBufferedData,
+			event: hls.Events.FRAG_BUFFERED,
+			data: hls.FragBufferedData,
 		) => {
 			events.emit('BUFFERING', false);
 			setBuffering(false);
 		};
 
-		controls.hls.on(Hls.Events.ERROR, errorListener);
-		controls.hls.on(Hls.Events.FRAG_BUFFERED, fragBufferedListener);
+		controls.hls.on(hls.Events.ERROR, errorListener);
+		controls.hls.on(hls.Events.FRAG_BUFFERED, fragBufferedListener);
 
 		return () => {
 			controls.destroy();
 			setControls(null);
 
-			controls.hls.off(Hls.Events.ERROR, errorListener);
-			controls.hls.off(Hls.Events.FRAG_BUFFERED, fragBufferedListener);
+			controls.hls.off(hls.Events.ERROR, errorListener);
+			controls.hls.off(hls.Events.FRAG_BUFFERED, fragBufferedListener);
 		};
 	}, [canPlay, ref.current]);
 
