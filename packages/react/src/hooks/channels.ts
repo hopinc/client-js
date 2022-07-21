@@ -3,7 +3,7 @@ import {API} from '@onehop/js';
 import {Dispatch, SetStateAction, useEffect} from 'react';
 import {resolveSetStateAction} from '../util/state';
 import {useLeap} from './leap';
-import {useObservableMap, useObservableMapGet} from './maps';
+import {useObservableMapGet} from './maps';
 
 export function useSendChannelMessage<T = any>(
 	channel: string,
@@ -22,7 +22,6 @@ export function useChannelMessage<T = any>(
 	listener: (data: T) => unknown,
 ) {
 	const client = useLeap();
-	const map = client.getMessageListeners();
 
 	useEffect(() => {
 		const subscription = client.addMessageSubscription(
