@@ -1,6 +1,7 @@
 import {pipe, util} from '@onehop/client';
 import {API} from '@onehop/js';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
+import Hls, {ErrorData, Events, FragBufferedData} from 'hls.js';
 import {
 	createContext,
 	RefObject,
@@ -8,6 +9,7 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
+	useState,
 } from 'react';
 import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet, useObserveObservableMap} from './maps';
@@ -60,11 +62,14 @@ export function useTrackedPipeComponentCount(joinToken: string | null) {
 export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 	const leap = useLeap();
 	const connectionState = useConnectionState();
+	const [controls, setControls] = useState<pipe.Controls | null>(null);
+	const [buffering, setBuffering] = useState(false);
 
 	const events = useMemo(
 		() =>
 			util.emitter.create<{
 				ROOM_UPDATE: API.Pipe.Room;
+				BUFFERING: boolean;
 			}>(),
 		[],
 	);
@@ -135,8 +140,34 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 			stream.connection.llhls!.edge_endpoint,
 		);
 
+		setControls(controls);
+
+		const errorListener = (event: Events.ERROR, data: ErrorData) => {
+			if (data.details !== Hls.ErrorDetails.BUFFER_STALLED_ERROR) {
+				return;
+			}
+
+			events.emit('BUFFERING', true);
+			setBuffering(true);
+		};
+
+		const fragBufferedListener = (
+			event: Events.FRAG_BUFFERED,
+			data: FragBufferedData,
+		) => {
+			events.emit('BUFFERING', false);
+			setBuffering(false);
+		};
+
+		controls.hls.on(Hls.Events.ERROR, errorListener);
+		controls.hls.on(Hls.Events.FRAG_BUFFERED, fragBufferedListener);
+
 		return () => {
 			controls.destroy();
+			setControls(null);
+
+			controls.hls.off(Hls.Events.ERROR, errorListener);
+			controls.hls.off(Hls.Events.FRAG_BUFFERED, fragBufferedListener);
 		};
 	}, [canPlay, ref.current]);
 
@@ -145,6 +176,25 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 		canPlay,
 		subscription: stream?.subscription ?? ('non_existent' as const),
 		events,
+		buffering,
+		controls,
+
+		/**
+		 * Gets the estimated position (in seconds) of live edge (ie edge of live playlist plus time sync playlist advanced) returns 0 before first playlist is loaded
+		 */
+		getLiveSync() {
+			return controls?.hls.liveSyncPosition ?? null;
+		},
+		/**
+		 * Gets the estimated position (in seconds) of live edge (ie edge of live playlist plus time sync playlist advanced) returns 0 before first playlist is loaded
+		 */
+		getLatency() {
+			return controls?.hls.latency ?? null;
+		},
+
+		/**
+		 * Requests a subscription to the pipe room. You only need to use this if you don't use the autojoin feature.
+		 */
 		join() {
 			if (!joinToken) {
 				throw new Error(

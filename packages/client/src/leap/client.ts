@@ -86,11 +86,23 @@ export class Client {
 	}
 
 	subscribeToPipeRoom(joinToken: string) {
-		this.send({
+		const existingSubscription = this.roomStateMap.get(joinToken);
+
+		const payload: EncapsulatingServicePayload = {
 			e: 'PIPE_ROOM_SUBSCRIBE',
 			c: null,
 			d: {join_token: joinToken},
-		});
+		};
+
+		if (existingSubscription) {
+			if (existingSubscription.subscription === 'unavailable') {
+				this.send(payload);
+			}
+
+			return;
+		}
+
+		this.send(payload);
 
 		this.roomStateMap.set(joinToken, {
 			subscription: 'pending',

@@ -1,6 +1,6 @@
 import {hop} from '@onehop/client';
 import {useEffect, useRef} from 'react';
-import {usePipeRoom} from '@onehop/react/src/hooks/pipe';
+import {usePipeRoom} from '@onehop/react';
 
 const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
 const joinToken =
@@ -19,7 +19,7 @@ export function Main() {
 	});
 
 	useEffect(() => {
-		const unsubscribe = room.events.on('STREAM_LIVE', event => {
+		const unsubscribe = room.events.on('ROOM_UPDATE', event => {
 			console.log(event.data.id, 'is now live');
 		});
 
