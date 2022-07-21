@@ -64,7 +64,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 	const leap = useLeap();
 	const connectionState = useConnectionState();
 	const [controls, setControls] = useState<pipe.Controls | null>(null);
-	const [buffering, setBuffering] = useState(false);
+	const [buffering, setBuffering] = useState(true);
 	const lastLatencyEmitRef = useRef<number>(-1);
 
 	const events = useMemo(
@@ -78,15 +78,15 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 	);
 
 	useInterval(500, () => {
-		if (!controls) {
+		if (!controls?.hls) {
 			return;
 		}
 
-		if (controls.hls.latency === lastLatencyEmitRef.current) {
+		if (controls.hls?.latency === lastLatencyEmitRef.current) {
 			return;
 		}
 
-		lastLatencyEmitRef.current = controls.hls.latency;
+		lastLatencyEmitRef.current = controls.hls?.latency;
 
 		events.emit('ESTIMATED_LATENCY', {
 			latency: controls.hls.latency,
@@ -178,15 +178,20 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 			setBuffering(false);
 		};
 
-		controls.hls.on(hls.Events.ERROR, errorListener);
-		controls.hls.on(hls.Events.FRAG_BUFFERED, fragBufferedListener);
+		if (controls.isNative) {
+			// iOS Safari polyfills
+			setBuffering(false);
+		} else {
+			controls.hls?.on(hls.Events.ERROR, errorListener);
+			controls.hls?.on(hls.Events.FRAG_BUFFERED, fragBufferedListener);
+		}
 
 		return () => {
 			controls.destroy();
 			setControls(null);
 
-			controls.hls.off(hls.Events.ERROR, errorListener);
-			controls.hls.off(hls.Events.FRAG_BUFFERED, fragBufferedListener);
+			controls.hls?.off(hls.Events.ERROR, errorListener);
+			controls.hls?.off(hls.Events.FRAG_BUFFERED, fragBufferedListener);
 		};
 	}, [canPlay, ref.current]);
 
@@ -202,13 +207,13 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 		 * Gets the estimated position (in seconds) of live edge (ie edge of live playlist plus time sync playlist advanced) returns 0 before first playlist is loaded
 		 */
 		getLiveSync() {
-			return controls?.hls.liveSyncPosition ?? null;
+			return controls?.hls?.liveSyncPosition ?? null;
 		},
 		/**
 		 * Gets the estimated position (in seconds) of live edge (ie edge of live playlist plus time sync playlist advanced) returns 0 before first playlist is loaded
 		 */
 		getLatency() {
-			return controls?.hls.latency ?? null;
+			return controls?.hls?.latency ?? null;
 		},
 
 		/**
