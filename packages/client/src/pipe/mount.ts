@@ -72,6 +72,10 @@ export function mount(
 	}
 
 	const syncToBCE = () => {
+		if (node.duration < LIVE_LLHLS_SYNC_BCE) {
+			return;
+		}
+
 		node.currentTime = node.duration - LIVE_LLHLS_SYNC_BCE;
 	};
 

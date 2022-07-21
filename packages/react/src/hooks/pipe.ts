@@ -8,10 +8,12 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from 'react';
 import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet, useObserveObservableMap} from './maps';
+import {useInterval} from './timeout';
 
 export type Config = {
 	joinToken: string | null;
@@ -63,15 +65,33 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 	const connectionState = useConnectionState();
 	const [controls, setControls] = useState<pipe.Controls | null>(null);
 	const [buffering, setBuffering] = useState(false);
+	const lastLatencyEmitRef = useRef<number>(-1);
 
 	const events = useMemo(
 		() =>
 			util.emitter.create<{
 				ROOM_UPDATE: API.Pipe.Room;
-				BUFFERING: boolean;
+				BUFFERING: {buffering: boolean};
+				ESTIMATED_LATENCY: {latency: number};
 			}>(),
 		[],
 	);
+
+	useInterval(500, () => {
+		if (!controls) {
+			return;
+		}
+
+		if (controls.hls.latency === lastLatencyEmitRef.current) {
+			return;
+		}
+
+		lastLatencyEmitRef.current = controls.hls.latency;
+
+		events.emit('ESTIMATED_LATENCY', {
+			latency: controls.hls.latency,
+		});
+	});
 
 	const roomStateMap = leap.getRoomStateMap();
 
@@ -146,7 +166,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 				return;
 			}
 
-			events.emit('BUFFERING', true);
+			events.emit('BUFFERING', {buffering: true});
 			setBuffering(true);
 		};
 
@@ -154,7 +174,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 			event: hls.Events.FRAG_BUFFERED,
 			data: hls.FragBufferedData,
 		) => {
-			events.emit('BUFFERING', false);
+			events.emit('BUFFERING', {buffering: false});
 			setBuffering(false);
 		};
 
