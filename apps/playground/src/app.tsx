@@ -35,6 +35,7 @@ export function Main() {
 					{
 						live: room.live,
 						canPlay: room.canPlay,
+						buffering: room.buffering,
 						subscription: room.subscription,
 					},
 					null,

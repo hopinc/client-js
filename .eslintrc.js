@@ -18,5 +18,6 @@ module.exports = {
 		'operator-linebreak': 'off',
 		'jsx-quotes': 'off',
 		'no-mixed-spaces-and-tabs': 'off',
+		'capitalized-comments': 'off',
 	},
 };

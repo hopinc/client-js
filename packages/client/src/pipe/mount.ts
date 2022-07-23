@@ -1,5 +1,6 @@
 import Hls, {HlsConfig} from 'hls.js';
 
+export const APPLE_HLS_MIME = 'application/vnd.apple.mpegurl';
 export const LIVE_LLHLS_SYNC_BCE = 3;
 export const WCL_DELAY_LES = 5;
 
@@ -47,6 +48,10 @@ export class Controls {
 		this.hls.destroy();
 	}
 
+	get isNative() {
+		return !this._hls;
+	}
+
 	get hls() {
 		if (!this._hls) {
 			throw new Error(
@@ -63,10 +68,19 @@ export function mount(
 	url: string,
 	hlsConfigOverride?: Partial<HlsConfig>,
 ): Controls {
-	if (!Hls.isSupported()) {
+	let instance: Hls;
+	if (Hls.isSupported()) {
+		instance = new Hls({
+			...defaultConfig,
+			...hlsConfigOverride,
+		});
+	} else if (node.canPlayType(APPLE_HLS_MIME)) {
+		node.src = url;
+		return new Controls(node);
+	} else {
 		throw new Error('HLS Will not work in this browser', {
 			cause: new Error(
-				'This browser does not support MSE: https://developer.mozilla.org/en-US/docs/Web/API/Media_Source_Extensions_API',
+				'This browser does not support HLS or MSE: https://developer.mozilla.org/en-US/docs/Web/API/Media_Source_Extensions_API',
 			),
 		});
 	}
@@ -82,11 +96,6 @@ export function mount(
 	node.onplay = () => {
 		syncToBCE();
 	};
-
-	const instance = new Hls({
-		...defaultConfig,
-		...hlsConfigOverride,
-	});
 
 	const liveSync = setInterval(() => {
 		if (
