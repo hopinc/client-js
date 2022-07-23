@@ -8,7 +8,6 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
-	useRef,
 	useState,
 } from 'react';
 import {useConnectionState, useLeap} from './leap';
@@ -65,7 +64,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 	const connectionState = useConnectionState();
 	const [controls, setControls] = useState<pipe.Controls | null>(null);
 	const [buffering, setBuffering] = useState(false);
-	const lastLatencyEmitRef = useRef<number>(-1);
+	const [lastLatencyEmit] = useState(() => util.atoms.create(-1));
 
 	const events = useMemo(
 		() =>
@@ -82,11 +81,11 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 			return;
 		}
 
-		if (controls.hls.latency === lastLatencyEmitRef.current) {
+		if (controls.hls.latency === lastLatencyEmit.get()) {
 			return;
 		}
 
-		lastLatencyEmitRef.current = controls.hls.latency;
+		lastLatencyEmit.set(controls.hls.latency);
 
 		events.emit('ESTIMATED_LATENCY', {
 			latency: controls.hls.latency,

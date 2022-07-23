@@ -1,8 +1,10 @@
 import {leap} from '@onehop/client';
 import {API} from '@onehop/js';
+import {LeapConnectionState} from '@onehop/leap-edge-js';
 import {Dispatch, SetStateAction, useEffect} from 'react';
+import {ConnectionState} from '..';
 import {resolveSetStateAction} from '../util/state';
-import {useLeap} from './leap';
+import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet} from './maps';
 
 export function useSendChannelMessage<T = any>(
@@ -40,21 +42,31 @@ export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): leap.ChannelStateData<T> {
 	const client = useLeap();
+	const connectionState = useConnectionState();
 
 	const data = useObservableMapGet(client.getChannelStateMap(), channel) as
 		| leap.ChannelStateData<T>
 		| undefined;
 
-	if (!data) {
-		client.subscribeToChannel(channel);
+	useEffect(() => {
+		if (
+			connectionState === ConnectionState.CONNECTED &&
+			data?.subscription === 'non_existent'
+		) {
+			client.subscribeToChannel(channel);
+		}
+	}, [connectionState, data?.state]);
 
-		const state: leap.ChannelStateData<T> = {
+	if (!data) {
+		const nonExistentData: leap.ChannelStateData<T> = {
 			state: null,
 			error: null,
-			subscription: 'pending',
+			subscription: 'non_existent',
 		};
 
-		return state;
+		client.getChannelStateMap().set(channel, nonExistentData);
+
+		return nonExistentData;
 	}
 
 	return data;
