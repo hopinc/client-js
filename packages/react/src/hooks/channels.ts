@@ -51,7 +51,7 @@ export function useReadChannelState<
 	useEffect(() => {
 		if (
 			connectionState === ConnectionState.CONNECTED &&
-			data?.subscription === 'non_existent'
+			(!data || data.subscription === 'non_existent')
 		) {
 			client.subscribeToChannel(channel);
 		}

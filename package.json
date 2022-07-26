@@ -43,5 +43,6 @@
 	"repository": "https://github.com/hopinc/hop-client-js.git",
 	"dependencies": {
 		"hls.js": "^1.1.5"
-	}
+	},
+	"version": "1.0.8"
 }

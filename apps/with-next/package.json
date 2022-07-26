@@ -1,0 +1,26 @@
+{
+  "name": "with-next",
+  "packageManager": "yarn@3.2.1",
+  "dependencies": {
+    "@onehop/client": "workspace:^",
+    "@onehop/react": "workspace:^",
+    "next": "^12.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@preconstruct/next": "^4.0.0"
+  },
+  "author": "Hop Development Team",
+  "keywords": [
+    "realtime",
+    "channels",
+    "pipe",
+    "client",
+    "react"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/hopinc/hop-client-js.git",
+  "version": "1.0.8",
+  "homepage": "https://github.com/hopinc/hop-client-js/tree/master/apps/with-next"
+}
