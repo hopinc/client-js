@@ -69,6 +69,7 @@ export function mount(
 	hlsConfigOverride?: Partial<HlsConfig>,
 ): Controls {
 	let instance: Hls;
+
 	if (Hls.isSupported()) {
 		instance = new Hls({
 			...defaultConfig,

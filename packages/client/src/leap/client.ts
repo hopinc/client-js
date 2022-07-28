@@ -184,6 +184,10 @@ export class Client {
 		};
 	}
 
+	/**
+	 * Get a list of all subscriptions
+	 * @returns A list of all channel names we are currently subscribed to
+	 */
 	getCurrentSubscriptions() {
 		return [...this.channelStateMap.entries()]
 			.filter(entry => {
@@ -274,6 +278,20 @@ export class Client {
 	}
 
 	private async handleConnectionStateUpdate(state: LeapConnectionState) {
+		if (state === LeapConnectionState.ERRORED) {
+			const l = this.connectionState.addListener(state => {
+				if (state !== LeapConnectionState.CONNECTED) {
+					return;
+				}
+
+				for (const channel of this.getCurrentSubscriptions()) {
+					this.subscribeToChannel(channel);
+				}
+
+				l.remove();
+			});
+		}
+
 		this.connectionState.set(state);
 	}
 
