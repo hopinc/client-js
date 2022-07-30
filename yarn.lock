@@ -3234,7 +3234,6 @@ __metadata:
     eslint: ^8.20.0
     eslint-config-xo: ^0.41.0
     eslint-config-xo-typescript: ^0.52.0
-    hls.js: ^1.1.5
     prettier: ^2.7.1
     typescript: ^4.7.4
   languageName: unknown

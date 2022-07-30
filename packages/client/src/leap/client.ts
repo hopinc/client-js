@@ -21,6 +21,7 @@ import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
+import {util} from '..';
 
 export class Client {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
@@ -35,6 +36,8 @@ export class Client {
 		PIPE_ROOM_AVAILABLE,
 		PIPE_ROOM_UPDATE,
 	};
+
+	public hasPreviouslyConnected = false;
 
 	private readonly connectionState = atoms.create<LeapConnectionState>(
 		LeapConnectionState.IDLE,
@@ -85,7 +88,7 @@ export class Client {
 		leap.on('connectionStateUpdate', connectionStateUpdate);
 	}
 
-	subscribeToPipeRoom(joinToken: string) {
+	subscribeToRoom(joinToken: string) {
 		const existingSubscription = this.roomStateMap.get(joinToken);
 
 		const payload: EncapsulatingServicePayload = {
@@ -184,17 +187,34 @@ export class Client {
 		};
 	}
 
-	/**
-	 * Get a list of all subscriptions
-	 * @returns A list of all channel names we are currently subscribed to
+	/*
+	 * @deprecated	Use getCurrentAvailableSubscriptions() instead
 	 */
 	getCurrentSubscriptions() {
-		return [...this.channelStateMap.entries()]
-			.filter(entry => {
-				const [, {subscription}] = entry;
-				return subscription === 'available';
-			})
-			.map(entry => entry[0]);
+		console.warn(
+			'getCurrentSubscriptions is deprecated and will be removed in a near update',
+		);
+		return this.getCurrentAvailableSubscriptions().channels;
+	}
+
+	/**
+	 * Get a list of all subscriptions
+	 * @returns A list of all channel and room names we are currently subscribed to
+	 */
+	getCurrentAvailableSubscriptions() {
+		const filter = (
+			value:
+				| util.maps.ObservableMap<string, ChannelStateData<API.Channels.State>>
+				| util.maps.ObservableMap<string, RoomStateData>,
+		) =>
+			[...value.entries()]
+				.filter(([, entry]) => entry.subscription === 'available')
+				.map(entry => entry[0]);
+
+		return {
+			channels: filter(this.getChannelStateMap()),
+			rooms: filter(this.getRoomStateMap()),
+		};
 	}
 
 	getChannelStateMap() {
@@ -278,18 +298,36 @@ export class Client {
 	}
 
 	private async handleConnectionStateUpdate(state: LeapConnectionState) {
-		if (state === LeapConnectionState.ERRORED) {
+		if (
+			state === LeapConnectionState.CONNECTING &&
+			this.hasPreviouslyConnected
+		) {
 			const l = this.connectionState.addListener(state => {
 				if (state !== LeapConnectionState.CONNECTED) {
 					return;
 				}
 
-				for (const channel of this.getCurrentSubscriptions()) {
+				const {channels, rooms} = this.getCurrentAvailableSubscriptions();
+
+				console.log('Leap reconnected, resubscribing to', {
+					channels,
+					rooms,
+				});
+
+				for (const channel of channels) {
 					this.subscribeToChannel(channel);
+				}
+
+				for (const room of rooms) {
+					this.subscribeToRoom(room);
 				}
 
 				l.remove();
 			});
+		}
+
+		if (!this.hasPreviouslyConnected) {
+			this.hasPreviouslyConnected = true;
 		}
 
 		this.connectionState.set(state);

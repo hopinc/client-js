@@ -8,7 +8,7 @@ const client = hop.init({
 
 const joinToken = 'join_token_xxx';
 
-client.subscribeToPipeRoom(joinToken);
+client.subscribeToRoom(joinToken);
 
 client.getRoomStateMap().addListener(map => {
 	const room = map.get(joinToken);

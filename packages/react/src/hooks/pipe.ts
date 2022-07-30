@@ -139,7 +139,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 			return;
 		}
 
-		leap.subscribeToPipeRoom(joinToken);
+		leap.subscribeToRoom(joinToken);
 	}, [connectionState, autojoin, joinToken, stream?.subscription]);
 
 	const canPlay =
@@ -225,7 +225,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 				);
 			}
 
-			leap.subscribeToPipeRoom(joinToken);
+			leap.subscribeToRoom(joinToken);
 		},
 	};
 }
