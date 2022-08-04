@@ -6,9 +6,7 @@ const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
 const joinToken =
 	'prjt_c18yYzY5ZmJjMTRhOWM3MmIzZDVjYTViYTc1YWJkYjRhNl8zMzY4MTU2MzU2NTEyOTcyOQ';
 
-hop.init({
-	projectId,
-});
+hop.init({projectId});
 
 export function Main() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);

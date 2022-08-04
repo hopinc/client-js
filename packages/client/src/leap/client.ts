@@ -194,6 +194,7 @@ export class Client {
 		console.warn(
 			'getCurrentSubscriptions is deprecated and will be removed in a near update',
 		);
+
 		return this.getCurrentAvailableSubscriptions().channels;
 	}
 
@@ -298,28 +299,16 @@ export class Client {
 	}
 
 	private async handleConnectionStateUpdate(state: LeapConnectionState) {
-		if (
-			state === LeapConnectionState.CONNECTING &&
-			this.hasPreviouslyConnected
-		) {
+		if (state === LeapConnectionState.ERRORED && this.hasPreviouslyConnected) {
 			const l = this.connectionState.addListener(state => {
 				if (state !== LeapConnectionState.CONNECTED) {
 					return;
 				}
 
-				const {channels, rooms} = this.getCurrentAvailableSubscriptions();
-
-				console.log('Leap reconnected, resubscribing to', {
-					channels,
-					rooms,
-				});
-
-				for (const channel of channels) {
-					this.subscribeToChannel(channel);
-				}
-
-				for (const room of rooms) {
-					this.subscribeToRoom(room);
+				// If we have a leap token, subscriptions are persisted
+				// on the server. There's no need to resubscribe.
+				if (!this.getLeap().auth.token) {
+					this.resubscribe();
 				}
 
 				l.remove();
@@ -331,6 +320,23 @@ export class Client {
 		}
 
 		this.connectionState.set(state);
+	}
+
+	private resubscribe() {
+		const {channels, rooms} = this.getCurrentAvailableSubscriptions();
+
+		console.log('resubscribing to', {
+			channels,
+			rooms,
+		});
+
+		for (const channel of channels) {
+			this.subscribeToChannel(channel);
+		}
+
+		for (const room of rooms) {
+			this.subscribeToRoom(room);
+		}
 	}
 
 	private async handleServiceEvent(event: LeapServiceEvent) {
