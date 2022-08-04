@@ -7,7 +7,7 @@
 		"@vitejs/plugin-react": "^2.0.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"vite": "^3.0.0"
+		"vite": "^3.0.4"
 	},
 	"author": "Hop Development Team",
 	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/apps/playground",
