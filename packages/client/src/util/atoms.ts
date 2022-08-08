@@ -1,16 +1,16 @@
 export type AtomValue<T> = {value: T} | {uninitialized: true; value: undefined};
 export type Listener<T> = (value: T) => unknown;
 
-export interface Listening {
+export type Listening = {
 	remove(): void;
-}
+};
 
-export interface Atom<T> {
+export type Atom<T> = {
 	get(): T;
 	set(value: T): void;
 	addListener(listener: Listener<T>): Listening;
 	removeListener(listener: Listener<T>): void;
-}
+};
 
 export type Infer<T> = T extends Atom<infer V> ? V : never;
 

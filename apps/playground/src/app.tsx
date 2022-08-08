@@ -6,7 +6,11 @@ const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
 const joinToken =
 	'prjt_c18yYzY5ZmJjMTRhOWM3MmIzZDVjYTViYTc1YWJkYjRhNl8zMzY4MTU2MzU2NTEyOTcyOQ';
 
-hop.init({projectId});
+const client = hop.init({projectId});
+
+client.on('MESSAGE', message => {
+	console.log('Received', message.event, 'event:', message.data);
+});
 
 export function Main() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -18,7 +22,7 @@ export function Main() {
 
 	useEffect(() => {
 		const unsubscribe = room.events.on('ROOM_UPDATE', event => {
-			console.log(event.data.id, 'is now live');
+			console.log(event.id, 'is now live');
 		});
 
 		return () => {

@@ -26,6 +26,11 @@ export const MESSAGE = createLeapEvent({
 			return;
 		}
 
+		client.emit('MESSAGE', {
+			event,
+			data: messageData,
+		});
+
 		for (const listener of listeners) {
 			listener(messageData);
 		}

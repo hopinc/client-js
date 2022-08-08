@@ -8,7 +8,7 @@ import {
 	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
 
-import {atoms, channels, maps} from '../util';
+import * as util from '../util';
 import {ChannelStateData, RoomStateData} from './types';
 
 import {AVAILABLE} from './handlers/AVAILABLE';
@@ -21,9 +21,19 @@ import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
-import {util} from '..';
 
-export class Client {
+export type ClientEvents = {
+	MESSAGE: {
+		event: string;
+		data: unknown;
+	};
+
+	SERVICE_EVENT: LeapServiceEvent;
+
+	CONNECTION_STATE_UPDATE: LeapConnectionState;
+};
+
+export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	public static readonly SUPPORTED_EVENTS: Record<string, LeapHandler> = {
 		INIT,
 		AVAILABLE,
@@ -39,19 +49,19 @@ export class Client {
 
 	public hasPreviouslyConnected = false;
 
-	private readonly connectionState = atoms.create<LeapConnectionState>(
+	private readonly connectionState = util.atoms.create<LeapConnectionState>(
 		LeapConnectionState.IDLE,
 	);
 
 	private leap: LeapEdgeClient | null = null;
 
-	private readonly channelStateMap = new maps.ObservableMap<
+	private readonly channelStateMap = new util.maps.ObservableMap<
 		API.Channels.Channel['id'],
 		ChannelStateData<API.Channels.State>
 	>();
 
 	private readonly channelMessageListeners = new Map<
-		channels.ChannelMessageListenerKey,
+		util.channels.ChannelMessageListenerKey,
 		Set<(data: unknown) => unknown>
 	>();
 
@@ -60,7 +70,7 @@ export class Client {
 		Set<(data: unknown) => unknown>
 	>();
 
-	private readonly roomStateMap = new maps.ObservableMap<
+	private readonly roomStateMap = new util.maps.ObservableMap<
 		API.Pipe.Room['join_token'],
 		RoomStateData
 	>();
@@ -68,6 +78,12 @@ export class Client {
 	private readonly rawServiceEventListeners = new Set<
 		(message: LeapServiceEvent) => unknown
 	>();
+
+	// Rule is broken — constructor is not useless because HopEmitter#constructor is protected
+	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
+	constructor() {
+		super();
+	}
 
 	connect(auth: LeapEdgeAuthenticationParameters) {
 		if (this.leap) {
@@ -77,10 +93,12 @@ export class Client {
 		const leap = this.getLeap(auth);
 
 		const serviceEvent = async (message: LeapServiceEvent) => {
+			this.emit('SERVICE_EVENT', message);
 			await this.handleServiceEvent(message);
 		};
 
 		const connectionStateUpdate = async (state: LeapConnectionState) => {
+			this.emit('CONNECTION_STATE_UPDATE', state);
 			await this.handleConnectionStateUpdate(state);
 		};
 
@@ -164,7 +182,7 @@ export class Client {
 		listener: (data: T) => unknown,
 	) {
 		const map = this.getMessageListeners();
-		const key = channels.getMessageListenerKey(channel, eventName);
+		const key = util.channels.getMessageListenerKey(channel, eventName);
 		const listeners = map.get(key) ?? new Set();
 
 		const castListener = listener as (data: unknown) => unknown;
@@ -235,7 +253,7 @@ export class Client {
 	}
 
 	getConnectionState(fullAtom?: false): LeapConnectionState;
-	getConnectionState(fullAtom: true): atoms.Atom<LeapConnectionState>;
+	getConnectionState(fullAtom: true): util.atoms.Atom<LeapConnectionState>;
 	getConnectionState(fullAtom = false) {
 		if (fullAtom) {
 			return this.connectionState;

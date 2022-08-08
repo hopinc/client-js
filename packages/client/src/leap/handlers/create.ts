@@ -2,9 +2,9 @@ import {API} from '@onehop/js';
 import {LeapServiceEvent} from '@onehop/leap-edge-js';
 import type {Client} from '..';
 
-export interface LeapHandler {
+export type LeapHandler = {
 	handle(client: Client, event: LeapServiceEvent): Promise<void>;
-}
+};
 
 export function createLeapEvent<D, G extends boolean = true>(config: {
 	requireId?: G;

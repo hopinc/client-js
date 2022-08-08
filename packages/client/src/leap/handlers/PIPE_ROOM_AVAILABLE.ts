@@ -1,14 +1,14 @@
 import {API} from '@onehop/js';
 import {createLeapEvent} from './create';
 
-export interface Connection {
+export type Connection = {
 	edge_endpoint: string;
-}
+};
 
-export interface Payload {
+export type Payload = {
 	pipe_room: API.Pipe.Room;
 	connection: {llhls?: Connection; webrtc?: Connection};
-}
+};
 
 export const PIPE_ROOM_AVAILABLE = createLeapEvent({
 	requireId: false,

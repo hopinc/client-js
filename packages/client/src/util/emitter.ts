@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/parameter-properties */
-
 export type HopEmitterListener<
 	P extends Record<string, unknown>,
 	Key extends keyof P,
-> = (event: HopEmitterEvent<P, Key>) => unknown;
+> = (event: P[Key]) => unknown;
+
+export type Unsubscribe = () => void;
 
 export class HopEmitter<Payloads extends Record<string, unknown>> {
 	private readonly listeners;
@@ -16,16 +16,28 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 	}
 
 	public createListener<K extends keyof Payloads>(
-		key: K,
+		_key: K,
 		fn: HopEmitterListener<Payloads, K>,
 	) {
 		return fn;
 	}
 
+	/**
+	 * Subscribe and listen to an event
+	 * @param key The event name to listen for
+	 * @param listener A listener for this event
+	 * @returns A function that can be called to unsubscribe the listener
+	 * @example
+	 * ```
+	 * const unsubscribe = client.on('MESSAGE', console.log);
+	 * // Unsubscribe later...
+	 * unsubscribe();
+	 * ```
+	 */
 	public on<K extends keyof Payloads>(
 		key: K,
 		listener: HopEmitterListener<Payloads, K>,
-	) {
+	): Unsubscribe {
 		const existing = this.listeners.get(key) ?? [];
 
 		const merged = new Set([...existing, listener]) as Set<
@@ -35,9 +47,17 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 		this.listeners.set(key, merged);
 
 		return () => {
-			this.listeners
-				.get(key)
-				?.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
+			const set = this.listeners.get(key);
+
+			if (!set) {
+				return;
+			}
+
+			if (set.size === 0) {
+				this.listeners.delete(key);
+			}
+
+			set.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
 		};
 	}
 
@@ -45,20 +65,18 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 		key: K,
 		listener: HopEmitterListener<Payloads, K>,
 	) {
-		const list = this.listeners.get(key);
+		const set = this.listeners.get(key);
 
-		if (!list) {
+		if (!set) {
 			throw new Error("Cannot remove listener for key that doesn't exist.");
 		}
 
-		if (list.size === 0) {
+		if (set.size === 0) {
 			this.listeners.delete(key);
 			return;
 		}
 
-		this.listeners
-			.get(key)
-			?.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
+		set.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
 	}
 
 	emit<K extends keyof Payloads>(key: K, data: Payloads[K]) {
@@ -75,40 +93,15 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 			return;
 		}
 
-		const event = new HopEmitterEvent(this, key, data);
-
 		for (const listener of listeners) {
-			listener(event);
+			listener(data);
 		}
 	}
 }
 
-class HopEmitterInitialiser<
-	P extends Record<string, unknown>,
-> extends HopEmitter<P> {
+class HopEmitterInitialiser extends HopEmitter<never> {
 	public static create = <D extends Record<string, unknown>>() =>
 		new HopEmitter<D>();
-
-	private constructor() {
-		super();
-	}
 }
 
-export function create<Payloads extends Record<string, unknown>>() {
-	return HopEmitterInitialiser.create<Payloads>();
-}
-
-export class HopEmitterEvent<
-	P extends Record<string, unknown>,
-	K extends keyof P,
-> {
-	public readonly emitter: HopEmitter<P>;
-	public readonly key: K;
-	public readonly data: P[K];
-
-	constructor(emitter: HopEmitter<P>, key: K, data: P[K]) {
-		this.emitter = emitter;
-		this.key = key;
-		this.data = data;
-	}
-}
+export const {create} = HopEmitterInitialiser;
