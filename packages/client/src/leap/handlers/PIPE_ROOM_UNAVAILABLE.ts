@@ -14,6 +14,7 @@ export const PIPE_ROOM_UNAVAILABLE = createLeapEvent({
 		client.getRoomStateMap().set(data.join_token, {
 			subscription: 'unavailable',
 			error: data,
+			room: null,
 		});
 	},
 });

@@ -1,14 +1,11 @@
-export type AtomValue<T> = {value: T} | {uninitialized: true; value: undefined};
-export type Listener<T> = (value: T) => unknown;
+import {Listener, Subscription} from '../util/types';
 
-export type Listening = {
-	remove(): void;
-};
+export type AtomValue<T> = {value: T} | {uninitialized: true; value: undefined};
 
 export type Atom<T> = {
 	get(): T;
 	set(value: T): void;
-	addListener(listener: Listener<T>): Listening;
+	addListener(listener: Listener<T>): Subscription;
 	removeListener(listener: Listener<T>): void;
 };
 
@@ -58,7 +55,7 @@ function atom<T>(initialValue?: T): Atom<T> {
 
 		set(value: T) {
 			// Be efficient and don't update
-			if (atomValue.value === value) {
+			if (Object.is(atomValue.value, value)) {
 				return;
 			}
 

@@ -27,7 +27,7 @@ export const trackedPipeComponents = createContext(
 	>(),
 );
 
-export function useTrackedPipeComponentCount(joinToken: string | null) {
+export function useTrackPipeComponentCount(joinToken: string | null) {
 	const map = useContext(trackedPipeComponents);
 	const state = useObservableMapGet(map, joinToken ?? undefined);
 
@@ -116,7 +116,7 @@ export function usePipeRoom({ref, autojoin = true, joinToken}: Config) {
 
 	const stream = useObservableMapGet(roomStateMap, joinToken ?? undefined);
 
-	useTrackedPipeComponentCount(joinToken);
+	useTrackPipeComponentCount(joinToken);
 
 	useEffect(() => {
 		if (connectionState !== LeapConnectionState.CONNECTED) {

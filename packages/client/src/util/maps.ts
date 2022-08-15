@@ -1,14 +1,16 @@
+import {Subscription} from './types';
+
 export type ListenerPayload<K, V> =
 	| {type: 'clear' | 'merge'}
 	| {type: 'set'; key: K; value: V}
 	| {type: 'delete'; key: K};
 
-export type Listener<K, V> = (
+export type Listener<K, V extends object> = (
 	instance: ObservableMap<K, V>,
 	payload: ListenerPayload<K, V>,
 ) => unknown;
 
-export class ObservableMap<K, V> implements Map<K, V> {
+export class ObservableMap<K, V extends object> implements Map<K, V> {
 	private map = new Map<K, V>();
 	private readonly listeners = new Set<Listener<K, V>>();
 
@@ -69,6 +71,10 @@ export class ObservableMap<K, V> implements Map<K, V> {
 		});
 	}
 
+	/**
+	 * Merge with another map, with the new map overwriting members with the same key
+	 * @param map A map that has a matching set of keys and values
+	 */
 	merge(map: Map<K, V>) {
 		this.map = new Map([...this.map, ...map]);
 		this.notify({type: 'merge'});
@@ -90,7 +96,7 @@ export class ObservableMap<K, V> implements Map<K, V> {
 		return this.map[Symbol.iterator]();
 	}
 
-	addListener(listener: Listener<K, V>) {
+	addListener(listener: Listener<K, V>): Subscription {
 		this.listeners.add(listener);
 
 		return {
