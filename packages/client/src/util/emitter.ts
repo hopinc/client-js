@@ -61,6 +61,30 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 		};
 	}
 
+	/**
+	 * Subscribe and listen to an event once only
+	 * @param key The event name to listen for
+	 * @param listener A listener for this event
+	 * @returns A function that can be called to unsubscribe the listener before it even runs
+	 */
+	public once<K extends keyof Payloads>(
+		key: K,
+		listener: HopEmitterListener<Payloads, K>,
+	): Unsubscribe {
+		const unsubscribe = this.on(key, data => {
+			unsubscribe();
+
+			return listener(data);
+		});
+
+		return unsubscribe;
+	}
+
+	/**
+	 * Remove a listener from an event
+	 * @param key The event name to remove a listener from
+	 * @param listener The listener to remove
+	 */
 	public off<K extends keyof Payloads>(
 		key: K,
 		listener: HopEmitterListener<Payloads, K>,
@@ -79,6 +103,11 @@ export class HopEmitter<Payloads extends Record<string, unknown>> {
 		set.delete(listener as HopEmitterListener<Payloads, keyof Payloads>);
 	}
 
+	/**
+	 * Emit an event to all listeners
+	 * @param key The event name to emit
+	 * @param data The data to emit
+	 */
 	emit<K extends keyof Payloads>(key: K, data: Payloads[K]) {
 		const listeners = this.listeners.get(key);
 
