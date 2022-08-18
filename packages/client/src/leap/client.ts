@@ -22,11 +22,13 @@ import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
 import {Subscription} from '../util/types';
+import {DIRECT_MESSAGE} from './handlers/DIRECT_MESSAGE';
 
 export type ClientEvents = {
 	MESSAGE: {
 		event: string;
 		data: unknown;
+		channel: string | null;
 	};
 
 	SERVICE_EVENT: LeapServiceEvent;
@@ -42,6 +44,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		STATE_UPDATE,
 		TOKEN_STATE_UPDATE,
 		MESSAGE,
+		DIRECT_MESSAGE,
 
 		PIPE_ROOM_UNAVAILABLE,
 		PIPE_ROOM_AVAILABLE,
@@ -182,7 +185,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		eventName: string,
 		listener: (data: T) => unknown,
 	): Subscription {
-		const map = this.getMessageListeners();
+		const map = this.getChannelMessageListeners();
 		const key = util.channels.getMessageListenerKey(channel, eventName);
 		const listeners = map.get(key) ?? new Set();
 
@@ -245,7 +248,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		return this.roomStateMap;
 	}
 
-	getMessageListeners() {
+	getChannelMessageListeners() {
 		return this.channelMessageListeners;
 	}
 

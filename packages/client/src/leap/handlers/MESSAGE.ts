@@ -14,7 +14,7 @@ export const MESSAGE = createLeapEvent({
 
 		const key = getMessageListenerKey(channel, event);
 
-		const listeners = client.getMessageListeners().get(key);
+		const listeners = client.getChannelMessageListeners().get(key);
 
 		if (!listeners) {
 			console.warn('Received a message that nobody wants to listen for');
@@ -22,13 +22,14 @@ export const MESSAGE = createLeapEvent({
 		}
 
 		if (listeners.size === 0) {
-			client.getMessageListeners().delete(key);
+			client.getChannelMessageListeners().delete(key);
 			return;
 		}
 
 		client.emit('MESSAGE', {
 			event,
 			data: messageData,
+			channel,
 		});
 
 		for (const listener of listeners) {
