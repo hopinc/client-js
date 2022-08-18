@@ -1,6 +1,10 @@
-import {Listener, Subscription} from '../util/types';
+import {Subscription} from '../util/types';
 
-export type AtomValue<T> = {value: T} | {uninitialized: true; value: undefined};
+export type Listener<T> = (value: T) => unknown;
+
+export type AtomValue<T> =
+	| {uninitialized?: never; value: T}
+	| {uninitialized: true; value: undefined};
 
 export type Atom<T> = {
 	get(): T;

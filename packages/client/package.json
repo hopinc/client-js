@@ -14,9 +14,9 @@
 		"package.json"
 	],
 	"dependencies": {
-		"@onehop/js": "^1.1.8",
+		"@onehop/js": "^1.2.2",
 		"@onehop/leap-edge-js": "^1.0.0",
-		"hls.js": "^1.2.0"
+		"hls.js": "^1.2.1"
 	},
 	"author": "Hop Development Team",
 	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/client",

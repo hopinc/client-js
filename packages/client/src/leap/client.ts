@@ -21,6 +21,7 @@ import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
+import {Subscription} from '../util/types';
 
 export type ClientEvents = {
 	MESSAGE: {
@@ -180,7 +181,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		channel: API.Channels.Channel['id'],
 		eventName: string,
 		listener: (data: T) => unknown,
-	) {
+	): Subscription {
 		const map = this.getMessageListeners();
 		const key = util.channels.getMessageListenerKey(channel, eventName);
 		const listeners = map.get(key) ?? new Set();
@@ -189,7 +190,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		map.set(key, listeners.add(castListener));
 
 		return {
-			unsubscribe() {
+			remove() {
 				const currentListeners = map.get(key);
 
 				if (!currentListeners) {

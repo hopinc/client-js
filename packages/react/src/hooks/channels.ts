@@ -37,7 +37,7 @@ export function useChannelMessage<T = any>(
 		);
 
 		return () => {
-			subscription.unsubscribe();
+			subscription.remove();
 		};
 	}, []);
 }
