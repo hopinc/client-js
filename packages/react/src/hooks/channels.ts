@@ -30,6 +30,19 @@ export function useChannelMessage<T = any>(
 	const client = useLeap();
 
 	useEffect(() => {
+		const connectionState = client.getConnectionState(true);
+
+		const connectionStateSubscription = connectionState.addListener(state => {
+			if (
+				state === ConnectionState.CONNECTED &&
+				!client
+					.getChannelMessageListeners()
+					.has(util.channels.getMessageListenerKey(channel, event))
+			) {
+				client.subscribeToChannel(channel);
+			}
+		});
+
 		const subscription = client.addMessageSubscription(
 			channel,
 			event,
@@ -38,6 +51,7 @@ export function useChannelMessage<T = any>(
 
 		return () => {
 			subscription.remove();
+			connectionStateSubscription.remove();
 		};
 	}, []);
 }

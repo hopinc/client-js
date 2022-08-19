@@ -191,11 +191,6 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 
 		const listeners = map.get(key);
 
-		// No listeners in message listener map
-		if (!listeners) {
-			this.subscribeToChannel(channel);
-		}
-
 		const castListener = listener as (data: unknown) => unknown;
 		map.set(key, (listeners ?? new Set()).add(castListener));
 
