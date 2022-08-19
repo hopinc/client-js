@@ -186,11 +186,18 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		listener: (data: T) => unknown,
 	): Subscription {
 		const map = this.getChannelMessageListeners();
+
 		const key = util.channels.getMessageListenerKey(channel, eventName);
-		const listeners = map.get(key) ?? new Set();
+
+		const listeners = map.get(key);
+
+		// No listeners in message listener map
+		if (!listeners) {
+			this.subscribeToChannel(channel);
+		}
 
 		const castListener = listener as (data: unknown) => unknown;
-		map.set(key, listeners.add(castListener));
+		map.set(key, (listeners ?? new Set()).add(castListener));
 
 		return {
 			remove() {
@@ -207,17 +214,6 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 				}
 			},
 		};
-	}
-
-	/*
-	 * @deprecated	Use getCurrentAvailableSubscriptions() instead
-	 */
-	getCurrentSubscriptions() {
-		console.warn(
-			'getCurrentSubscriptions is deprecated and will be removed in a near update',
-		);
-
-		return this.getCurrentAvailableSubscriptions().channels;
 	}
 
 	/**

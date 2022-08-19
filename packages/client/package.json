@@ -5,6 +5,7 @@
 	"typings": "dist/onehop-client.cjs.d.ts",
 	"packageManager": "yarn@3.2.1",
 	"description": "Client library for hop.io",
+	"sideEffects": false,
 	"scripts": {
 		"release": "yarn npm publish --tolerate-republish"
 	},
@@ -29,7 +30,7 @@
 	],
 	"license": "MIT",
 	"repository": "https://github.com/hopinc/hop-client-js.git",
-	"version": "1.3.1",
+	"version": "1.3.2",
 	"publishConfig": {
 		"access": "public"
 	}
