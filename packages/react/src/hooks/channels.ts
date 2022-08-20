@@ -28,21 +28,22 @@ export function useChannelMessage<T = any>(
 	listener: (data: T) => unknown,
 ) {
 	const client = useLeap();
+	const connectionState = useConnectionState();
+
+	const data = useObservableMapGet(client.getChannelStateMap(), channel);
 
 	useEffect(() => {
-		const connectionState = client.getConnectionState(true);
+		console.log('dsads', connectionState);
 
-		const connectionStateSubscription = connectionState.addListener(state => {
-			if (
-				state === ConnectionState.CONNECTED &&
-				!client
-					.getChannelMessageListeners()
-					.has(util.channels.getMessageListenerKey(channel, event))
-			) {
-				client.subscribeToChannel(channel);
-			}
-		});
+		if (
+			connectionState === ConnectionState.CONNECTED &&
+			(!data || data.subscription === 'non_existent')
+		) {
+			client.subscribeToChannel(channel);
+		}
+	}, [connectionState, data?.state]);
 
+	useEffect(() => {
 		const subscription = client.addMessageSubscription(
 			channel,
 			event,
@@ -51,7 +52,6 @@ export function useChannelMessage<T = any>(
 
 		return () => {
 			subscription.remove();
-			connectionStateSubscription.remove();
 		};
 	}, []);
 }

@@ -103,6 +103,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 
 		const connectionStateUpdate = async (state: LeapConnectionState) => {
 			this.emit('CONNECTION_STATE_UPDATE', state);
+
 			await this.handleConnectionStateUpdate(state);
 		};
 
@@ -189,10 +190,10 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 
 		const key = util.channels.getMessageListenerKey(channel, eventName);
 
-		const listeners = map.get(key);
-
+		const listeners = map.get(key) ?? new Set();
 		const castListener = listener as (data: unknown) => unknown;
-		map.set(key, (listeners ?? new Set()).add(castListener));
+
+		map.set(key, listeners.add(castListener));
 
 		return {
 			remove() {

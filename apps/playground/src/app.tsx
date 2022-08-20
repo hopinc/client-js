@@ -1,55 +1,17 @@
 import {hop} from '@onehop/client';
-import {useEffect, useRef} from 'react';
-import {usePipeRoom} from '@onehop/react';
+import {useChannelMessage} from '@onehop/react';
+import {useEffect} from 'react';
 
-const projectId = 'project_MzMwMzI3NzAyMTcxNTY2MTc';
-const joinToken =
-	'prjt_c18yYzY5ZmJjMTRhOWM3MmIzZDVjYTViYTc1YWJkYjRhNl8zMzY4MTU2MzU2NTEyOTcyOQ';
-
-const client = hop.init({projectId});
-
-client.on('MESSAGE', message => {
-	console.log('Received', message.event, 'event:', message.data);
-});
+const projectId = 'project_Mjg2MjczMDQzMjY4Njg5OTU';
 
 export function Main() {
-	const videoRef = useRef<HTMLVideoElement | null>(null);
-
-	const room = usePipeRoom({
-		joinToken,
-		ref: videoRef,
-	});
+	useChannelMessage('messages', 'MESSAGE', console.log);
 
 	useEffect(() => {
-		const unsubscribe = room.events.on('ROOM_UPDATE', event => {
-			console.log(event.id, 'is now live');
+		hop.init({
+			projectId,
 		});
-
-		return () => {
-			unsubscribe();
-		};
 	}, []);
 
-	return (
-		<>
-			<pre>
-				{JSON.stringify(
-					{
-						live: room.live,
-						canPlay: room.canPlay,
-						buffering: room.buffering,
-						subscription: room.subscription,
-					},
-					null,
-					4,
-				)}
-			</pre>
-
-			<button disabled={!room.canPlay} onClick={() => videoRef.current?.play()}>
-				play
-			</button>
-
-			<video ref={videoRef} />
-		</>
-	);
+	return <div>hi</div>;
 }
