@@ -33,8 +33,6 @@ export function useChannelMessage<T = any>(
 	const data = useObservableMapGet(client.getChannelStateMap(), channel);
 
 	useEffect(() => {
-		console.log('dsads', connectionState);
-
 		if (
 			connectionState === ConnectionState.CONNECTED &&
 			(!data || data.subscription === 'non_existent')

@@ -990,7 +990,7 @@ __metadata:
     "@vitejs/plugin-react": ^2.0.1
     react: ^18.2.0
     react-dom: ^18.2.0
-    vite: ^3.0.8
+    vite: ^3.0.9
   languageName: unknown
   linkType: soft
 
@@ -1010,20 +1010,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@onehop/client@workspace:packages/client"
   dependencies:
-    "@onehop/js": ^1.2.5
-    "@onehop/leap-edge-js": ^1.0.0
+    "@onehop/js": ^1.2.7
+    "@onehop/leap-edge-js": ^1.0.2
     hls.js: ^1.2.1
   languageName: unknown
   linkType: soft
 
-"@onehop/js@npm:^1.2.5":
-  version: 1.2.5
-  resolution: "@onehop/js@npm:1.2.5"
+"@onehop/js@npm:^1.2.7":
+  version: 1.2.7
+  resolution: "@onehop/js@npm:1.2.7"
   dependencies:
     "@onehop/json-methods": ^1.1.1
     cross-fetch: ^3.1.5
     zod: ^3.18.0
-  checksum: d564edae5361781b7d5455cfe153e31bf80dcb675c0878b78da814c3918fd210acb57c072c62558587d606be56e64a11ff607b17f5bd2e05da214b7d1d7bd5b7
+  checksum: 55243b2de22eb69274de7f4a5200f34d45dcdc23701446cd5b4f36e2fe9290805934a29e277cb45cb4fa32a375ec696976691c4f05f840a49d9707f02d4571cc
   languageName: node
   linkType: hard
 
@@ -1034,13 +1034,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@onehop/leap-edge-js@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@onehop/leap-edge-js@npm:1.0.0"
+"@onehop/leap-edge-js@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@onehop/leap-edge-js@npm:1.0.2"
   dependencies:
     eventemitter3: ^4.0.7
     ws: ^8.8.0
-  checksum: 7974e70a5c9b383a7ad4450e218f50b3f70edaf9804a9c0a1f61ab297a9e3bb92f84d710e17ae9d27e8ca4f01934c73624af7816f905b4ab0eee1705c9e68a53
+  checksum: f828feb69c50c8b72f3e15de080fc2f1bc447051dd1b5a4fbd6657f855dfe2e6d5f34177f0fabd93643b701df7bc2f9c3769d62e1a9e371e557e07b44cd9f7aa
   languageName: node
   linkType: hard
 
@@ -1049,8 +1049,8 @@ __metadata:
   resolution: "@onehop/react@workspace:packages/react"
   dependencies:
     "@onehop/client": "workspace:^"
-    "@onehop/js": ^1.2.5
-    "@onehop/leap-edge-js": ^1.0.0
+    "@onehop/js": ^1.2.7
+    "@onehop/leap-edge-js": ^1.0.2
     "@types/react": ^18.0.17
     react: ^18.2.0
   peerDependencies:
@@ -6410,7 +6410,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.0.8":
+"vite@npm:^3.0.9":
   version: 3.0.9
   resolution: "vite@npm:3.0.9"
   dependencies:
