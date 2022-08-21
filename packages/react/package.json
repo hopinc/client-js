@@ -23,8 +23,8 @@
 	},
 	"dependencies": {
 		"@onehop/client": "workspace:^",
-		"@onehop/js": "^1.2.7",
-		"@onehop/leap-edge-js": "^1.0.2"
+		"@onehop/js": "^1.2.8",
+		"@onehop/leap-edge-js": "^1.0.3"
 	},
 	"author": "Hop Development Team",
 	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/react",
