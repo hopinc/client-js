@@ -259,6 +259,10 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
+		if (this.channelStateMap.get(channel)) {
+			return;
+		}
+
 		const state: ChannelStateData<API.Channels.State> = {
 			subscription: 'pending',
 			state: null,

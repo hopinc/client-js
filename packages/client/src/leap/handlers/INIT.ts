@@ -20,11 +20,9 @@ export const INIT = createLeapEvent({
 		>();
 
 		for (const channel of data.channels) {
-			client.subscribeToChannel(channel.id);
-
 			localState.set(channel.id, {
 				state: channel.state,
-				subscription: 'pending',
+				subscription: 'available',
 				error: null,
 			});
 		}
