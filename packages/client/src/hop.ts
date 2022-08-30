@@ -1,7 +1,16 @@
 import {LeapEdgeAuthenticationParameters} from '@onehop/leap-edge-js';
+import {ClientInitOptions} from './leap';
 import {instance} from './leap/client';
 
-export function init(leapConnectionParams: LeapEdgeAuthenticationParameters) {
-	instance.connect(leapConnectionParams);
+export function init(
+	leapConnectionParams: LeapEdgeAuthenticationParameters,
+	options?: ClientInitOptions,
+) {
+	instance.connect(
+		leapConnectionParams,
+		options?.leapSocketUrl
+			? {socketUrl: options.leapSocketUrl, debug: false}
+			: undefined,
+	);
 	return instance;
 }

@@ -5,6 +5,7 @@ import {
 	LeapConnectionState,
 	LeapEdgeAuthenticationParameters,
 	LeapEdgeClient,
+	LeapEdgeInitOptions,
 	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
 
@@ -89,7 +90,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		super();
 	}
 
-	connect(auth: LeapEdgeAuthenticationParameters) {
+	connect(auth: LeapEdgeAuthenticationParameters, opts?: LeapEdgeInitOptions) {
 		if (this.leap) {
 			return;
 		}
@@ -383,7 +384,10 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		this.getLeap().sendServicePayload(data);
 	}
 
-	private getLeap(auth?: LeapEdgeAuthenticationParameters) {
+	private getLeap(
+		auth?: LeapEdgeAuthenticationParameters,
+		opts?: LeapEdgeInitOptions,
+	) {
 		if (this.leap) {
 			if (auth) {
 				this.leap.auth = auth;
@@ -398,7 +402,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 			);
 		}
 
-		this.leap = new LeapEdgeClient(auth);
+		this.leap = new LeapEdgeClient(auth, opts);
 		this.leap.connect();
 
 		return this.leap;
