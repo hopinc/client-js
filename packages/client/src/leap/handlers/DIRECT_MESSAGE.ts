@@ -7,15 +7,14 @@ export const DIRECT_MESSAGE = createLeapEvent({
 		const {e: event, d: messageData} = data;
 
 		client.emit('MESSAGE', {
-                        event,
-                        data: messageData,
-                        channel: null,
-                });
+			event,
+			data: messageData,
+			channel: null,
+		});
 
 		const listeners = client.getDirectMessageListeners().get(event);
 
 		if (!listeners) {
-			console.warn('Received a message that nobody wants to listen for');
 			return;
 		}
 
