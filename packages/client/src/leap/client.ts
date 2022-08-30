@@ -95,7 +95,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 			return;
 		}
 
-		const leap = this.getLeap(auth);
+		const leap = this.getLeap(auth, opts);
 
 		const serviceEvent = async (message: LeapServiceEvent) => {
 			this.emit('SERVICE_EVENT', message);
