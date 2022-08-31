@@ -71,7 +71,7 @@ export function useReadChannelState<
 		) {
 			client.subscribeToChannel(channel);
 		}
-	}, [connectionState, data?.state]);
+	}, [connectionState, data?.subscription, data?.state]);
 
 	if (!data) {
 		const nonExistentData: leap.ChannelStateData<T> = {

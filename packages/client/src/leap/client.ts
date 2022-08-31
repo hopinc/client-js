@@ -260,7 +260,8 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
-		if (this.channelStateMap.get(channel)) {
+		const s = this.channelStateMap.get(channel)?.subscription;
+		if (s && s === 'available') {
 			return;
 		}
 
