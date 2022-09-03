@@ -34,7 +34,10 @@ export function useObservableMapGet<K, V extends object>(
 
 	useEffect(() => {
 		const subscription = map.addListener((instance, payload) => {
-			if ('key' in payload && payload.key === key) {
+			if (
+				('key' in payload && payload.key === key) ||
+				(key && payload.type === 'merge')
+			) {
 				setStoreState(map.get(key));
 			} else if (payload.type === 'clear') {
 				setStoreState(undefined);
