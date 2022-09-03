@@ -1,15 +1,20 @@
 import {hop} from '@onehop/client';
-import {useChannelMessage} from '@onehop/react';
+import {useChannelMessage, useReadChannelState} from '@onehop/react';
 import {useEffect} from 'react';
 
-const projectId = 'project_Mjg2MjczMDQzMjY4Njg5OTU';
+const projectId = 'project_MjcxMjgyNDEyMDc2MjM3NDE';
 
 export function Main() {
-	useChannelMessage('messages', 'MESSAGE_CREATE', console.log);
+	// useChannelMessage('project_NDc4MjU3NTE1MTE3MzYzMjE', 'ABC', console.log);
+	const t = useReadChannelState('test4');
+	useChannelMessage('test4', 'TEST', console.log);
+
+	console.log(t);
 
 	useEffect(() => {
 		hop.init({
 			projectId,
+			token: null,
 		});
 	}, []);
 

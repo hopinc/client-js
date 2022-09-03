@@ -3,6 +3,8 @@ import type {API} from '@onehop/js';
 import type {
 	EncapsulatingServicePayload,
 	LeapEdgeAuthenticationParameters,
+	LeapEdgeClient,
+	LeapEdgeInitOptions,
 	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
 import {LeapConnectionState, LeapEdgeClient} from '@onehop/leap-edge-js';
@@ -88,12 +90,12 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		super();
 	}
 
-	connect(auth: LeapEdgeAuthenticationParameters) {
+	connect(auth: LeapEdgeAuthenticationParameters, opts?: LeapEdgeInitOptions) {
 		if (this.leap) {
 			return;
 		}
 
-		const leap = this.getLeap(auth);
+		const leap = this.getLeap(auth, opts);
 
 		const serviceEvent = async (message: LeapServiceEvent) => {
 			this.emit('SERVICE_EVENT', message);
@@ -258,6 +260,11 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
+		const s = this.channelStateMap.get(channel)?.subscription;
+		if (s && s === 'available') {
+			return;
+		}
+
 		const state: ChannelStateData<API.Channels.State> = {
 			subscription: 'pending',
 			state: null,
@@ -378,7 +385,10 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		this.getLeap().sendServicePayload(data);
 	}
 
-	private getLeap(auth?: LeapEdgeAuthenticationParameters) {
+	private getLeap(
+		auth?: LeapEdgeAuthenticationParameters,
+		opts?: LeapEdgeInitOptions,
+	) {
 		if (this.leap) {
 			if (auth) {
 				this.leap.auth = auth;
@@ -393,7 +403,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 			);
 		}
 
-		this.leap = new LeapEdgeClient(auth);
+		this.leap = new LeapEdgeClient(auth, opts);
 		this.leap.connect();
 
 		return this.leap;

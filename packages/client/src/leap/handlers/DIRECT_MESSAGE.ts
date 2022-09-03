@@ -6,10 +6,15 @@ export const DIRECT_MESSAGE = createLeapEvent({
 	async handle(client, channel, data: {e: string; d: unknown}) {
 		const {e: event, d: messageData} = data;
 
+		client.emit('MESSAGE', {
+			event,
+			data: messageData,
+			channel: null,
+		});
+
 		const listeners = client.getDirectMessageListeners().get(event);
 
 		if (!listeners) {
-			console.warn('Received a message that nobody wants to listen for');
 			return;
 		}
 
@@ -17,12 +22,6 @@ export const DIRECT_MESSAGE = createLeapEvent({
 			client.getDirectMessageListeners().delete(event);
 			return;
 		}
-
-		client.emit('MESSAGE', {
-			event,
-			data: messageData,
-			channel: null,
-		});
 
 		for (const listener of listeners) {
 			listener(messageData);

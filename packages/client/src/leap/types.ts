@@ -1,6 +1,10 @@
 import type {API} from '@onehop/js';
 import type {Payload as PIPE_ROOM_AVAILABLE_PAYLOAD} from './handlers/PIPE_ROOM_AVAILABLE';
 
+export type ClientInitOptions = {
+	leapSocketUrl?: string;
+};
+
 export type LeapChannelSubscriptionError = 'NOT_GRANTED' | 'UNKNOWN';
 
 export type GenericSubscriptionState =
