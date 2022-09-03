@@ -1,4 +1,5 @@
-import Hls, {HlsConfig} from 'hls.js';
+import type {HlsConfig} from 'hls.js';
+import Hls from 'hls.js';
 
 export const APPLE_HLS_MIME = 'application/vnd.apple.mpegurl';
 export const LIVE_LLHLS_SYNC_BCE = 3;

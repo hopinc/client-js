@@ -1,5 +1,5 @@
-import {util} from '@onehop/client';
-import {useState, useEffect} from 'react';
+import type {util} from '@onehop/client';
+import {useEffect, useState} from 'react';
 
 export function useObservableMap<K, V extends object>(
 	map: util.maps.ObservableMap<K, V>,

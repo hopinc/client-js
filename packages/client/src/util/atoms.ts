@@ -1,4 +1,4 @@
-import {Subscription} from '../util/types';
+import type {Subscription} from '../util/types';
 
 export type Listener<T> = (value: T) => unknown;
 

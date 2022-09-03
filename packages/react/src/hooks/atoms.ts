@@ -1,5 +1,5 @@
-import {util} from '@onehop/client';
-import {useState, useEffect} from 'react';
+import type {util} from '@onehop/client';
+import {useEffect, useState} from 'react';
 
 export function useAtom<T>(atom: util.atoms.Atom<T>) {
 	const [value, setValue] = useState({atom});

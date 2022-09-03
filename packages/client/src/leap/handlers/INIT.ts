@@ -1,5 +1,5 @@
-import {API} from '@onehop/js';
-import {ChannelStateData} from '..';
+import type {API} from '@onehop/js';
+import type {ChannelStateData} from '..';
 import {createLeapEvent} from './create';
 
 export type Data = {

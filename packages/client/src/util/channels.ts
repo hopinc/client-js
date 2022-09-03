@@ -1,4 +1,4 @@
-import {API} from '@onehop/js';
+import type {API} from '@onehop/js';
 
 export const getMessageListenerKey = (
 	channel: API.Channels.Channel['id'],

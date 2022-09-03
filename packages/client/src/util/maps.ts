@@ -1,4 +1,4 @@
-import {Subscription} from './types';
+import type {Subscription} from './types';
 
 export type ListenerPayload<K, V> =
 	| {type: 'clear' | 'merge'}

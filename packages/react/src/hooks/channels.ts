@@ -1,5 +1,5 @@
-import {leap, util} from '@onehop/client';
-import {API} from '@onehop/js';
+import type {leap} from '@onehop/client';
+import type {API} from '@onehop/js';
 import {
 	// Dispatch, SetStateAction,
 	useEffect,

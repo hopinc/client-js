@@ -1,9 +1,9 @@
-import {pipe, util, hls} from '@onehop/client';
-import {API} from '@onehop/js';
+import {hls, pipe, util} from '@onehop/client';
+import type {API} from '@onehop/js';
 import {LeapConnectionState} from '@onehop/leap-edge-js';
+import type {RefObject} from 'react';
 import {
 	createContext,
-	RefObject,
 	useCallback,
 	useContext,
 	useEffect,

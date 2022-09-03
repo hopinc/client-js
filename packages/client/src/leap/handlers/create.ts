@@ -1,5 +1,5 @@
-import {API} from '@onehop/js';
-import {LeapServiceEvent} from '@onehop/leap-edge-js';
+import type {API} from '@onehop/js';
+import type {LeapServiceEvent} from '@onehop/leap-edge-js';
 import type {Client} from '..';
 
 export type LeapHandler = {

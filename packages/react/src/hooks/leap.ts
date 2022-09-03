@@ -1,5 +1,5 @@
 import {hop, leap} from '@onehop/client';
-import {LeapEdgeAuthenticationParameters} from '@onehop/leap-edge-js';
+import type {LeapEdgeAuthenticationParameters} from '@onehop/leap-edge-js';
 import {createContext, useContext, useEffect} from 'react';
 import {useAtom} from './atoms';
 

@@ -1,4 +1,4 @@
-import {UnavailableError} from '../types';
+import type {UnavailableError} from '../types';
 import {createLeapEvent} from './create';
 
 export const PIPE_ROOM_UNAVAILABLE = createLeapEvent({

@@ -1,18 +1,19 @@
-import {API} from '@onehop/js';
+import type {API} from '@onehop/js';
 
-import {
+import type {
 	EncapsulatingServicePayload,
-	LeapConnectionState,
 	LeapEdgeAuthenticationParameters,
-	LeapEdgeClient,
 	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
+import {LeapConnectionState, LeapEdgeClient} from '@onehop/leap-edge-js';
 
 import * as util from '../util';
-import {ChannelStateData, RoomStateData} from './types';
+import type {ChannelStateData, RoomStateData} from './types';
 
+import type {Subscription} from '../util/types';
 import {AVAILABLE} from './handlers/AVAILABLE';
-import {LeapHandler} from './handlers/create';
+import type {LeapHandler} from './handlers/create';
+import {DIRECT_MESSAGE} from './handlers/DIRECT_MESSAGE';
 import {INIT} from './handlers/INIT';
 import {MESSAGE} from './handlers/MESSAGE';
 import {PIPE_ROOM_AVAILABLE} from './handlers/PIPE_ROOM_AVAILABLE';
@@ -21,8 +22,6 @@ import {PIPE_ROOM_UPDATE} from './handlers/PIPE_ROOM_UPDATE';
 import {STATE_UPDATE} from './handlers/STATE_UPDATE';
 import {TOKEN_STATE_UPDATE} from './handlers/TOKEN_STATE_UPDATE';
 import {UNAVAILABLE} from './handlers/UNAVAILABLE';
-import {Subscription} from '../util/types';
-import {DIRECT_MESSAGE} from './handlers/DIRECT_MESSAGE';
 
 export type ClientEvents = {
 	MESSAGE: {

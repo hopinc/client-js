@@ -1,4 +1,4 @@
-import {API} from '@onehop/js';
+import type {API} from '@onehop/js';
 import {createLeapEvent} from './create';
 
 export const STATE_UPDATE = createLeapEvent({

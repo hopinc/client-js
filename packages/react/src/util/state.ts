@@ -1,4 +1,4 @@
-import {SetStateAction} from 'react';
+import type {SetStateAction} from 'react';
 
 /**
  * Resolves a SetStateAction into a value
