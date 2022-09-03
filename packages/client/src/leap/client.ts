@@ -3,11 +3,11 @@ import type {API} from '@onehop/js';
 import type {
 	EncapsulatingServicePayload,
 	LeapEdgeAuthenticationParameters,
-	LeapEdgeClient,
 	LeapEdgeInitOptions,
 	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
-import {LeapConnectionState, LeapEdgeClient} from '@onehop/leap-edge-js';
+import {LeapEdgeClient} from '@onehop/leap-edge-js';
+import {LeapConnectionState} from '@onehop/leap-edge-js';
 
 import * as util from '../util';
 import type {ChannelStateData, RoomStateData} from './types';

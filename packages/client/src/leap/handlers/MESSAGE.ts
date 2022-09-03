@@ -13,10 +13,10 @@ export const MESSAGE = createLeapEvent({
 		const {e: event, d: messageData} = data;
 
 		client.emit('MESSAGE', {
-                        event,
-                        data: messageData,
-                        channel,
-                });
+			event,
+			data: messageData,
+			channel,
+		});
 
 		const key = getMessageListenerKey(channel, event);
 

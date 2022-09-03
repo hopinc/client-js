@@ -54,6 +54,40 @@ export function useChannelMessage<T = any>(
 	}, []);
 }
 
+export function useDirectMessage<T = any>(
+	event: string,
+	listener: (data: T) => unknown,
+) {
+	const client = useLeap();
+
+	const castListener = listener as (data: unknown) => unknown;
+
+	useEffect(() => {
+		const listeners = client.getDirectMessageListeners().get(event);
+
+		if (listeners) {
+			listeners.add(castListener);
+		} else {
+			client.getDirectMessageListeners().set(event, new Set([castListener]));
+		}
+
+		return () => {
+			const listeners = client.getDirectMessageListeners().get(event);
+
+			if (!listeners) {
+				return;
+			}
+
+			if (listeners.size === 0) {
+				client.getDirectMessageListeners().delete(event);
+				return;
+			}
+
+			listeners.delete(castListener);
+		};
+	}, [event]);
+}
+
 export function useReadChannelState<
 	T extends API.Channels.State = API.Channels.State,
 >(channel: API.Channels.Channel['id']): leap.ChannelStateData<T> {
