@@ -32,6 +32,11 @@ export type ClientEvents = {
 		channel: string | null;
 	};
 
+	STATE_UPDATE: {
+		channel: string;
+		state: unknown;
+	};
+
 	SERVICE_EVENT: LeapServiceEvent;
 
 	CONNECTION_STATE_UPDATE: LeapConnectionState;
