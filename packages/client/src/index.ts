@@ -1,7 +1,6 @@
-import * as hls from 'hls.js';
-import * as hop from './hop';
-import * as leap from './leap';
-import * as pipe from './pipe';
-import * as util from './util';
-
-export {util, pipe, leap, hop, hls};
+export {LeapConnectionState as ConnectionState} from '@onehop/leap-edge-js';
+export * as hls from 'hls.js';
+export * as hop from './hop';
+export * as leap from './leap';
+export * as pipe from './pipe';
+export * as util from './util';

@@ -1,6 +1,5 @@
-import * as atoms from './atoms';
-import * as channels from './channels';
-import * as emitter from './emitter';
-import * as maps from './maps';
-
-export {maps, atoms, emitter, channels};
+export * as atoms from './atoms';
+export * as channels from './channels';
+export * as emitter from './emitter';
+export * as maps from './maps';
+export * as queues from './queues';
