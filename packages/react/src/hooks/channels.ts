@@ -51,7 +51,7 @@ export function useChannelMessage<T = any>(
 		return () => {
 			subscription.remove();
 		};
-	}, [listener]);
+	}, [channel, event, listener]);
 }
 
 export function useDirectMessage<T = any>(
