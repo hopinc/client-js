@@ -992,6 +992,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@onehop-client-apps/client-playground@workspace:apps/playground"
   dependencies:
+    "@onehop/client": "workspace:^"
+    "@onehop/react": "workspace:^"
     "@types/react": ^18.0.18
     "@types/react-dom": ^18.0.6
     "@vitejs/plugin-react": ^2.0.1

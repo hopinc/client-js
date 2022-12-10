@@ -219,17 +219,17 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	}
 
 	/**
-	 * Get a list of all subscriptions
+	 * Get a list of pending subscriptions
 	 * @returns A list of all channel and room names we are currently subscribed to
 	 */
-	getCurrentAvailableSubscriptions() {
+	getCurrentPendingSubscriptions() {
 		const filter = (
 			value:
 				| util.maps.ObservableMap<string, ChannelStateData<API.Channels.State>>
 				| util.maps.ObservableMap<string, RoomStateData>,
 		) =>
 			[...value.entries()]
-				.filter(([, entry]) => entry.subscription === 'available')
+				.filter(([, entry]) => entry.subscription === 'pending')
 				.map(entry => entry[0]);
 
 		return {
@@ -265,14 +265,14 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	}
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
-		const s = this.channelStateMap.get(channel)?.subscription;
-		if (s && s === 'available') {
+		const c = this.channelStateMap.get(channel);
+		if (c && c.subscription === 'available') {
 			return;
 		}
 
 		const state: ChannelStateData<API.Channels.State> = {
 			subscription: 'pending',
-			state: null,
+			state: c?.state ?? null,
 			error: null,
 		};
 
@@ -325,6 +325,10 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 
 	private async handleConnectionStateUpdate(state: LeapConnectionState) {
 		if (state === LeapConnectionState.ERRORED && this.hasPreviouslyConnected) {
+			for (const ch of this.channelStateMap.keys()) {
+				this.channelStateMap.patch(ch, {subscription: 'pending'});
+			}
+
 			const l = this.connectionState.addListener(state => {
 				if (state !== LeapConnectionState.CONNECTED) {
 					return;
@@ -348,12 +352,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 	}
 
 	private resubscribe() {
-		const {channels, rooms} = this.getCurrentAvailableSubscriptions();
-
-		console.log('resubscribing to', {
-			channels,
-			rooms,
-		});
+		const {channels, rooms} = this.getCurrentPendingSubscriptions();
 
 		for (const channel of channels) {
 			this.subscribeToChannel(channel);
