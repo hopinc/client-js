@@ -33,6 +33,10 @@ export function useObservableMapGet<K, V extends object>(
 	);
 
 	useEffect(() => {
+		if (!key) {
+			return;
+		}
+
 		const subscription = map.addListener((instance, payload) => {
 			if (
 				('key' in payload && payload.key === key) ||
