@@ -37,7 +37,7 @@
 	],
 	"license": "MIT",
 	"repository": "https://github.com/hopinc/hop-client-js.git",
-	"version": "1.4.20",
+	"version": "1.4.21",
 	"publishConfig": {
 		"access": "public"
 	}
