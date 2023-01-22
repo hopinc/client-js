@@ -1,26 +1,9 @@
 import type {leap} from '@onehop/client';
-import type {API} from '@onehop/js';
-import {
-	// Dispatch, SetStateAction,
-	useEffect,
-} from 'react';
+import {type API, IS_BROWSER} from '@onehop/js';
+import {useEffect} from 'react';
 import {ConnectionState} from '..';
-// import {resolveSetStateAction} from '../util/state';
 import {useConnectionState, useLeap} from './leap';
 import {useObservableMapGet} from './maps';
-
-// Right now we do not support sending messages to channels
-// from the client.
-// export function useSendChannelMessage<T = any>(
-// 	channel: string,
-// 	eventName: string,
-// ) {
-// 	const client = useLeap();
-
-// 	return (data: T) => {
-// 		client.sendMessage(channel, eventName, data);
-// 	};
-// }
 
 export function useChannelMessage<T = any>(
 	channel: API.Channels.Channel['id'],
@@ -34,6 +17,7 @@ export function useChannelMessage<T = any>(
 
 	useEffect(() => {
 		if (
+			IS_BROWSER &&
 			connectionState === ConnectionState.CONNECTED &&
 			(!data || data.subscription === 'non_existent')
 		) {
@@ -42,14 +26,10 @@ export function useChannelMessage<T = any>(
 	}, [connectionState, data?.state]);
 
 	useEffect(() => {
-		const subscription = client.addMessageSubscription(
-			channel,
-			event,
-			listener,
-		);
+		const unsubscribe = client.addMessageSubscription(channel, event, listener);
 
 		return () => {
-			subscription.remove();
+			unsubscribe();
 		};
 	}, [channel, event, listener]);
 }
@@ -100,6 +80,7 @@ export function useReadChannelState<
 
 	useEffect(() => {
 		if (
+			IS_BROWSER &&
 			connectionState === ConnectionState.CONNECTED &&
 			(!data || data.subscription === 'non_existent')
 		) {
@@ -121,36 +102,3 @@ export function useReadChannelState<
 
 	return data;
 }
-
-// export function useSetChannelState<
-// 	T extends API.Channels.State = API.Channels.State,
-// >(channel: API.Channels.Channel['id']): Dispatch<SetStateAction<T>> {
-// 	const client = useLeap();
-// 	const oldState = useObservableMapGet(client.getChannelStateMap(), channel);
-
-// 	return value => {
-// 		if (!oldState) {
-// 			return;
-// 		}
-
-// 		const newState = resolveSetStateAction<T>(oldState.state as T, value);
-
-// 		client.setChannelState(channel, newState);
-
-// 		client.getChannelStateMap().patch(channel, {
-// 			state: newState,
-// 		});
-// 	};
-// }
-
-// Right now, we do not support setting channel state from the client
-// export function useChannelState<
-// 	T extends API.Channels.State = API.Channels.State,
-// >(
-// 	channel: API.Channels.Channel['id'],
-// ): [data: leap.ChannelStateData<T>, setState: Dispatch<SetStateAction<T>>] {
-// 	const state = useReadChannelState<T>(channel);
-// 	const setState = useSetChannelState<T>(channel);
-
-// 	return [state, setState];
-// }

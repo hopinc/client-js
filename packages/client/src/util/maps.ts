@@ -1,4 +1,4 @@
-import type {Subscription} from './types';
+import type {Unsubscribe} from './types';
 
 export type ListenerPayload<K, V> =
 	| {type: 'clear' | 'merge'}
@@ -8,7 +8,7 @@ export type ListenerPayload<K, V> =
 export type Listener<K, V extends object> = (
 	instance: ObservableMap<K, V>,
 	payload: ListenerPayload<K, V>,
-) => unknown;
+) => void;
 
 export class ObservableMap<K, V extends object> implements Map<K, V> {
 	private map = new Map<K, V>();
@@ -96,13 +96,11 @@ export class ObservableMap<K, V extends object> implements Map<K, V> {
 		return this.map[Symbol.iterator]();
 	}
 
-	addListener(listener: Listener<K, V>): Subscription {
+	addListener(listener: Listener<K, V>): Unsubscribe {
 		this.listeners.add(listener);
 
-		return {
-			remove: () => {
-				this.listeners.delete(listener);
-			},
+		return () => {
+			this.listeners.delete(listener);
 		};
 	}
 

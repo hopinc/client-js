@@ -1,6 +1,6 @@
-import type {Subscription} from '../util/types';
+import type {Unsubscribe} from '../util/types';
 
-export type Listener<T> = (value: T) => unknown;
+export type Listener<T> = (value: T) => void;
 
 export type AtomValue<T> =
 	| {uninitialized?: never; value: T}
@@ -9,7 +9,7 @@ export type AtomValue<T> =
 export type Atom<T> = {
 	get(): T;
 	set(value: T): void;
-	addListener(listener: Listener<T>): Subscription;
+	addListener(listener: Listener<T>): Unsubscribe;
 	removeListener(listener: Listener<T>): void;
 };
 
@@ -70,10 +70,8 @@ function atom<T>(initialValue?: T): Atom<T> {
 		addListener(listener: Listener<T>) {
 			listeners.add(listener);
 
-			return {
-				remove() {
-					listeners.delete(listener);
-				},
+			return () => {
+				listeners.delete(listener);
 			};
 		},
 

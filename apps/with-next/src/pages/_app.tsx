@@ -1,5 +1,5 @@
 import {useInit} from '@onehop/react';
-import {AppProps} from 'next/app';
+import {type AppProps} from 'next/app';
 
 export default function App({Component, pageProps}: AppProps) {
 	useInit({

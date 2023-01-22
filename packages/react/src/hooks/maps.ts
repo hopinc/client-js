@@ -8,7 +8,7 @@ export function useObservableMap<K, V extends object>(
 	const [storeState, setStoreState] = useState({map});
 
 	useEffect(() => {
-		const listening = map.addListener((instance, payload) => {
+		const unsubscribe = map.addListener((instance, payload) => {
 			if (listenOnlyFor && !listenOnlyFor.includes(payload.type)) {
 				return;
 			}
@@ -17,7 +17,7 @@ export function useObservableMap<K, V extends object>(
 		});
 
 		return () => {
-			listening.remove();
+			unsubscribe();
 		};
 	}, [map]);
 
@@ -37,7 +37,7 @@ export function useObservableMapGet<K, V extends object>(
 			return;
 		}
 
-		const subscription = map.addListener((instance, payload) => {
+		const unsubscribe = map.addListener((instance, payload) => {
 			if (
 				('key' in payload && payload.key === key) ||
 				(key && payload.type === 'merge')
@@ -49,7 +49,7 @@ export function useObservableMapGet<K, V extends object>(
 		});
 
 		return () => {
-			subscription.remove();
+			unsubscribe();
 		};
 	}, [key, map]);
 
@@ -61,10 +61,10 @@ export function useObserveObservableMap<K, V extends object>(
 	listener: (map: util.maps.ObservableMap<K, V>) => unknown,
 ) {
 	useEffect(() => {
-		const subscription = map.addListener(listener);
+		const unsubscribe = map.addListener(listener);
 
 		return () => {
-			subscription.remove();
+			unsubscribe();
 		};
 	}, [map]);
 }

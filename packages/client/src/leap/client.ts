@@ -12,7 +12,7 @@ import {LeapConnectionState} from '@onehop/leap-edge-js';
 import * as util from '../util';
 import type {ChannelStateData, RoomStateData} from './types';
 
-import type {Subscription} from '../util/types';
+import type {Unsubscribe} from '../util/types';
 import {AVAILABLE} from './handlers/AVAILABLE';
 import type {LeapHandler} from './handlers/create';
 import {DIRECT_MESSAGE} from './handlers/DIRECT_MESSAGE';
@@ -191,7 +191,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		channel: API.Channels.Channel['id'],
 		eventName: string,
 		listener: (data: T) => unknown,
-	): Subscription {
+	): Unsubscribe {
 		const map = this.getChannelMessageListeners();
 
 		const key = util.channels.getMessageListenerKey(channel, eventName);
@@ -201,20 +201,18 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 
 		map.set(key, listeners.add(castListener));
 
-		return {
-			remove() {
-				const currentListeners = map.get(key);
+		return () => {
+			const currentListeners = map.get(key);
 
-				if (!currentListeners) {
-					return;
-				}
+			if (!currentListeners) {
+				return;
+			}
 
-				currentListeners.delete(castListener);
+			currentListeners.delete(castListener);
 
-				if (currentListeners.size === 0) {
-					map.delete(key);
-				}
-			},
+			if (currentListeners.size === 0) {
+				map.delete(key);
+			}
 		};
 	}
 
@@ -266,6 +264,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 
 	subscribeToChannel(channel: API.Channels.Channel['id']) {
 		const c = this.channelStateMap.get(channel);
+
 		if (c && c.subscription === 'available') {
 			return;
 		}
@@ -329,7 +328,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 				this.channelStateMap.patch(ch, {subscription: 'pending'});
 			}
 
-			const l = this.connectionState.addListener(state => {
+			const unsubscribe = this.connectionState.addListener(state => {
 				if (state !== LeapConnectionState.CONNECTED) {
 					return;
 				}
@@ -340,7 +339,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 					this.resubscribe();
 				}
 
-				l.remove();
+				unsubscribe();
 			});
 		}
 

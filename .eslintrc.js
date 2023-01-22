@@ -1,3 +1,5 @@
+const {join} = require('node:path');
+
 module.exports = {
 	extends: ['xo', 'xo-typescript'],
 	plugins: ['@typescript-eslint'],
@@ -6,7 +8,7 @@ module.exports = {
 		ecmaFeatures: {jsx: true},
 		ecmaVersion: 12,
 		sourceType: 'module',
-		project: './tsconfig.json',
+		project: join(__dirname, 'tsconfig.json'),
 	},
 	ignorePatterns: ['**/*.js', '**/dist/**/*'],
 	rules: {

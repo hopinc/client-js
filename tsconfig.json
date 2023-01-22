@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "ES6",
+		"target": "ES2015",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -16,8 +16,10 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"useUnknownInCatchVariables": true,
-		"allowUnreachableCode": false
+		"allowUnreachableCode": false,
+		"downlevelIteration": true,
+		"strictNullChecks": true
 	},
 	"exclude": ["node_modules", "dist"],
-	"include": ["./**/*.ts", "./**/*.tsx"]
+	"include": ["**/*.ts", "**/*.tsx"]
 }

@@ -1,3 +1,1 @@
-export type Subscription = {
-	remove(): void;
-};
+export type Unsubscribe = () => void;

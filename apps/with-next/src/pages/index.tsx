@@ -12,20 +12,8 @@ export default function Index() {
 	const [message, setMessage] = useState<string | null>(null);
 
 	useChannelMessage<{message: string}>('isla', 'MESSAGE', data => {
-		setMessage(() => data.message);
+		setMessage(data.message);
 	});
 
-	return (
-		<pre>
-			{JSON.stringify(
-				{
-					channel,
-					connection,
-					message,
-				},
-				null,
-				4,
-			)}
-		</pre>
-	);
+	return <pre>{JSON.stringify({channel, connection, message}, null, 4)}</pre>;
 }
