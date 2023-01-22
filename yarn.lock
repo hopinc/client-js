@@ -1272,7 +1272,7 @@ __metadata:
   resolution: "@onehop/client@workspace:packages/client"
   dependencies:
     "@onehop/js": ^1.18.0
-    "@onehop/leap-edge-js": ^1.0.9
+    "@onehop/leap-edge-js": ^1.0.11
     hls.js: ^1.3.1
   languageName: unknown
   linkType: soft
@@ -1295,15 +1295,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@onehop/leap-edge-js@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "@onehop/leap-edge-js@npm:1.0.9"
+"@onehop/leap-edge-js@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "@onehop/leap-edge-js@npm:1.0.11"
   dependencies:
     "@types/lodash.throttle": ^4.1.7
     eventemitter3: ^4.0.7
     lodash.throttle: ^4.1.1
     ws: ^8.8.0
-  checksum: 2610c1207beac4f23e4b4e8c207c890c51324cf36a3fa211805f1bfff4934ef669427b844859c13cb16e62e10372be67a37dfa24ed17da6656b42ca6244e98ca
+  checksum: 142ba432ec9ef623507ccfff79d281e8b90c8ededb30f7193aa9d6298061f51333171feea3ab08b2e87fe6d4f1b62c9e85bbc55dae86181a6294fefcc8def0bd
   languageName: node
   linkType: hard
 
@@ -1313,7 +1313,7 @@ __metadata:
   dependencies:
     "@onehop/client": "workspace:^"
     "@onehop/js": ^1.18.0
-    "@onehop/leap-edge-js": ^1.0.9
+    "@onehop/leap-edge-js": ^1.0.11
     "@types/react": ^18.0.27
     react: ^18.2.0
   peerDependencies:
