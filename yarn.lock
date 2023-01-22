@@ -1272,7 +1272,7 @@ __metadata:
   resolution: "@onehop/client@workspace:packages/client"
   dependencies:
     "@onehop/js": ^1.18.0
-    "@onehop/leap-edge-js": ^1.0.6
+    "@onehop/leap-edge-js": ^1.0.7
     hls.js: ^1.3.1
   languageName: unknown
   linkType: soft
@@ -1295,15 +1295,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@onehop/leap-edge-js@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@onehop/leap-edge-js@npm:1.0.6"
+"@onehop/leap-edge-js@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@onehop/leap-edge-js@npm:1.0.7"
   dependencies:
     "@types/lodash.throttle": ^4.1.7
     eventemitter3: ^4.0.7
     lodash.throttle: ^4.1.1
     ws: ^8.8.0
-  checksum: b0d4cb01700978d65f5e34e4a3bf2cec2394d0d93d1876603e7875bc64de6846afd3244fc6d80bd17bef3f397d780f06be3b9b1545e1359a0ca924e3c873b402
+  checksum: 6830afc779df6ed941a9748ba3b0144a5bfb26cb3f75ac0a01e9928d060987bd275fa6e3ea37227638280615406364026f2960efbd5189850c5a623953426786
   languageName: node
   linkType: hard
 
@@ -1313,7 +1313,7 @@ __metadata:
   dependencies:
     "@onehop/client": "workspace:^"
     "@onehop/js": ^1.18.0
-    "@onehop/leap-edge-js": ^1.0.6
+    "@onehop/leap-edge-js": ^1.0.7
     "@types/react": ^18.0.27
     react: ^18.2.0
   peerDependencies:
@@ -3177,7 +3177,7 @@ __metadata:
 
 "fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -5740,7 +5740,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.17.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>":
   version: 1.22.1
-  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
+  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=c3c19d"
   dependencies:
     is-core-module: ^2.9.0
     path-parse: ^1.0.7
@@ -6389,11 +6389,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.4#~builtin<compat/typescript>":
   version: 4.9.4
-  resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=7ad353"
+  resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 37f6e2c3c5e2aa5934b85b0fddbf32eeac8b1bacf3a5b51d01946936d03f5377fe86255d4e5a4ae628fd0cd553386355ad362c57f13b4635064400f3e8e05b9d
+  checksum: 1caaea6cb7f813e64345190fddc4e6c924d0b698ab81189b503763c4a18f7f5501c69362979d36e19c042d89d936443e768a78b0675690b35eb663d19e0eae71
   languageName: node
   linkType: hard
 

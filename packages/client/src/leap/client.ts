@@ -6,8 +6,7 @@ import type {
 	LeapEdgeInitOptions,
 	LeapServiceEvent,
 } from '@onehop/leap-edge-js';
-import {LeapEdgeClient} from '@onehop/leap-edge-js';
-import {LeapConnectionState} from '@onehop/leap-edge-js';
+import {LeapConnectionState, LeapEdgeClient} from '@onehop/leap-edge-js';
 
 import * as util from '../util';
 import type {ChannelStateData, RoomStateData} from './types';
