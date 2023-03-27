@@ -3,7 +3,7 @@
 	"main": "dist/onehop-client.cjs.js",
 	"module": "dist/onehop-client.esm.js",
 	"typings": "dist/onehop-client.cjs.d.ts",
-	"packageManager": "yarn@3.2.1",
+	"packageManager": "yarn@3.5.0",
 	"description": "Client library for hop.io",
 	"sideEffects": false,
 	"scripts": {

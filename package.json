@@ -1,7 +1,7 @@
 {
 	"name": "hop-client-js",
 	"license": "MIT",
-	"packageManager": "yarn@3.2.1",
+	"packageManager": "yarn@3.5.0",
 	"description": "Root workspace for hop's client library",
 	"scripts": {
 		"build": "yarn preconstruct build",

@@ -3,7 +3,7 @@
 	"main": "dist/onehop-react.cjs.js",
 	"module": "dist/onehop-react.esm.js",
 	"typings": "dist/onehop-react.cjs.d.ts",
-	"packageManager": "yarn@3.2.1",
+	"packageManager": "yarn@3.5.0",
 	"description": "React client library for hop.io",
 	"sideEffects": false,
 	"scripts": {
