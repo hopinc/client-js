@@ -1,5 +1,5 @@
-import {LeapEdgeAuthenticationParameters} from '@onehop/leap-edge-js';
-import {ClientInitOptions} from './leap';
+import type {LeapEdgeAuthenticationParameters} from '@onehop/leap-edge-js';
+import type {ClientInitOptions} from './leap';
 import {instance} from './leap/client';
 
 export function init(
@@ -12,5 +12,6 @@ export function init(
 			? {socketUrl: options.leapSocketUrl, debug: false}
 			: undefined,
 	);
+
 	return instance;
 }

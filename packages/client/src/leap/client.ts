@@ -281,8 +281,6 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 			d: null,
 			c: channel,
 		});
-
-		return state;
 	}
 
 	unsubscribeFromChannel(channel: API.Channels.Channel['id']) {
@@ -406,7 +404,7 @@ export class Client extends util.emitter.HopEmitter<ClientEvents> {
 		}
 
 		this.leap = new LeapEdgeClient(auth, opts);
-		this.leap.connect();
+		void this.leap.connect();
 
 		return this.leap;
 	}

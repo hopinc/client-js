@@ -4,6 +4,14 @@ import {useEffect} from 'react';
 
 const projectId = 'project_MjcxMDk5Nzg1MTM1MDYzMTA';
 
+const instance = hop.init({projectId: '', token: ''});
+
+instance.sendMessage('votes', 'add', 1);
+instance.sendMessage('public-chat', 'kashcafe', {
+	user: 'Kashall',
+	message: 'This is a message!',
+});
+
 export function Main() {
 	// useChannelMessage('project_NDc4MjU3NTE1MTE3MzYzMjE', 'ABC', console.log);
 	const t = useReadChannelState('test');
