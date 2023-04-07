@@ -27,7 +27,7 @@
 		"@onehop/leap-edge-js": "^1.0.11"
 	},
 	"author": "Hop Development Team",
-	"homepage": "https://github.com/hopinc/hop-client-js/tree/master/packages/react",
+	"homepage": "https://docs.hop.io/sdks/client/react",
 	"keywords": [
 		"realtime",
 		"channels",
